@@ -25,5 +25,8 @@
     "url": "https://github.com/rapyuta-robotics/amphion/issues"
   },
   "homepage": "https://amphion.rapyuta.io",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "roslib": "^1.0.1"
+  }
 }
