@@ -1,17 +1,17 @@
-import Core from "./Index";
-import {MESSAGE_TYPE_MARKER} from "../index";
-import Arrow from "./Arrow";
+import Core from './Index';
+import { MESSAGE_TYPE_MARKER } from './messages';
+import Arrow from './Arrow';
 
 class Axes extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, scene) {
     super(ros, topicName, MESSAGE_TYPE_MARKER);
     this.object = new THREE.Group();
-    this.x = new Arrow(ros, topicName);
-    this.y = new Arrow(ros, topicName);
-    this.z = new Arrow(ros, topicName);
-    this.object.add(this.x);
-    this.object.add(this.y);
-    this.object.add(this.z);
+    this.x = new Arrow(scene);
+    this.y = new Arrow(scene);
+    this.z = new Arrow(scene);
+    this.object.add(this.x.object);
+    this.object.add(this.y.object);
+    this.object.add(this.z.object);
   }
 }
 

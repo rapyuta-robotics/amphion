@@ -1,6 +1,6 @@
-import Core from "./Index";
-import {MESSAGE_TYPE_VECTOR3STAMPED} from "../index";
-import Arrow from "./Arrow";
+import Core from './Index';
+import { MESSAGE_TYPE_VECTOR3STAMPED } from './messages';
+import Arrow from './Arrow';
 
 class CircledArrow extends Core {
   constructor(ros, topicName) {
@@ -13,4 +13,4 @@ class CircledArrow extends Core {
   }
 }
 
-export default Arrow;
+export default CircledArrow;

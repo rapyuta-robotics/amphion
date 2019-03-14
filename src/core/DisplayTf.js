@@ -1,14 +1,17 @@
-import Core from "./Index";
-import {MESSAGE_TYPE_DISPLAYTF} from "../index";
+import Core from './Index';
+import { MESSAGE_TYPE_DISPLAYTF } from './messages';
 
 class DisplayTf extends Core {
-  constructor(ros, object, topicName) {
+  constructor(ros, topicName, scene) {
     super(ros, topicName, MESSAGE_TYPE_DISPLAYTF);
-    this.object = object;
+    this.scene = scene;
+    this.object = new THREE.Group();
+    this.scene.add(this.object);
   }
+
   update(message) {
     super.update(message);
-    message.transforms.forEach(t => {
+    message.transforms.forEach((t) => {
       const {
         child_frame_id: childFrame,
         header: { frame_id: parentFrame },
@@ -19,12 +22,15 @@ class DisplayTf extends Core {
           },
         },
       } = t;
+
       const [trimmedChildFrame, trimmedParentFrame] = [
         _.trimStart(childFrame, '/'),
         _.trimStart(parentFrame, '/'),
       ];
+
       const childObject = this.object.getObjectByName(trimmedChildFrame);
       const parentObject = this.object.getObjectByName(trimmedParentFrame);
+
       if (childObject && parentObject) {
         childObject.position.set(x, y, z);
         childObject.quaternion.set(rx, ry, rz, rw);

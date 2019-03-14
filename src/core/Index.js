@@ -11,17 +11,20 @@ class Core {
       messageType,
     });
   }
+
   destroy() {
 
   }
+
   subscribe() {
-    this.topic.subscribe(this.update);
+    this.topic.subscribe(this.update.bind(this));
   }
+
   unsubscribe() {
     this.topic.unsubscribe();
   }
-  update(message) {
 
+  update(message) {
   }
 }
 
