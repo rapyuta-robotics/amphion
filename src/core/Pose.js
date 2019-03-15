@@ -34,7 +34,6 @@ class Pose extends Core {
   }
 
   update(message) {
-    console.log(message);
     this.objectInstance.setPose(message);
   }
 }

@@ -48,6 +48,34 @@ class Axes {
     this.object.position.set(posX, posY, posZ);
     this.object.quaternion.set(orientX, orientY, orientZ, orientW);
   }
+
+  setTransform(transform) {
+    const { x: posX, y: posY, z: posZ } = transform.translation;
+    const {
+      x: orientX,
+      y: orientY,
+      z: orientZ,
+      w: orientW
+    } = transform.rotation;
+
+    this.object.position.set(posX, posY, posZ);
+    this.object.quaternion.set(orientX, orientY, orientZ, orientW);
+  }
+
+  updateTransform(transform) {
+    const { x: posX, y: posY, z: posZ } = transform.translation;
+    const newPos = new THREE.Vector3(posX, posY, posZ);
+    this.object.position.lerp(newPos, 0.125);
+
+    const {
+      x: orientX,
+      y: orientY,
+      z: orientZ,
+      w: orientW
+    } = transform.rotation;
+    const newRot = new THREE.Quaternion(orientX, orientY, orientZ, orientW);
+    this.object.quaternion.slerp(newRot, 0.125);
+  }
 }
 
 export default Axes;
