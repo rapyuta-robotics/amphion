@@ -1,5 +1,4 @@
-import Core from './Index';
-
+// Given a unit, the cylinder to cone ratio is 0.75: 0.25
 const defaultConfig = {
   cone: {
     radius: 1,
@@ -27,7 +26,7 @@ class Arrow {
     const geometry = new THREE.ConeBufferGeometry(cone.radius, cone.height, 16);
     const material = new THREE.MeshStandardMaterial({ color: 0xf0ff00 });
     this.coneMesh = new THREE.Mesh(geometry, material);
-    this.coneMesh.position.y = -0.125;
+    this.coneMesh.position.y = 0.875;
     this.coneMesh.castShadow = true;
     this.coneMesh.receiveShadow = true;
     this.object.add(this.coneMesh);
@@ -38,11 +37,11 @@ class Arrow {
     );
     const cyMaterial = new THREE.MeshStandardMaterial({ color: 0xf0ff00 });
     this.cylinderMesh = new THREE.Mesh(cyGeometry, cyMaterial);
-    this.cylinderMesh.position.y -= 2 * cone.height;
+    this.cylinderMesh.position.y = 0.375;
     this.cylinderMesh.castShadow = true;
     this.cylinderMesh.receiveShadow = true;
 
-    this.coneMesh.add(this.cylinderMesh);
+    this.object.add(this.cylinderMesh);
     this.object.add(this.coneMesh);
   }
 
