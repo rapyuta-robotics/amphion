@@ -45,13 +45,25 @@ class Arrow {
     this.object.add(this.coneMesh);
   }
 
-  update(message) {
+  setPose(message) {
     const { x: posX, y: posY, z: posZ } = message.pose.position;
-    const { x: scaleX, y: scaleY, z: scaleZ } = message.scale;
+    const {
+      x: orientX,
+      y: orientY,
+      z: orientZ,
+      w: orientW
+    } = message.pose.orientation;
 
     this.object.position.set(posX, posY, posZ);
-    this.object.scale.set(scaleX, scaleY, scaleZ);
+    this.object.quaternion.set(orientX, orientY, orientZ, orientW);
+  }
 
+  setScale(message) {
+    const { x: scaleX, y: scaleY, z: scaleZ } = message.scale;
+    this.object.scale.set(scaleX, scaleY, scaleZ);
+  }
+
+  setColor(message) {
     this.coneMesh.material.color = new THREE.Color(
       message.color.r, message.color.g, message.color.b
     );
