@@ -1,7 +1,9 @@
 import DisplayTf from './core/DisplayTf';
-import Arrow from './core/Arrow';
+import Pose from './core/Pose';
+import TF from './core/TF';
 
 export default {
   DisplayTf,
-  Arrow
+  Pose,
+  TF
 };

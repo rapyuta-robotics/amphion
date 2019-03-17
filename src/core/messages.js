@@ -9,6 +9,7 @@ export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/Boundi
 export const MESSAGE_TYPE_DISPLAYJOINTSTATE =                'sensor_msgs/JointState';
 export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
 export const MESSAGE_TYPE_DISPLAYTF =                        'tf2_msgs/TFMessage';
+export const MESSAGE_TYPE_TF =                               'tf2_msgs/TFMessage';
 export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
 export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
 export const MESSAGE_TYPE_OCCUPANCYGRID =                    'nav_msgs/OccupancyGrid';
