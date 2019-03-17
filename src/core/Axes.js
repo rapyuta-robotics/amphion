@@ -32,21 +32,6 @@ class Axes {
     this.object.add(this.z);
   }
 
-  setPose({
-    pose: {
-      position: { x: posX, y: posY, z: posZ },
-      orientation: {
-        x: orientX,
-        y: orientY,
-        z: orientZ,
-        w: orientW
-      },
-    }
-  }) {
-    this.object.position.set(posX, posY, posZ);
-    this.object.quaternion.set(orientX, orientY, orientZ, orientW);
-  }
-
   setTransform({
     translation: { x: posX, y: posY, z: posZ },
     rotation: {
