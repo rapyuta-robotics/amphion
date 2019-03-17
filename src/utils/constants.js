@@ -1,3 +1,8 @@
+export const OBJECT_TYPE_ARROW = 'Arrow';
+export const OBJECT_TYPE_AXES = 'Axes';
+
+export const MAX_POINTCLOUD_POINTS = 500000;
+
 export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
 export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
 export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';

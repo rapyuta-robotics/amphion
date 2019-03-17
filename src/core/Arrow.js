@@ -1,81 +1,62 @@
-// Given a unit, the cylinder to cone ratio is 0.75: 0.25
-const defaultConfig = {
-  cone: {
-    radius: 1,
-    height: 0.25
-  },
-  cylinder: {
-    radius: 0.5,
-    height: 0.75
-  }
-};
+import * as THREE from 'three';
+import {
+  DEFAULT_ARROW_HEIGHT,
+  DEFAULT_ARROW_RADIUS,
+  DEFAULT_COLOR_ARROW,
+  DEFAULT_CONE_HEIGHT,
+  DEFAULT_CONE_RADIUS,
+  DEFAULT_CYLINDER_HEIGHT,
+  DEFAULT_CYLINDER_RADIUS,
+} from '../utils/defaults';
+import Cylinder from '../primitives/Cylinder';
+import Cone from '../primitives/Cone';
+import { OBJECT_TYPE_ARROW } from '../utils/constants';
 
 class Arrow {
-  constructor(scene) {
-    this.scene = scene;
-    this.object = new THREE.Group();
-    this.scene.add(this.object);
-
-    this.init();
-  }
-
-  init() {
-    const { cone, cylinder } = defaultConfig;
-
-    // cone setup
-    const geometry = new THREE.ConeBufferGeometry(cone.radius, cone.height, 16);
-    const material = new THREE.MeshStandardMaterial({ color: 0xf0ff00 });
-    this.coneMesh = new THREE.Mesh(geometry, material);
-    this.coneMesh.position.y = 0.875;
-    this.coneMesh.castShadow = true;
-    this.coneMesh.receiveShadow = true;
-    this.object.add(this.coneMesh);
-
-    // Cylinder setup
-    const cyGeometry = new THREE.CylinderGeometry(
-      cylinder.radius, cylinder.radius, cylinder.height, 16
+  constructor() {
+    this.cone = new Cone(DEFAULT_COLOR_ARROW);
+    this.cone.setScale(
+      DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
+      0.25 * DEFAULT_ARROW_HEIGHT / DEFAULT_CONE_HEIGHT,
+      DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
     );
-    const cyMaterial = new THREE.MeshStandardMaterial({ color: 0xf0ff00 });
-    this.cylinderMesh = new THREE.Mesh(cyGeometry, cyMaterial);
-    this.cylinderMesh.position.y = 0.375;
-    this.cylinderMesh.castShadow = true;
-    this.cylinderMesh.receiveShadow = true;
+    this.cone.translateY(0.875 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
 
-    this.object.add(this.cylinderMesh);
-    this.object.add(this.coneMesh);
+    this.cylinder = new Cylinder(DEFAULT_COLOR_ARROW);
+    this.cylinder.setScale(
+      0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS,
+      DEFAULT_ARROW_HEIGHT * 0.75 / DEFAULT_CYLINDER_HEIGHT,
+      0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS
+    );
+    this.cylinder.translateY(0.375 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
+
+    this.object = new THREE.Group();
+    this.object.type = OBJECT_TYPE_ARROW;
+    this.object.add(this.cone);
+    this.object.add(this.cylinder);
   }
 
-  setPose(message) {
-    const { x: posX, y: posY, z: posZ } = message.pose.position;
-    const {
+  setPose({
+    position: { x: posX, y: posY, z: posZ },
+    orientation: {
       x: orientX,
       y: orientY,
       z: orientZ,
       w: orientW
-    } = message.pose.orientation;
-
+    }
+  }) {
     this.object.position.set(posX, posY, posZ);
     this.object.quaternion.set(orientX, orientY, orientZ, orientW);
   }
 
-  setScale(message) {
-    const { x: scaleX, y: scaleY, z: scaleZ } = message.scale;
-    this.object.scale.set(scaleX, scaleY, scaleZ);
+  setScale({ x, y, z }) {
+    this.object.scale.set(x, y, z);
   }
 
-  setColor(message) {
-    this.coneMesh.material.color = new THREE.Color(
-      message.color.r, message.color.g, message.color.b
-    );
-
-    this.cylinderMesh.material.color = new THREE.Color(
-      message.color.r, message.color.g, message.color.b
-    );
+  setColor(color) {
+    this.cone.setColor(color);
+    this.cylinder.setColor(color);
   }
-
-  // Config(config) {
-
-  // }
 }
 
 export default Arrow;

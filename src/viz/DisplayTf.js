@@ -1,12 +1,11 @@
-import Core from './Index';
-import { MESSAGE_TYPE_DISPLAYTF } from './messages';
+import * as THREE from 'three';
+import Core from '../core';
+import { MESSAGE_TYPE_DISPLAYTF } from '../utils/constants';
 
 class DisplayTf extends Core {
-  constructor(ros, topicName, scene) {
+  constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_DISPLAYTF);
-    this.scene = scene;
     this.object = new THREE.Group();
-    this.scene.add(this.object);
   }
 
   update(message) {

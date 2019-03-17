@@ -1,80 +1,63 @@
-const CYLINDER_RADIUS = 0.05;
-const CYLINDER_HEIGHT = 1;
+import * as THREE from 'three';
+import Cylinder from '../primitives/Cylinder';
+import {
+  DEFAULT_COLOR_X_AXIS,
+  DEFAULT_COLOR_Y_AXIS,
+  DEFAULT_COLOR_Z_AXIS,
+  DEFAULT_CYLINDER_HEIGHT
+} from '../utils/defaults';
+import { OBJECT_TYPE_AXES } from '../utils/constants';
 
 class Axes {
-  constructor(scene) {
-    this.scene = scene;
+  constructor() {
     this.object = new THREE.Group();
     this.init();
   }
 
   init() {
-    this.x = new THREE.Group();
-    this.x.add(this.getCylinder(0xff0000));
-    this.y = new THREE.Group();
-    this.y.add(this.getCylinder(0x008000));
-    this.z = new THREE.Group();
-    this.z.add(this.getCylinder(0x0000ff));
+    this.x = new Cylinder(DEFAULT_COLOR_X_AXIS);
+    this.y = new Cylinder(DEFAULT_COLOR_Y_AXIS);
+    this.z = new Cylinder(DEFAULT_COLOR_Z_AXIS);
 
-    this.x.rotation.z = -Math.PI / 2;
-    this.z.rotation.x = Math.PI / 2;
+    this.x.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
+    this.y.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
+    this.z.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
+    this.x.rotateZ(-Math.PI / 2);
+    this.z.rotateX(Math.PI / 2);
 
+    this.object = new THREE.Group();
+    this.object.type = OBJECT_TYPE_AXES;
     this.object.add(this.x);
     this.object.add(this.y);
     this.object.add(this.z);
-
-    this.scene.add(this.object);
   }
 
-  getCylinder(colorHex) {
-    const geometry = new THREE.CylinderGeometry(
-      CYLINDER_RADIUS, CYLINDER_RADIUS, CYLINDER_HEIGHT, 16
-    );
-    const material = new THREE.MeshStandardMaterial({ color: colorHex });
-    const cylinder = new THREE.Mesh(geometry, material);
-    cylinder.position.y = 0.5;
-    return cylinder;
-  }
-
-  setPose(message) {
-    const { x: posX, y: posY, z: posZ } = message.pose.position;
-    const {
-      x: orientX,
-      y: orientY,
-      z: orientZ,
-      w: orientW
-    } = message.pose.orientation;
-
+  setPose({
+    pose: {
+      position: { x: posX, y: posY, z: posZ },
+      orientation: {
+        x: orientX,
+        y: orientY,
+        z: orientZ,
+        w: orientW
+      },
+    }
+  }) {
     this.object.position.set(posX, posY, posZ);
     this.object.quaternion.set(orientX, orientY, orientZ, orientW);
   }
 
-  setTransform(transform) {
-    const { x: posX, y: posY, z: posZ } = transform.translation;
-    const {
+  setTransform({
+    translation: { x: posX, y: posY, z: posZ },
+    rotation: {
       x: orientX,
       y: orientY,
       z: orientZ,
       w: orientW
-    } = transform.rotation;
-
+    }
+  }) {
     this.object.position.set(posX, posY, posZ);
     this.object.quaternion.set(orientX, orientY, orientZ, orientW);
-  }
-
-  updateTransform(transform) {
-    const { x: posX, y: posY, z: posZ } = transform.translation;
-    const newPos = new THREE.Vector3(posX, posY, posZ);
-    this.object.position.lerp(newPos, 0.125);
-
-    const {
-      x: orientX,
-      y: orientY,
-      z: orientZ,
-      w: orientW
-    } = transform.rotation;
-    const newRot = new THREE.Quaternion(orientX, orientY, orientZ, orientW);
-    this.object.quaternion.slerp(newRot, 0.125);
   }
 }
 
