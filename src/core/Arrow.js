@@ -12,8 +12,9 @@ import Cylinder from '../primitives/Cylinder';
 import Cone from '../primitives/Cone';
 import { OBJECT_TYPE_ARROW } from '../utils/constants';
 
-class Arrow {
+class Arrow extends THREE.Group {
   constructor() {
+    super();
     this.cone = new Cone(DEFAULT_COLOR_ARROW);
     this.cone.setScale(
       DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
@@ -30,10 +31,9 @@ class Arrow {
     );
     this.cylinder.translateY(0.375 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
 
-    this.object = new THREE.Group();
-    this.object.type = OBJECT_TYPE_ARROW;
-    this.object.add(this.cone);
-    this.object.add(this.cylinder);
+    this.type = OBJECT_TYPE_ARROW;
+    this.add(this.cone);
+    this.add(this.cylinder);
   }
 
   setTransform({
@@ -45,12 +45,12 @@ class Arrow {
       w: orientW
     }
   }) {
-    this.object.position.set(posX, posY, posZ);
-    this.object.quaternion.set(orientX, orientY, orientZ, orientW);
+    this.position.set(posX, posY, posZ);
+    this.quaternion.set(orientX, orientY, orientZ, orientW);
   }
 
   setScale({ x, y, z }) {
-    this.object.scale.set(x, y, z);
+    this.scale.set(x, y, z);
   }
 
   setColor(color) {

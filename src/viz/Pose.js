@@ -37,8 +37,11 @@ class Pose extends Core {
     Object.setPrototypeOf(this.object, newObject);
   }
 
-  update(message) {
-    this.object.setTransform(message);
+  update({ pose: { position, orientation } }) {
+    this.object.setTransform({
+      translation: position,
+      rotation: orientation
+    });
   }
 }
 
