@@ -1,4 +1,5 @@
-import { URDFRobot } from 'urdf-loader/src/URDFClasses';
+import _ from 'lodash';
+
 import Core from '../core';
 import { MESSAGE_TYPE_DISPLAYJOINTSTATE } from '../utils/constants';
 
@@ -6,12 +7,13 @@ class DisplayJointState extends Core {
   constructor(ros, topicName, object) {
     super(ros, topicName, MESSAGE_TYPE_DISPLAYJOINTSTATE);
     this.object = object;
-    Object.setPrototypeOf(this.object, new URDFRobot());
   }
 
   update(message) {
     super.update(message);
-    this.object.setAngle(message.name, message.position);
+    _.each(message.name, (jointName, messageIndex) => {
+      this.object.setAngle(jointName, message.angles[messageIndex]);
+    });
   }
 }
 

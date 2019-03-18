@@ -19,6 +19,7 @@ class RobotModel extends URDFLoader {
       onComplete(this.object);
     });
   }
+  
 }
 
 export default RobotModel;
