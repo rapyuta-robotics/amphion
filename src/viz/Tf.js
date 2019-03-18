@@ -17,27 +17,21 @@ class Tf extends Core {
         frame_id: parentFrameId,
       },
       child_frame_id: childFrameId,
-      transform: {
-        translation,
-        rotation,
-      }
+      transform
     }) => {
       const [
         childFrame,
         parentFrame,
       ] = [
-        this.getObjectOrCreate(childFrameId),
-        this.getObjectOrCreate(parentFrameId),
+        this.getFrameOrCreate(childFrameId),
+        this.getFrameOrCreate(parentFrameId),
       ];
       parentFrame.add(childFrame);
-      childFrame.setTransform({
-        translation,
-        rotation,
-      });
+      childFrame.setTransform(transform);
     });
   }
 
-  getObjectOrCreate(frameId) {
+  getFrameOrCreate(frameId) {
     const existingFrame = this.object.getObjectByName(frameId);
     if (existingFrame) {
       return existingFrame;

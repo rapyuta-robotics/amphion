@@ -35,6 +35,7 @@
     "object.entries": "^1.1.0"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "roslib": "^1.0.1",
     "three": "^0.102.1",
     "urdf-loader": "^0.6.1"

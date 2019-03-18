@@ -11,4 +11,5 @@ export const DEFAULT_ARROW_HEIGHT = 1;
 export const DEFAULT_COLOR_X_AXIS = '0xff0000';
 export const DEFAULT_COLOR_Y_AXIS = '0x008000';
 export const DEFAULT_COLOR_Z_AXIS = '0x0000ff';
-export const DEFAULT_COLOR_ARROW = '0xf0ff00'
+export const DEFAULT_COLOR_ARROW = '0xf0ff00';
+export const DEFAULT_COLOR_LINE = '0xf0ff00';

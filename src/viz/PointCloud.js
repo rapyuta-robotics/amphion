@@ -2,14 +2,15 @@ import * as THREE from 'three';
 import Core from '../core';
 import { MESSAGE_TYPE_POINTCLOUD, MAX_POINTCLOUD_POINTS } from '../utils/constants';
 
+const defaultOptions = {};
+
 class PointCloud extends Core {
-  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD, userOptions) {
+  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD, userOptions = {}) {
     super(ros, topicName, messageType);
 
-    const options = {
-      // ...defaultOptions,
-      // ...userOptions,
-    };
+    const options = {};
+    Object.assign(options, defaultOptions, userOptions);
+
     const material = new THREE.PointsMaterial({
       size: 0.01,
       vertexColors: THREE.VertexColors,

@@ -1,39 +1,44 @@
+import _ from 'lodash';
+
 import Core from '../core';
-import { MESSAGE_TYPE_POSESTAMPED } from '../utils/constants';
+import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES } from '../utils/constants';
 import Arrow from '../core/Arrow';
 import Axes from '../core/Axes';
 
-export const POSE_TYPE = {
-  ARROW: 'ARROW',
-  AXES: 'AXES'
+const POSE_VIZ_TYPES = {
+  arrow: OBJECT_TYPE_ARROW,
+  axes: OBJECT_TYPE_AXES,
 };
 
 class Pose extends Core {
   constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_POSESTAMPED);
 
-    this.type = POSE_TYPE.ARROW;
-    this.arrow = new Arrow();
-    this.axes = new Axes();
-    this.axes.object.visible = false;
-
-    this.objectInstance = this.arrow;
+    this.object = new THREE.Group();
+    this.setVizType(POSE_VIZ_TYPES.arrow);
   }
 
-  setArrowType() {
-    this.objectInstance.object.visible = false;
-    this.objectInstance = this.arrow;
-    this.objectInstance.object.visible = true;
-  }
-
-  setAxesType() {
-    this.objectInstance.object.visible = false;
-    this.objectInstance = this.axes;
-    this.objectInstance.object.visible = true;
+  setVizType(type) {
+    let newObject = null;
+    switch (type) {
+      case POSE_VIZ_TYPES.arrow:
+        newObject = new Arrow();
+        break;
+      case POSE_VIZ_TYPES.axes:
+        newObject = new Axes();
+        break;
+    }
+    _.each(this.object.children, (child) => {
+      child.parent.remove(child);
+    });
+    _.each(newObject.children, (child) => {
+      this.object.add(child);
+    });
+    Object.setPrototypeOf(this.object, newObject);
   }
 
   update(message) {
-    this.objectInstance.setPose(message);
+    this.object.setTransform(message);
   }
 }
 

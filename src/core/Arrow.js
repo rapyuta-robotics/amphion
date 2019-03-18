@@ -36,7 +36,7 @@ class Arrow {
     this.object.add(this.cylinder);
   }
 
-  setPose({
+  setTransform({
     position: { x: posX, y: posY, z: posZ },
     orientation: {
       x: orientX,
