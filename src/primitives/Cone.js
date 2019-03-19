@@ -9,12 +9,13 @@ import {
 class Cone extends Mesh {
   constructor(color) {
     super();
-    this.geometry = new THREE.ConeBufferGeometry(
+    this.geometry = new THREE.ConeGeometry(
       DEFAULT_CONE_RADIUS,
       DEFAULT_CONE_HEIGHT / 4,
       DEFAULT_RADIAL_SEGMENTS
     );
     this.material = new THREE.MeshStandardMaterial({ color });
+    // this.geometru
   }
 }
 

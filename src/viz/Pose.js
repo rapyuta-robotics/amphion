@@ -28,16 +28,19 @@ class Pose extends Core {
         newObject = new Axes();
         break;
     }
+
     _.each(this.object.children, (child) => {
       child.parent.remove(child);
     });
-    _.each(newObject.children, (child) => {
-      this.object.add(child);
-    });
-    Object.setPrototypeOf(this.object, newObject);
+    this.object.add(newObject);
+    // _.each(newObject.children, (child) => {
+    //   this.object.add(child);
+    // });
+    Object.setPrototypeOf(this.object, Object.getPrototypeOf(newObject));
   }
 
-  update({ pose: { position, orientation } }) {
+  update(message) {
+    const { pose: { position, orientation } } = message;
     this.object.setTransform({
       translation: position,
       rotation: orientation

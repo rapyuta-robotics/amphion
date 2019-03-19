@@ -16,19 +16,19 @@ class Arrow extends THREE.Group {
   constructor() {
     super();
     this.cone = new Cone(DEFAULT_COLOR_ARROW);
-    this.cone.setScale(
-      DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
-      0.25 * DEFAULT_ARROW_HEIGHT / DEFAULT_CONE_HEIGHT,
-      DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
-    );
+    this.cone.setScale({
+      x: DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
+      y: 0.25 * DEFAULT_ARROW_HEIGHT / DEFAULT_CONE_HEIGHT,
+      z: DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
+    });
     this.cone.translateY(0.875 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
 
     this.cylinder = new Cylinder(DEFAULT_COLOR_ARROW);
-    this.cylinder.setScale(
-      0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS,
-      DEFAULT_ARROW_HEIGHT * 0.75 / DEFAULT_CYLINDER_HEIGHT,
-      0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS
-    );
+    this.cylinder.setScale({
+      x: 0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS,
+      y: DEFAULT_ARROW_HEIGHT * 0.75 / DEFAULT_CYLINDER_HEIGHT,
+      z: 0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS
+    });
     this.cylinder.translateY(0.375 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
 
     this.type = OBJECT_TYPE_ARROW;
@@ -37,8 +37,8 @@ class Arrow extends THREE.Group {
   }
 
   setTransform({
-    position: { x: posX, y: posY, z: posZ },
-    orientation: {
+    translation: { x: posX, y: posY, z: posZ },
+    rotation: {
       x: orientX,
       y: orientY,
       z: orientZ,
