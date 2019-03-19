@@ -15,9 +15,9 @@ class Axes extends THREE.Group {
     this.y = new Cylinder(DEFAULT_COLOR_Y_AXIS);
     this.z = new Cylinder(DEFAULT_COLOR_Z_AXIS);
 
-    this.x.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
-    this.y.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
-    this.z.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
+    this.x.translateZ(DEFAULT_CYLINDER_HEIGHT);
+    this.y.translateZ(DEFAULT_CYLINDER_HEIGHT);
+    this.z.translateZ(DEFAULT_CYLINDER_HEIGHT);
     this.x.rotateZ(-Math.PI / 2);
     this.z.rotateX(Math.PI / 2);
 

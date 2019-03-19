@@ -12,6 +12,14 @@ class Core {
     });
   }
 
+  hide() {
+    this.object.visible = false;
+  }
+
+  show() {
+    this.object.visible = true;
+  }
+
   destroy() {
 
   }
