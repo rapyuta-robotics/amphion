@@ -1,5 +1,5 @@
 export const DEFAULT_CYLINDER_HEIGHT = 1;
-export const DEFAULT_CYLINDER_RADIUS = 0.05;
+export const DEFAULT_CYLINDER_RADIUS = 0.5;
 export const DEFAULT_RADIAL_SEGMENTS = 32;
 
 export const DEFAULT_CONE_HEIGHT = 1;

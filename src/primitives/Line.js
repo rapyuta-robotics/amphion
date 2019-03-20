@@ -2,10 +2,10 @@ import * as THREE from 'three';
 import _ from 'lodash';
 
 class Line extends THREE.Line {
-  constructor(color) {
+  constructor(color, linewidth = 1) {
     super();
     this.geometry = new THREE.Geometry();
-    this.material = new THREE.LineBasicMaterial({ color });
+    this.material = new THREE.LineBasicMaterial({ color, linewidth });
   }
 
   updatePoints(points) {
