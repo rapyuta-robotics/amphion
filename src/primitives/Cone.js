@@ -11,11 +11,11 @@ class Cone extends Mesh {
     super();
     this.geometry = new THREE.ConeGeometry(
       DEFAULT_CONE_RADIUS,
-      DEFAULT_CONE_HEIGHT / 4,
+      DEFAULT_CONE_HEIGHT,
       DEFAULT_RADIAL_SEGMENTS
     );
     this.material = new THREE.MeshStandardMaterial({ color });
-    // this.geometru
+    this.rotateX(Math.PI / 2);
   }
 }
 

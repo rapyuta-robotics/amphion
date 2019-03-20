@@ -5,6 +5,8 @@ import Mesh from './Mesh';
 class Cylinder extends Mesh {
   constructor(color, radius = DEFAULT_CYLINDER_RADIUS, height = DEFAULT_CYLINDER_HEIGHT) {
     super();
+    this.radius = radius;
+    this.height = height;
     this.geometry = new THREE.CylinderGeometry(
       radius,
       radius,
@@ -12,6 +14,7 @@ class Cylinder extends Mesh {
       DEFAULT_RADIAL_SEGMENTS
     );
     this.material = new THREE.MeshStandardMaterial({ color });
+    this.rotateX(Math.PI / 2);
   }
 }
 

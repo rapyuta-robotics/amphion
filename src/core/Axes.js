@@ -40,6 +40,10 @@ class Axes extends THREE.Group {
     this.position.set(posX, posY, posZ);
     this.quaternion.set(orientX, orientY, orientZ, orientW);
   }
+
+  setScale({ x, y, z }) {
+    this.scale.set(x, y, z);
+  }
 }
 
 export default Axes;
