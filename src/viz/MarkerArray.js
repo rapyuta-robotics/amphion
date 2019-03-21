@@ -1,3 +1,5 @@
+import { Triangle } from 'three';
+
 import Core from '../core';
 import { MESSAGE_TYPE_MARKERARRAY, MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../core/Arrow';
@@ -7,7 +9,6 @@ import { DEFAULT_COLOR_ARROW, DEFAULT_CYLINDER_HEIGHT } from '../utils/defaults'
 import Line from '../primitives/Line';
 import Cube from '../primitives/Cube';
 import Sphere from '../primitives/Sphere';
-import { Triangle } from 'three';
 
 
 const SUPPORTED_TYPES = [

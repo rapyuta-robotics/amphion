@@ -6,6 +6,7 @@ import Tf from './viz/Tf';
 import RobotModel from './viz/RobotModel';
 import PointCloud from './viz/PointCloud';
 import MarkerArray from './viz/MarkerArray';
+import LaserScan from './viz/LaserScan';
 
 export default {
   DisplayTf,
@@ -15,5 +16,6 @@ export default {
   Pose,
   Tf,
   RobotModel,
-  MarkerArray
+  MarkerArray,
+  LaserScan
 };
