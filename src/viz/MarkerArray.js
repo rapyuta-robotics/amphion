@@ -8,6 +8,20 @@ import Cube from '../primitives/Cube';
 import Sphere from '../primitives/Sphere';
 import Triangle from '../primitives/Triangle';
 
+
+const getId = (marker) => {
+  return `${marker.id}-${marker.ns}`;
+};
+
+const getColorHex = (marker) => {
+  let color = DEFAULT_COLOR_ARROW;
+  if (marker.color) {
+    color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
+    color = color.getHexString();
+  }
+  return `#${color}`;
+};
+
 class MarkerArray extends Core {
   constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_MARKERARRAY);
@@ -64,7 +78,7 @@ class MarkerArray extends Core {
 
   drawArrows(marker) {
     const { pose: { position, orientation } } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
       const arrow = new Arrow();
@@ -72,24 +86,20 @@ class MarkerArray extends Core {
       arrow.setColor(marker.color);
       this.objectMap[id] = arrow;
       this.object.add(arrow);
+      this.object.rotateX = Math.PI / 3;
     }
     this.objectMap[id].setTransform({ translation: position, rotation: orientation });
   }
 
   drawCylinder(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
+      const color = getColorHex(marker);
+      const cylinder = new Cylinder(color);
 
-      let color = DEFAULT_COLOR_ARROW;
-      if (marker.color) {
-        color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
-        color = color.getHexString();
-      }
-
-      const cylinder = new Cylinder(`#${color}`);
       group.add(cylinder);
 
       this.objectMap[id] = group;
@@ -107,16 +117,12 @@ class MarkerArray extends Core {
 
   drawLineStrip(marker, lineWidth) {
     const { pose: { position, orientation } } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
-      let color = DEFAULT_COLOR_ARROW;
-      if (marker.color) {
-        color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
-        color = color.getHexString();
-      }
+      const color = getColorHex(marker);
+      const line = new Line(color, lineWidth);
 
-      const line = new Line(`#${color}`, lineWidth);
       this.objectMap[id] = line;
       this.object.add(line);
     }
@@ -133,19 +139,14 @@ class MarkerArray extends Core {
 
   drawSphere(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
+      const color = getColorHex(marker);
+      const sphere = new Sphere(color);
 
-      let color = DEFAULT_COLOR_ARROW;
-      if (marker.color) {
-        color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
-        color = color.getHexString();
-      }
-
-      const cube = new Sphere(`#${color}`);
-      group.add(cube);
+      group.add(sphere);
 
       this.objectMap[id] = group;
       this.object.add(group);
@@ -165,21 +166,15 @@ class MarkerArray extends Core {
   }
 
   drawCube(marker) {
-    const { pose: { position, orientation }, scale } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const { pose: { position, orientation } } = marker;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
+      const color = getColorHex(marker);
+      const cube = new Cube(color, marker.scale.x);
 
-      let color = DEFAULT_COLOR_ARROW;
-      if (marker.color) {
-        color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
-        color = color.getHexString();
-      }
-
-      const cube = new Cube(`#${color}`, marker.scale.x);
       group.add(cube);
-
       this.objectMap[id] = group;
       this.object.add(group);
     }
@@ -192,16 +187,11 @@ class MarkerArray extends Core {
 
   drawTriangle(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = `${marker.id}-${marker.ns}`;
+    const id = getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
-
-      let color = DEFAULT_COLOR_ARROW;
-      if (marker.color) {
-        color = new THREE.Color(marker.color.r, marker.color.g, marker.color.b);
-        color = color.getHexString();
-      }
+      const color = getColorHex(marker);
 
       for (let i = 0; i < marker.points.length;) {
         const tempVerts = [];
@@ -209,7 +199,7 @@ class MarkerArray extends Core {
           tempVerts.push(marker.points[i]);
           i++;
         }
-        group.add(new Triangle(`#${color}`, tempVerts));
+        group.add(new Triangle(color, tempVerts));
       }
 
       this.objectMap[id] = group;
@@ -227,8 +217,8 @@ class MarkerArray extends Core {
 
   removeObject(id) {
     const obj = this.objectMap[id];
-    obj.parent.remove(obj);
 
+    obj.parent.remove(obj);
     this.objectMap[id] = null;
   }
 }

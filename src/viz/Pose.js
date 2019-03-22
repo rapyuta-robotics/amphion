@@ -23,6 +23,7 @@ class Pose extends Core {
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
         newObject = new Arrow();
+        newObject.setScale({ x: 0.1, y: 0.1, z: 0.5 });
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
@@ -33,9 +34,6 @@ class Pose extends Core {
       child.parent.remove(child);
     });
     this.object.add(newObject);
-    // _.each(newObject.children, (child) => {
-    //   this.object.add(child);
-    // });
     Object.setPrototypeOf(this.object, Object.getPrototypeOf(newObject));
   }
 

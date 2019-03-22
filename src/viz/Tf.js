@@ -12,7 +12,6 @@ class Tf extends Core {
   }
 
   update({ transforms }) {
-    console.log(transforms);
     transforms.forEach(({
       header: {
         frame_id: parentFrameId,

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import Mesh from './Mesh';
 
-class Sphere extends Mesh {
+class Triangle extends Mesh {
   constructor(color, sides) {
     super();
     const [side0, side1, side2] = sides;
@@ -13,8 +13,9 @@ class Sphere extends Mesh {
     ];
     this.geometry.faces = [new THREE.Face3(0, 1, 2)];
     this.material = new THREE.MeshBasicMaterial({ color });
+    this.material.side = THREE.DoubleSide;
     this.rotateX(Math.PI / 2);
   }
 }
 
-export default Sphere;
+export default Triangle;
