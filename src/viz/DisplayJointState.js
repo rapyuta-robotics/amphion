@@ -12,7 +12,7 @@ class DisplayJointState extends Core {
   update(message) {
     super.update(message);
     _.each(message.name, (jointName, messageIndex) => {
-      this.object.setAngle(jointName, message.angles[messageIndex]);
+      this.object.setAngle(jointName, message.position[messageIndex]);
     });
   }
 }

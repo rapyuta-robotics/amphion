@@ -12,6 +12,7 @@ class Tf extends Core {
   }
 
   update({ transforms }) {
+    console.log(transforms);
     transforms.forEach(({
       header: {
         frame_id: parentFrameId,
@@ -37,7 +38,7 @@ class Tf extends Core {
       return existingFrame;
     }
 
-    const newFrame = new Axes();
+    const newFrame = new Axes(0.015, 0.25);
     newFrame.name = frameId;
     this.object.add(newFrame);
     return newFrame;

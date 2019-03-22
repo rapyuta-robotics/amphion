@@ -4,7 +4,7 @@ import Mesh from './Mesh';
 class Sphere extends Mesh {
   constructor(color, sides) {
     super();
-    [side0, side1, side2] = sides;
+    const [side0, side1, side2] = sides;
     this.geometry = new THREE.Geometry();
     this.geometry.vertices = [
       new THREE.Vector3(side0.x, side0.y, side0.z),

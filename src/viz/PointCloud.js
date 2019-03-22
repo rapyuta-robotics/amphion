@@ -16,12 +16,11 @@ const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   };
 };
 
-const BASE64 =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+const BASE64 =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 function decode64(x) {
   const a = [];
-  let z = 0,
-    bits = 0;
+  let z = 0;
+  let bits = 0;
 
   for (let i = 0, len = x.length; i < len; i++) {
     z += BASE64.indexOf(x[i]);
@@ -29,14 +28,14 @@ function decode64(x) {
     if (bits >= 8) {
       bits -= 8;
       a.push(z >> bits);
-      z = z & (Math.pow(2, bits) - 1);
+      z &= ((2 ** bits) - 1);
     }
-    z = z << 6;
+    z <<= 6;
   }
   return a;
 }
 
-const editPointCloudPoints = function(message) {
+const editPointCloudPoints = function (message) {
   const positions = [];
   const colors = [];
   if (message) {
@@ -55,8 +54,8 @@ const editPointCloudPoints = function(message) {
         message.is_bigendian,
         message.point_step,
       );
-      if (pt['x'] && pt['y'] && pt['z']) {
-        positions.push(pt['x'], pt['y'], pt['z']);
+      if (pt.x && pt.y && pt.z) {
+        positions.push(pt.x, pt.y, pt.z);
         const color = new THREE.Color(`#${pt.hex}`);
         colors.push(color.r, color.g, color.b);
       }
@@ -67,7 +66,6 @@ const editPointCloudPoints = function(message) {
     colors: Float32Array.from(colors),
   };
 };
-
 
 
 class PointCloud extends Core {
@@ -116,6 +114,7 @@ class PointCloud extends Core {
     geometry.attributes.position.needsUpdate = true;
     geometry.attributes.color.needsUpdate = true;
   }
+
   update(message) {
     const { positions, colors } = editPointCloudPoints(message);
     this.updatePointCloudGeometry(

@@ -9,15 +9,17 @@ import {
 import { OBJECT_TYPE_AXES } from '../utils/constants';
 
 class Axes extends THREE.Group {
-  constructor() {
+  constructor(radius, height) {
     super();
-    this.x = new Cylinder(DEFAULT_COLOR_X_AXIS);
-    this.y = new Cylinder(DEFAULT_COLOR_Y_AXIS);
-    this.z = new Cylinder(DEFAULT_COLOR_Z_AXIS);
+    this.radius = radius;
+    this.height = height;
+    this.x = new Cylinder(DEFAULT_COLOR_X_AXIS, radius, height);
+    this.y = new Cylinder(DEFAULT_COLOR_Y_AXIS, radius, height);
+    this.z = new Cylinder(DEFAULT_COLOR_Z_AXIS, radius, height);
 
-    this.x.translateX(DEFAULT_CYLINDER_HEIGHT / 2);
-    this.y.translateY(DEFAULT_CYLINDER_HEIGHT / 2);
-    this.z.translateZ(DEFAULT_CYLINDER_HEIGHT / 2);
+    this.x.translateX((height || DEFAULT_CYLINDER_HEIGHT) / 2);
+    this.y.translateY((height || DEFAULT_CYLINDER_HEIGHT) / 2);
+    this.z.translateZ((height || DEFAULT_CYLINDER_HEIGHT) / 2);
     this.x.rotateZ(-Math.PI / 2);
     this.z.rotateX(Math.PI / 2);
 

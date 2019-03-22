@@ -1,19 +1,12 @@
-import { Triangle } from 'three';
-
 import Core from '../core';
 import { MESSAGE_TYPE_MARKERARRAY, MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../core/Arrow';
-import Axes from '../core/Axes';
 import Cylinder from '../primitives/Cylinder';
-import { DEFAULT_COLOR_ARROW, DEFAULT_CYLINDER_HEIGHT } from '../utils/defaults';
+import { DEFAULT_COLOR_ARROW } from '../utils/defaults';
 import Line from '../primitives/Line';
 import Cube from '../primitives/Cube';
 import Sphere from '../primitives/Sphere';
-
-
-const SUPPORTED_TYPES = [
-  MESSAGE_TYPE_MARKERARRAY.ARROW
-];
+import Triangle from '../primitives/Triangle';
 
 class MarkerArray extends Core {
   constructor(ros, topicName) {
@@ -212,12 +205,11 @@ class MarkerArray extends Core {
 
       for (let i = 0; i < marker.points.length;) {
         const tempVerts = [];
-        for (let j = 0; j <= 2; j++) {
+        for (let j = 0; j < 3; j++) {
           tempVerts.push(marker.points[i]);
-          j++;
           i++;
         }
-        this.group.add(new Triangle(color, tempVerts));
+        group.add(new Triangle(`#${color}`, tempVerts));
       }
 
       this.objectMap[id] = group;
