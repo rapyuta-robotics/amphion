@@ -8,11 +8,6 @@ import Cube from '../primitives/Cube';
 import Sphere from '../primitives/Sphere';
 import Triangle from '../primitives/Triangle';
 
-
-const getId = (marker) => {
-  return `${marker.id}-${marker.ns}`;
-};
-
 const getColorHex = (marker) => {
   let color = DEFAULT_COLOR_ARROW;
   if (marker.color) {
@@ -34,6 +29,7 @@ class MarkerArray extends Core {
   }
 
   update(message) {
+    console.log(this.topicName);
     if (message.markers.length > 0) {
       message.markers.forEach((marker) => {
         this.types[marker.type] = _.union(
@@ -42,6 +38,10 @@ class MarkerArray extends Core {
         this.drawType(marker);
       });
     }
+  }
+
+  getId(marker) {
+    return `${marker.id}-${marker.ns}-${this.topicName}`;
   }
 
   drawType(marker) {
@@ -78,7 +78,7 @@ class MarkerArray extends Core {
 
   drawArrows(marker) {
     const { pose: { position, orientation } } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const arrow = new Arrow();
@@ -88,12 +88,13 @@ class MarkerArray extends Core {
       this.object.add(arrow);
       this.object.rotateX = Math.PI / 3;
     }
+    this.objectMap[id].visible = true;
     this.objectMap[id].setTransform({ translation: position, rotation: orientation });
   }
 
   drawCylinder(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
@@ -106,6 +107,7 @@ class MarkerArray extends Core {
       this.object.add(group);
     }
 
+    this.objectMap[id].visible = true;
     this.objectMap[id].position.set(position.x, position.y, position.z);
     this.objectMap[id].quaternion.set(
       orientation.x, orientation.y, orientation.z, orientation.w
@@ -117,7 +119,7 @@ class MarkerArray extends Core {
 
   drawLineStrip(marker, lineWidth) {
     const { pose: { position, orientation } } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const color = getColorHex(marker);
@@ -131,6 +133,7 @@ class MarkerArray extends Core {
       this.objectMap[id].updatePoints(marker.points);
     }
 
+    this.objectMap[id].visible = true;
     this.objectMap[id].position.set(position.x, position.y, position.z);
     this.objectMap[id].quaternion.set(
       orientation.x, orientation.y, orientation.z, orientation.w
@@ -139,7 +142,7 @@ class MarkerArray extends Core {
 
   drawSphere(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
@@ -152,6 +155,7 @@ class MarkerArray extends Core {
       this.object.add(group);
     }
 
+    this.objectMap[id].visible = true;
     this.objectMap[id].position.set(position.x, position.y, position.z);
     this.objectMap[id].quaternion.set(
       orientation.x, orientation.y, orientation.z, orientation.w
@@ -167,7 +171,7 @@ class MarkerArray extends Core {
 
   drawCube(marker) {
     const { pose: { position, orientation } } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
@@ -179,6 +183,7 @@ class MarkerArray extends Core {
       this.object.add(group);
     }
 
+    this.objectMap[id].visible = true;
     this.objectMap[id].position.set(position.x, position.y, position.z);
     this.objectMap[id].quaternion.set(
       orientation.x, orientation.y, orientation.z, orientation.w
@@ -187,7 +192,7 @@ class MarkerArray extends Core {
 
   drawTriangle(marker) {
     const { pose: { position, orientation }, scale } = marker;
-    const id = getId(marker);
+    const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const group = new THREE.Group();
@@ -206,6 +211,7 @@ class MarkerArray extends Core {
       this.object.add(group);
     }
 
+    this.objectMap[id].visible = true;
     this.objectMap[id].position.set(position.x, position.y, position.z);
     this.objectMap[id].quaternion.set(
       orientation.x, orientation.y, orientation.z, orientation.w
@@ -220,6 +226,12 @@ class MarkerArray extends Core {
 
     obj.parent.remove(obj);
     this.objectMap[id] = null;
+  }
+
+  reset() {
+    for (let i = this.object.children.length - 1; i >= 0; i--) {
+      this.object.children[i].visible = false;
+    }
   }
 }
 

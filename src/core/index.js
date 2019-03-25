@@ -20,9 +20,9 @@ class Core {
     this.object.visible = true;
   }
 
-  destroy() {
+  destroy() {}
 
-  }
+  reset() {}
 
   subscribe() {
     this.topic.subscribe(this.update.bind(this));
@@ -33,6 +33,21 @@ class Core {
   }
 
   update(message) {
+  }
+
+  changeTopic(newTopic) {
+    this.unsubscribe();
+    this.topicName = newTopic;
+
+    this.reset();
+
+    this.topic = new ROSLIB.Topic({
+      ros: this.ros,
+      name: newTopic,
+      messageType: this.messageType,
+    });
+
+    this.subscribe();
   }
 }
 

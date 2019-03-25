@@ -34,7 +34,6 @@ class Arrow extends THREE.Group {
     this.type = OBJECT_TYPE_ARROW;
     this.add(this.cone);
     this.add(this.cylinder);
-    this.rotateX(Math.PI / 2);
   }
 
   setTransform({
