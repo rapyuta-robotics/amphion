@@ -20,7 +20,9 @@ class Core {
     this.object.visible = true;
   }
 
-  destroy() {}
+  destroy() {
+    console.log("destroyed!!");
+  }
 
   reset() {}
 

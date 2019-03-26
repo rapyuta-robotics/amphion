@@ -11,6 +11,7 @@ import {
 import Cylinder from '../primitives/Cylinder';
 import Cone from '../primitives/Cone';
 import { OBJECT_TYPE_ARROW } from '../utils/constants';
+import Axes from './Axes';
 
 class Arrow extends THREE.Group {
   constructor() {
@@ -30,10 +31,12 @@ class Arrow extends THREE.Group {
       z: 0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS
     });
     this.cylinder.translateY(0.375 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
+    this.add(new Axes(0.01, 0.1));
 
     this.type = OBJECT_TYPE_ARROW;
     this.add(this.cone);
     this.add(this.cylinder);
+    this.rotateY(Math.PI / 2);
   }
 
   setTransform({
@@ -46,7 +49,7 @@ class Arrow extends THREE.Group {
     }
   }) {
     this.position.set(posX, posY, posZ);
-    this.quaternion.set(orientX, orientY, orientZ, orientW);
+    this.applyQuaternion(new THREE.Quaternion(orientX, orientY, orientZ, orientW));
   }
 
   setScale({ x, y, z }) {

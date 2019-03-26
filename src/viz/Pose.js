@@ -23,7 +23,7 @@ class Pose extends Core {
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
         newObject = new Arrow();
-        newObject.setScale({ x: 0.1, y: 0.1, z: 0.5 });
+        newObject.setScale({ x: 1, y: 1, z: 1 });
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();

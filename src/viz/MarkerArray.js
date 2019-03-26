@@ -1,3 +1,7 @@
+
+import * as THREE from 'three';
+import ROSLIB from 'roslib';
+
 import Core from '../core';
 import { MESSAGE_TYPE_MARKERARRAY, MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../core/Arrow';
@@ -7,6 +11,8 @@ import Line from '../primitives/Line';
 import Cube from '../primitives/Cube';
 import Sphere from '../primitives/Sphere';
 import Triangle from '../primitives/Triangle';
+import LineSegments from '../primitives/LineSegment';
+import Points from '../primitives/Points';
 
 const getColorHex = (marker) => {
   let color = DEFAULT_COLOR_ARROW;
@@ -29,7 +35,6 @@ class MarkerArray extends Core {
   }
 
   update(message) {
-    console.log(this.topicName);
     if (message.markers.length > 0) {
       message.markers.forEach((marker) => {
         this.types[marker.type] = _.union(
@@ -59,10 +64,10 @@ class MarkerArray extends Core {
         this.drawCylinder(marker);
         break;
       case MARKERARRAY_TYPES.LINE_STRIP:
-        this.drawLineStrip(marker, 15);
+        this.drawLineStrip(marker, 5);
         break;
       case MARKERARRAY_TYPES.LINE_LIST:
-        this.drawLineStrip(marker, 2);
+        this.drawLineList(marker, 5);
         break;
       case MARKERARRAY_TYPES.SPHERE_LIST:
         this.drawSphereList(marker);
@@ -72,6 +77,12 @@ class MarkerArray extends Core {
         break;
       case MARKERARRAY_TYPES.TRIANGLE_LIST:
         this.drawTriangle(marker);
+        break;
+      case MARKERARRAY_TYPES.POINTS:
+        this.drawPoints(marker);
+        break;
+      case MARKERARRAY_TYPES.MESH_RESOURCE:
+        this.drawMesh(marker);
         break;
     }
   }
@@ -140,6 +151,29 @@ class MarkerArray extends Core {
     );
   }
 
+  drawLineList(marker, lineWidth) {
+    const { pose: { position, orientation } } = marker;
+    const id = this.getId(marker);
+
+    if (!this.objectMap[id]) {
+      const color = getColorHex(marker);
+      const line = new LineSegments(color, lineWidth);
+
+      this.objectMap[id] = line;
+      this.object.add(line);
+    }
+
+    if (marker.points.length) {
+      this.objectMap[id].updatePoints(marker.points);
+    }
+
+    this.objectMap[id].visible = true;
+    this.objectMap[id].position.set(position.x, position.y, position.z);
+    this.objectMap[id].quaternion.set(
+      orientation.x, orientation.y, orientation.z, orientation.w
+    );
+  }
+
   drawSphere(marker) {
     const { pose: { position, orientation }, scale } = marker;
     const id = this.getId(marker);
@@ -190,6 +224,27 @@ class MarkerArray extends Core {
     );
   }
 
+  drawPoints(marker) {
+    const { pose: { position, orientation }, scale } = marker;
+    const id = this.getId(marker);
+
+    if (!this.objectMap[id]) {
+      const group = new THREE.Group();
+      const color = getColorHex(marker);
+      const points = new Points(color, marker.points, scale.x);
+
+      group.add(points);
+      this.objectMap[id] = group;
+      this.object.add(group);
+    }
+
+    this.objectMap[id].visible = true;
+    this.objectMap[id].position.set(position.x, position.y, position.z);
+    this.objectMap[id].quaternion.set(
+      orientation.x, orientation.y, orientation.z, orientation.w
+    );
+  }
+
   drawTriangle(marker) {
     const { pose: { position, orientation }, scale } = marker;
     const id = this.getId(marker);
@@ -219,6 +274,20 @@ class MarkerArray extends Core {
     this.objectMap[id].scale.set(
       scale.x, scale.y, scale.z
     );
+  }
+
+  drawMesh(marker) {
+    const param = new ROSLIB.Param({
+      ros: this.ros,
+      name: 'robot_description'
+    });
+
+    param.get((data) =>  {
+      console.log(data);
+      // let urdfModel = new ROSLIB.UrdfModel({
+      //   string : data
+      // });
+    });
   }
 
   removeObject(id) {
