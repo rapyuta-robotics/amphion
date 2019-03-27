@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import * as THREE from 'three';
 
 import Core from '../core';
 import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES } from '../utils/constants';
-import Arrow from '../core/Arrow';
-import Axes from '../core/Axes';
+import Arrow from '../primitives/Arrow';
+import Axes from '../primitives/Axes';
 
 const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,

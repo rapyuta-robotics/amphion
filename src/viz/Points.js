@@ -1,6 +1,3 @@
-import Core from '../core';
-import Mesh from '../primitives/Mesh';
-
 class Points {
   constructor(options = {}) {
     this.max_pts = options.max_pts || 10000;
@@ -8,8 +5,6 @@ class Points {
     this.messageRatio = options.messageRatio || 1;
     this.messageCount = 0;
     this.rootObject = options.rootObject || new THREE.Object3D();
-
-    this.sn = null;
   }
 
   setup(frame, pointStep, fields) {
@@ -27,8 +22,6 @@ class Points {
 
       this.material = new THREE.PointsMaterial({ color: 0x888888, size: 0.1 });
       this.object = new THREE.Points(this.geom, this.material);
-
-      this.frameID = frame;
 
       this.rootObject.add(this.object);
     }

@@ -10,6 +10,7 @@ class Core {
       name: topicName,
       messageType,
     });
+    this.update = this.this.update.bind(this);
   }
 
   hide() {
@@ -27,7 +28,7 @@ class Core {
   reset() {}
 
   subscribe() {
-    this.topic.subscribe(this.update.bind(this));
+    this.topic.subscribe(this.update);
   }
 
   unsubscribe() {

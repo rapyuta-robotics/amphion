@@ -1,5 +1,4 @@
-import * as THREE from 'three';
-import Cylinder from '../primitives/Cylinder';
+import Cylinder from './Cylinder';
 import {
   DEFAULT_COLOR_X_AXIS,
   DEFAULT_COLOR_Y_AXIS,
@@ -7,12 +6,11 @@ import {
   DEFAULT_CYLINDER_HEIGHT
 } from '../utils/defaults';
 import { OBJECT_TYPE_AXES } from '../utils/constants';
+import Group from './Group';
 
-class Axes extends THREE.Group {
+class Axes extends Group {
   constructor(radius, height) {
     super();
-    this.radius = radius;
-    this.height = height;
     this.x = new Cylinder(DEFAULT_COLOR_X_AXIS, radius, height);
     this.y = new Cylinder(DEFAULT_COLOR_Y_AXIS, radius, height);
     this.z = new Cylinder(DEFAULT_COLOR_Z_AXIS, radius, height);
@@ -28,24 +26,6 @@ class Axes extends THREE.Group {
     this.add(this.x);
     this.add(this.y);
     this.add(this.z);
-  }
-
-
-  setTransform({
-    translation: { x: posX, y: posY, z: posZ },
-    rotation: {
-      x: orientX,
-      y: orientY,
-      z: orientZ,
-      w: orientW
-    }
-  }) {
-    this.position.set(posX, posY, posZ);
-    this.quaternion.set(orientX, orientY, orientZ, orientW);
-  }
-
-  setScale({ x, y, z }) {
-    this.scale.set(x, y, z);
   }
 }
 

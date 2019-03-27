@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import Core from '../core';
 import { MESSAGE_TYPE_TF } from '../utils/constants';
-import Axes from '../core/Axes';
+import Axes from '../primitives/Axes';
 
 class Tf extends Core {
   constructor(ros, topicName) {
