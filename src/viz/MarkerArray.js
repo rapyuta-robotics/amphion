@@ -93,11 +93,10 @@ class MarkerArray extends Core {
 
     if (!this.objectMap[id]) {
       const arrow = new Arrow();
-      arrow.setScale({ x: 0.01, y: 0.01, z: 0.05 });
+      arrow.setScale({ x: 0.05, y: 0.01, z: 0.01 });
       arrow.setColor(marker.color);
       this.objectMap[id] = arrow;
       this.object.add(arrow);
-      this.object.rotateX = Math.PI / 3;
     }
     this.objectMap[id].visible = true;
     this.objectMap[id].setTransform({ translation: position, rotation: orientation });
