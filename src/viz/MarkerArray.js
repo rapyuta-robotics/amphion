@@ -88,18 +88,18 @@ class MarkerArray extends Core {
   }
 
   drawArrows(marker) {
-    const { pose: { position, orientation } } = marker;
+    const { pose: { position, orientation }, scale } = marker;
     const id = this.getId(marker);
 
     if (!this.objectMap[id]) {
       const arrow = new Arrow();
-      arrow.setScale({ x: 0.05, y: 0.01, z: 0.01 });
-      arrow.setColor(marker.color);
       this.objectMap[id] = arrow;
       this.object.add(arrow);
     }
     this.objectMap[id].visible = true;
     this.objectMap[id].setTransform({ translation: position, rotation: orientation });
+    this.objectMap[id].setScale({ x: scale.x, y: scale.y, z: scale.z });
+    this.objectMap[id].setColor(marker.color);
   }
 
   drawCylinder(marker) {
