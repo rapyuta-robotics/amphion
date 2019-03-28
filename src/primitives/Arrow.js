@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import {
   DEFAULT_ARROW_HEIGHT,
   DEFAULT_ARROW_RADIUS,
@@ -8,15 +7,17 @@ import {
   DEFAULT_CYLINDER_HEIGHT,
   DEFAULT_CYLINDER_RADIUS,
 } from '../utils/defaults';
-import Cylinder from '../primitives/Cylinder';
-import Cone from '../primitives/Cone';
+import Cylinder from './Cylinder';
+import Cone from './Cone';
 import { OBJECT_TYPE_ARROW } from '../utils/constants';
 import Axes from './Axes';
+import Group from './Group';
 
-class Arrow extends THREE.Group {
+class Arrow extends Group {
   constructor() {
     super();
     this.cone = new Cone(DEFAULT_COLOR_ARROW);
+    this.cone.rotateZ(-Math.PI / 2);
     this.cone.setScale({
       x: DEFAULT_ARROW_RADIUS / DEFAULT_CONE_RADIUS,
       y: 0.25 * DEFAULT_ARROW_HEIGHT / DEFAULT_CONE_HEIGHT,
@@ -25,6 +26,7 @@ class Arrow extends THREE.Group {
     this.cone.translateY(0.875 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
 
     this.cylinder = new Cylinder(DEFAULT_COLOR_ARROW);
+    this.cylinder.rotateZ(-Math.PI / 2);
     this.cylinder.setScale({
       x: 0.5 * DEFAULT_ARROW_RADIUS / DEFAULT_CYLINDER_RADIUS,
       y: DEFAULT_ARROW_HEIGHT * 0.75 / DEFAULT_CYLINDER_HEIGHT,
@@ -36,24 +38,6 @@ class Arrow extends THREE.Group {
     this.type = OBJECT_TYPE_ARROW;
     this.add(this.cone);
     this.add(this.cylinder);
-    this.rotateY(Math.PI / 2);
-  }
-
-  setTransform({
-    translation: { x: posX, y: posY, z: posZ },
-    rotation: {
-      x: orientX,
-      y: orientY,
-      z: orientZ,
-      w: orientW
-    }
-  }) {
-    this.position.set(posX, posY, posZ);
-    this.applyQuaternion(new THREE.Quaternion(orientX, orientY, orientZ, orientW));
-  }
-
-  setScale({ x, y, z }) {
-    this.scale.set(x, y, z);
   }
 
   setColor(color) {

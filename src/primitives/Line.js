@@ -8,6 +8,10 @@ class Line extends THREE.Line {
     this.material = new THREE.LineBasicMaterial({ color, linewidth });
   }
 
+  setColor({ r, g, b }) {
+    this.material.color.setRGB(r, g, b);
+  }
+
   updatePoints(points) {
     this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
     this.geometry.verticesNeedUpdate = true;

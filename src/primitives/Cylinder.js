@@ -1,12 +1,15 @@
 import * as THREE from 'three';
-import { DEFAULT_CYLINDER_RADIUS, DEFAULT_CYLINDER_HEIGHT, DEFAULT_RADIAL_SEGMENTS } from '../utils/defaults';
+import {
+  DEFAULT_CYLINDER_RADIUS,
+  DEFAULT_CYLINDER_HEIGHT,
+  DEFAULT_RADIAL_SEGMENTS,
+  DEFAULT_COLOR_ARROW
+} from '../utils/defaults';
 import Mesh from './Mesh';
 
 class Cylinder extends Mesh {
-  constructor(color, radius = DEFAULT_CYLINDER_RADIUS, height = DEFAULT_CYLINDER_HEIGHT) {
+  constructor(color = DEFAULT_COLOR_ARROW, radius = DEFAULT_CYLINDER_RADIUS, height = DEFAULT_CYLINDER_HEIGHT) {
     super();
-    this.radius = radius;
-    this.height = height;
     this.geometry = new THREE.CylinderGeometry(
       radius,
       radius,
