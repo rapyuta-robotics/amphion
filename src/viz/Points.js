@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 class Points {
   constructor(options = {}) {
     this.max_pts = options.max_pts || 10000;
