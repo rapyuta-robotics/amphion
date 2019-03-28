@@ -10,7 +10,7 @@ class Core {
       name: topicName,
       messageType,
     });
-    this.update = this.this.update.bind(this);
+    this.update = this.update.bind(this);
   }
 
   hide() {

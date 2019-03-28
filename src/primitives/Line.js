@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import _ from 'lodash';
+import * as TransformUtils from '../utils/transform';
 
 class Line extends THREE.Line {
   constructor(color, linewidth = 1) {
@@ -8,8 +9,8 @@ class Line extends THREE.Line {
     this.material = new THREE.LineBasicMaterial({ color, linewidth });
   }
 
-  setColor({ r, g, b }) {
-    this.material.color.setRGB(r, g, b);
+  setColor(colors) {
+    TransformUtils.setColor(this, colors);
   }
 
   updatePoints(points) {
