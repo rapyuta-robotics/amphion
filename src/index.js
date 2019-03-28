@@ -7,6 +7,7 @@ import RobotModel from './viz/RobotModel';
 import PointCloud from './viz/PointCloud';
 import MarkerArray from './viz/MarkerArray';
 import LaserScan from './viz/LaserScan';
+import OccupancyGrid from './viz/OccupancyGrid';
 
 export default {
   DisplayTf,
@@ -17,5 +18,6 @@ export default {
   Tf,
   RobotModel,
   MarkerArray,
-  LaserScan
+  LaserScan,
+  OccupancyGrid
 };
