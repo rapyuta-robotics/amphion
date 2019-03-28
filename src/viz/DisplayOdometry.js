@@ -2,33 +2,36 @@ import _ from 'lodash';
 import Core from '../core';
 import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
-import Group from '../primitives/Group';
+import * as TransformUtils from '../utils/transform';
 
 class DisplayOdometry extends Core {
   constructor(ros, topicName, controlledObject) {
     super(ros, topicName, MESSAGE_TYPE_ODOMETRY);
 
-    this.object = new Group();
+    this.object = null;
     this.setVizType(controlledObject);
   }
 
   setVizType(controlledObject) {
-    let newObject = null;
     if (!_.isNil(controlledObject)) {
-      newObject = controlledObject;
+      this.object = controlledObject;
     } else {
-      newObject = new Arrow();
-      newObject.setScale({ x: 1, y: 1, z: 1 });
+      this.object = new Arrow();
+      this.object.setScale({ x: 1, y: 1, z: 1 });
     }
-    this.object.add(newObject);
   }
 
   update(message) {
-    const { pose: { pose } } = message;
-    this.object.setTransform({
-      translation: pose.position,
-      rotation: pose.orientation
-    });
+    const { pose: { pose: { position, orientation } } } = message;
+    const transform = {
+      translation: position,
+      rotation: orientation
+    };
+    if (!_.isNil(this.object.setTransform)) {
+      this.object.setTransform(transform);
+    } else {
+      TransformUtils.setTransform(this.object, transform);
+    }
   }
 }
 

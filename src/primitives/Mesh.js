@@ -1,25 +1,17 @@
 import * as THREE from 'three';
+import * as TransformUtils from '../utils/transform';
 
 class Mesh extends THREE.Mesh {
-  setTransform({
-    translation: { x: posX, y: posY, z: posZ },
-    rotation: {
-      x: orientX,
-      y: orientY,
-      z: orientZ,
-      w: orientW
-    }
-  }) {
-    this.position.set(posX, posY, posZ);
-    this.quaternion.set(orientX, orientY, orientZ, orientW);
+  setTransform(transform) {
+    TransformUtils.setTransform(this, transform);
   }
 
-  setScale({ x, y, z }) {
-    this.scale.set(x, y, z);
+  setScale(scale) {
+    TransformUtils.setScale(this, scale);
   }
 
-  setColor({ r, g, b }) {
-    this.material.color.setRGB(r, g, b);
+  setColor(colors) {
+    TransformUtils.setColor(this, colors);
   }
 }
 
