@@ -1,3 +1,8 @@
+export const OBJECT_TYPE_ARROW = 'Arrow';
+export const OBJECT_TYPE_AXES = 'Axes';
+
+export const MAX_POINTCLOUD_POINTS = 500000;
+
 export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
 export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
 export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
@@ -9,6 +14,7 @@ export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/Boundi
 export const MESSAGE_TYPE_DISPLAYJOINTSTATE =                'sensor_msgs/JointState';
 export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
 export const MESSAGE_TYPE_DISPLAYTF =                        'tf2_msgs/TFMessage';
+export const MESSAGE_TYPE_TF =                               'tf2_msgs/TFMessage';
 export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
 export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
 export const MESSAGE_TYPE_OCCUPANCYGRID =                    'nav_msgs/OccupancyGrid';
@@ -54,3 +60,18 @@ export const UNSUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_TWISTSTAMPED,
   MESSAGE_TYPE_VECTOR3STAMPED,
 ];
+
+export const MARKERARRAY_TYPES = {
+  ARROW: 0,
+  CUBE: 1,
+  SPHERE: 2,
+  CYLINDER: 3,
+  LINE_STRIP: 4,
+  LINE_LIST: 5,
+  CUBE_LIST: 6,
+  SPHERE_LIST: 7,
+  POINTS: 8,
+  TEXT_VIEW_FACING: 9,
+  MESH_RESOURCE: 10,
+  TRIANGLE_LIST: 11,
+};
