@@ -30,6 +30,7 @@ export const MESSAGE_TYPE_POINTCLOUD2 =                      'sensor_msgs/PointC
 export const MESSAGE_TYPE_RANGE =                            'sensor_msgs/Range';
 export const MESSAGE_TYPE_MARKER =                           'visualization_msgs/Marker';
 export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
+export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
 
 export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_DISPLAYJOINTSTATE,
