@@ -6,7 +6,7 @@ import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES } from '.
 import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 
-const POSE_VIZ_TYPES = {
+export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
   axes: OBJECT_TYPE_AXES,
 };
@@ -19,7 +19,7 @@ class Pose extends Core {
     this.setVizType(POSE_VIZ_TYPES.arrow);
   }
 
-  setVizType(type) {
+  static getNewPrimitive(type) {
     let newObject = null;
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
@@ -30,7 +30,11 @@ class Pose extends Core {
         newObject = new Axes();
         break;
     }
+    return newObject;
+  }
 
+  setVizType(type) {
+    const newObject = Pose.getNewPrimitive(type);
     _.each(this.object.children, (child) => {
       child.parent.remove(child);
     });

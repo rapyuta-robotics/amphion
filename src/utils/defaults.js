@@ -5,7 +5,7 @@ export const DEFAULT_RADIAL_SEGMENTS = 32;
 export const DEFAULT_CONE_HEIGHT = 1;
 export const DEFAULT_CONE_RADIUS = 1;
 
-export const DEFAULT_ARROW_RADIUS = 1;
+export const DEFAULT_ARROW_RADIUS = 0.05;
 export const DEFAULT_ARROW_HEIGHT = 1;
 
 export const DEFAULT_COLOR_X_AXIS = '#ff0000';

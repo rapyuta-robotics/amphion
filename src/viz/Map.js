@@ -7,7 +7,7 @@ import {
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
 
-class OccupancyGrid extends Core {
+class Map extends Core {
   constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID);
     this.object = new Plane();
@@ -35,4 +35,4 @@ class OccupancyGrid extends Core {
   }
 }
 
-export default OccupancyGrid;
+export default Map;
