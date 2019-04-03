@@ -18,7 +18,7 @@ class PoseArray extends Core {
     }
 
     for (let i = this.object.children.length; i < message.poses.length; i++) {
-      this.object.add(Pose.getNewPrimitive(POSE_VIZ_TYPES.arrow));
+      this.object.add(Pose.getNewPrimitive(POSE_VIZ_TYPES.flatArrow));
     }
 
     for (let i = 0; i < message.poses.length; i++) {

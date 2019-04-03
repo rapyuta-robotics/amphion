@@ -1,5 +1,6 @@
 export const OBJECT_TYPE_ARROW = 'Arrow';
 export const OBJECT_TYPE_AXES = 'Axes';
+export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
 export const MAX_POINTCLOUD_POINTS = 500000;
 
