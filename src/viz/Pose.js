@@ -2,13 +2,15 @@ import _ from 'lodash';
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES } from '../utils/constants';
+import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
+import LineArrow from '../primitives/LineArrow';
 
 export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
   axes: OBJECT_TYPE_AXES,
+  flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
 
 class Pose extends Core {
@@ -28,6 +30,9 @@ class Pose extends Core {
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
+        break;
+      case POSE_VIZ_TYPES.flatArrow:
+        newObject = new LineArrow();
         break;
     }
     return newObject;
