@@ -10,7 +10,7 @@ import {
 import Cylinder from './Cylinder';
 import Cone from './Cone';
 import { OBJECT_TYPE_ARROW } from '../utils/constants';
-import Axes from './Axes';
+// import Axes from './Axes';
 import Group from './Group';
 
 class Arrow extends Group {

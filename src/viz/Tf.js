@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import Core from '../core';
 import { MESSAGE_TYPE_TF } from '../utils/constants';
-import Axes from '../primitives/Axes';
+import TfFrame from '../primitives/TfFrame';
 
 class Tf extends Core {
   constructor(ros, topicName) {
@@ -37,8 +37,7 @@ class Tf extends Core {
       return existingFrame;
     }
 
-    const newFrame = new Axes(0.015, 0.25);
-    newFrame.name = frameId;
+    const newFrame = new TfFrame(frameId);
     this.object.add(newFrame);
     return newFrame;
   }
