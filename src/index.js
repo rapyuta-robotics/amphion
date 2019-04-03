@@ -10,6 +10,7 @@ import LaserScan from './viz/LaserScan';
 import Map from './viz/Map';
 import DisplayOdometry from './viz/DisplayOdometry';
 import PoseArray from './viz/PoseArray';
+import Path from './viz/Path';
 
 export default {
   DisplayTf,
@@ -23,5 +24,6 @@ export default {
   MarkerArray,
   LaserScan,
   Map,
-  DisplayOdometry
+  DisplayOdometry,
+  Path,
 };
