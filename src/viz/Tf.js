@@ -17,7 +17,7 @@ class Tf extends Core {
         frame_id: parentFrameId,
       },
       child_frame_id: childFrameId,
-      transform
+      transform,
     }) => {
       const [
         childFrame,
@@ -28,6 +28,10 @@ class Tf extends Core {
       ];
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
+      childFrame.arrow.lookAt(childFrame.position.clone().negate());
+      childFrame.arrow.rotateY(-Math.PI / 2);
+      const arrowLength = childFrame.position.length();
+      childFrame.arrow.scale.setX(arrowLength);
     });
   }
 

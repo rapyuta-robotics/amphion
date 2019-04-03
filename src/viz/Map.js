@@ -11,6 +11,9 @@ class Map extends Core {
   constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID);
     this.object = new Plane();
+    this.object.material.transparent = true;
+    this.object.material.opacity = 0.7;
+    this.object.material.needsUpdate = true;
   }
 
   update(message) {
