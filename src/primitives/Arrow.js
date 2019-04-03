@@ -33,7 +33,6 @@ class Arrow extends Group {
       z: 0.5 * radius / DEFAULT_CYLINDER_RADIUS
     });
     this.cylinder.translateY(0.375 * DEFAULT_ARROW_HEIGHT / DEFAULT_CYLINDER_HEIGHT);
-    // this.add(new Axes(0.01, 0.1));
 
     this.type = OBJECT_TYPE_ARROW;
     this.add(this.cone);
