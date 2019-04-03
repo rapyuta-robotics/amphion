@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import ROSLIB from 'roslib';
-import URDFLoader from 'urdf-loader';
-import { URDFRobot } from 'urdf-loader/src/URDFClasses';
+import URDFLoader from '../lib/URDFLoader';
+import { URDFRobot } from '../lib/URDFClasses';
+
+// const { URDFLoader } = window;
 
 class RobotModel extends URDFLoader {
   constructor(ros, paramName) {
@@ -15,7 +17,9 @@ class RobotModel extends URDFLoader {
 
   load(onComplete = () => {}, options) {
     this.param.get((robotString) => {
-      this.object.copy(super.parse(robotString, options), true);
+      const parsedSourceObject = super.parse(robotString, options);
+      console.log(parsedSourceObject);
+      this.object.copy(parsedSourceObject, true);
       onComplete(this.object);
     });
   }
