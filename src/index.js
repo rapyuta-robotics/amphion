@@ -11,6 +11,7 @@ import Map from './viz/Map';
 import DisplayOdometry from './viz/DisplayOdometry';
 import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
+import Image from './viz/Image';
 
 export default {
   DisplayTf,
@@ -26,4 +27,5 @@ export default {
   Map,
   DisplayOdometry,
   Path,
+  Image
 };
