@@ -2,8 +2,7 @@ import ROSLIB from 'roslib';
 import Core from '../core';
 import { MESSAGE_TYPE_PATH } from '../utils/constants';
 import Group from '../primitives/Group';
-import Cylinder from '../primitives/Cylinder';
-import LineArrow from '../primitives/LineArrow';
+import Line from '../primitives/Line';
 
 class Path extends Core {
   constructor(ros, topicName) {
@@ -12,18 +11,23 @@ class Path extends Core {
   }
 
   update(message) {
+    console.log(message);
     const { poses } = message;
+    const points = [];
 
     poses.forEach((poseData) => {
-      const newObj = new LineArrow();
-      const { pose: { position, orientation } } = poseData;
-
-      newObj.setTransform({
-        translation: position,
-        rotation: orientation,
-      });
-      this.object.add(newObj);
+      const { pose: { position } } = poseData;
+      points.push(position);
     });
+
+    // remove previous line
+    this.object.children.forEach((children) => {
+      this.object.remove(children);
+    });
+
+    const line = new Line(0x00ff00);
+    line.updatePoints(points);
+    this.object.add(line);
   }
 }
 
