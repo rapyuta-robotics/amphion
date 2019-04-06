@@ -16,7 +16,6 @@ class URDFLink extends Object3D {
     super.copy(source, recursive);
     source.children.forEach((child) => {
       if (child.type === 'Mesh') {
-        console.log('Is mesh');
         this.add(child.clone());
       }
     });
