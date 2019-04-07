@@ -31,8 +31,6 @@ class Image extends Core {
 
     ctx.putImageData(imgData, 0, 0);
   }
-
-
 }
 
 export default Image;

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as THREE from 'three';
 import Core from '../core';
 import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
@@ -11,7 +12,12 @@ class DisplayOdometry extends Core {
 
     this.object = null;
     this.objectPool = [];
-    this.keepSize = 2;
+    this.keepSize = 7;
+    this.currentObject = -1;
+    this.tolerance = {
+      position: 0.5,
+      angle: 0.01,
+    };
     this.setVizType(controlledObject);
   }
 
@@ -56,21 +62,48 @@ class DisplayOdometry extends Core {
     this.objectPool = [];
   }
 
+  checkTolerance(position, rotation) {
+    if (this.objectPool.length === 0) {
+      return false;
+    }
+
+    const positionTolerance = this.objectPool[this.currentObject]
+      .position.distanceTo(position) < this.tolerance.position;
+    const angleTolerance = this.objectPool[this.currentObject]
+      .quaternion.angleTo(rotation) < this.tolerance.angle;
+    if (positionTolerance && angleTolerance) {
+      return true;
+    }
+
+    return false;
+  }
+
   update(message) {
     if (!this.keepSize) {
       this.removeAllObjects();
       return;
     }
 
-    const newObject = new Arrow();
-    newObject.setScale({ x: 0.5, y: 0.5, z: 0.5 });
     const { pose: { pose: { position, orientation } } } = message;
     const transform = {
       translation: position,
       rotation: orientation
     };
 
+    const checkTolerance = this.checkTolerance(
+      new THREE.Vector3(position.x, position.y, position.z),
+      new THREE.Quaternion(orientation.x, orientation.y, orientation.z, orientation.w)
+    );
+    if (checkTolerance) {
+      return;
+    }
+
+    const newObject = new Arrow();
+    newObject.setScale({ x: 0.5, y: 0.5, z: 0.5 });
+
     this.objectPool.push(newObject);
+    this.currentObject += 1;
+    this.currentObject = THREE.Math.clamp(this.currentObject, 0, this.keepSize - 1);
     this.object.add(newObject);
     TransformUtils.setTransform(newObject, transform);
 
