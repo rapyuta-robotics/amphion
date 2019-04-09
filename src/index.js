@@ -12,6 +12,7 @@ import DisplayOdometry from './viz/DisplayOdometry';
 import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
+import Marker from './viz/Marker';
 
 export default {
   DisplayTf,
@@ -27,5 +28,6 @@ export default {
   Map,
   DisplayOdometry,
   Path,
-  Image
+  Image,
+  Marker,
 };
