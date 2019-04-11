@@ -44,6 +44,10 @@ class RobotModel extends URDFLoader {
       onComplete(this.object);
     });
   }
+
+  destroy() {
+    this.object.parent.remove(this.object);
+  }
 }
 
 export default RobotModel;

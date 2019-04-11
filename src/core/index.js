@@ -22,7 +22,9 @@ class Core {
   }
 
   destroy() {
-    console.log("destroyed!!");
+    this.unsubscribe();
+    this.object.parent.remove(this.object);
+    this.object = null;
   }
 
   reset() {}
