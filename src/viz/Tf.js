@@ -5,13 +5,15 @@ import { MESSAGE_TYPE_TF } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
 
 class Tf extends Core {
-  constructor(ros, topicName) {
-    super(ros, topicName, MESSAGE_TYPE_TF);
+  constructor(ros, topicName, options, callback) {
+    super(ros, topicName, options.messageType || MESSAGE_TYPE_TF);
 
     this.object = new THREE.Group();
+    this.callback = callback;
   }
 
-  update({ transforms }) {
+  update(message) {
+    const { transforms } = message;
     transforms.forEach(({
       header: {
         frame_id: parentFrameId,
@@ -28,11 +30,15 @@ class Tf extends Core {
       ];
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
-      childFrame.arrow.lookAt(childFrame.position.clone().negate());
+      childFrame.arrow.lookAt(parentFrame.position);
       childFrame.arrow.rotateY(-Math.PI / 2);
       const arrowLength = childFrame.position.length();
       childFrame.arrow.scale.setX(arrowLength);
     });
+
+    if (this.callback) {
+      this.callback(message);
+    }
   }
 
   getFrameOrCreate(frameId) {
@@ -44,7 +50,7 @@ class Tf extends Core {
     const newFrame = new TfFrame(frameId);
     this.object.add(newFrame);
     return newFrame;
-  }
+  } 
 }
 
 export default Tf;

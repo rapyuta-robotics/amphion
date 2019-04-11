@@ -7,6 +7,7 @@ import Sphere from '../primitives/Sphere';
 import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
+import Group from '../primitives/Group';
 
 export default class MarkerManager {
   constructor(rootObject) {

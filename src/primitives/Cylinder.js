@@ -8,7 +8,10 @@ import {
 import Mesh from './Mesh';
 
 class Cylinder extends Mesh {
-  constructor(color = DEFAULT_COLOR_ARROW, radius = DEFAULT_CYLINDER_RADIUS, height = DEFAULT_CYLINDER_HEIGHT) {
+  constructor(
+    color = DEFAULT_COLOR_ARROW,
+    radius = DEFAULT_CYLINDER_RADIUS, height = DEFAULT_CYLINDER_HEIGHT
+  ) {
     super();
     this.geometry = new THREE.CylinderGeometry(
       radius,

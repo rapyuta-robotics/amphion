@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as TransformUtils from '../utils/transform';
 
 class Points extends THREE.Points {
   constructor(points) {
@@ -11,6 +12,10 @@ class Points extends THREE.Points {
       }
     }
     this.material = new THREE.PointsMaterial();
+  }
+
+  setTransform(transform) {
+    TransformUtils.setTransform(this, transform);
   }
 }
 

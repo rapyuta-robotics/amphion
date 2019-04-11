@@ -13,7 +13,7 @@ class TfFrame extends Group {
       .translateX(0.03)
       .translateY(0.03);
     this.add(textObject);
-    this.arrow = new Arrow(0.025);
+    this.arrow = new Arrow(0.01);
     this.add(this.arrow);
     this.name = name;
   }
