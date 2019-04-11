@@ -1,8 +1,8 @@
-import * as THREE from 'three';
 import _ from 'lodash';
 import Core from '../core';
 import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS } from '../utils/constants';
 
+const { THREE } = window;
 
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;

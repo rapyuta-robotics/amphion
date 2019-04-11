@@ -1,15 +1,21 @@
-import * as THREE from 'three';
+import _ from 'lodash';
+import ROSLIB from 'roslib';
+
+const { THREE } = window;
 
 import Core from '../core';
-import { MESSAGE_TYPE_TF } from '../utils/constants';
+import { TF_TOPICS } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
 
 class Tf extends Core {
-  constructor(ros, topicName, options = {}, callback) {
-    super(ros, topicName, options.messageType || MESSAGE_TYPE_TF);
-
+  constructor(ros) {
+    super(ros);
+    this.topic = _.map(TF_TOPICS, ([name, messageType]) => new ROSLIB.Topic({
+      ros,
+      name,
+      messageType,
+    }));
     this.object = new THREE.Group();
-    this.callback = callback;
   }
 
   update(message) {
@@ -31,18 +37,14 @@ class Tf extends Core {
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
       childFrame.arrow.lookAt(parentFrame.position);
-      childFrame.arrow.rotateY(-Math.PI / 2);
+      childFrame.arrow.rotateY(-Math.PI / 2); //.rotateX(Math.PI / 2);
       const arrowLength = childFrame.position.length();
       childFrame.arrow.scale.setX(arrowLength || 0.0001);
     });
-
-    if (this.callback) {
-      this.callback(message);
-    }
   }
 
   getFrameOrCreate(frameId) {
-    const existingFrame = this.object.getObjectByName(frameId);
+    const existingFrame = this.object.getObjectByName(TfFrame.getName(frameId));
     if (existingFrame) {
       return existingFrame;
     }

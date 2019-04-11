@@ -1,5 +1,6 @@
-import * as THREE from 'three';
 import * as TransformUtils from '../utils/transform';
+
+const { THREE } = window;
 
 class Group extends THREE.Group {
   setTransform(transform) {

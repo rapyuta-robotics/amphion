@@ -35,6 +35,13 @@ export const MESSAGE_TYPE_MARKER =                           'visualization_msgs
 export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
 export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
 
+export const TF_TOPICS = [
+  ['/tf', MESSAGE_TYPE_TF],
+  ['/tf', MESSAGE_TYPE_TF2],
+  ['/tf_static', MESSAGE_TYPE_TF],
+  ['/tf_static', MESSAGE_TYPE_TF2],
+];
+
 export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_DISPLAYJOINTSTATE,
   MESSAGE_TYPE_DISPLAYROBOTSTATE,

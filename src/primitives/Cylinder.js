@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import {
   DEFAULT_CYLINDER_RADIUS,
   DEFAULT_CYLINDER_HEIGHT,
@@ -6,6 +5,8 @@ import {
   DEFAULT_COLOR_ARROW
 } from '../utils/defaults';
 import Mesh from './Mesh';
+
+const { THREE } = window;
 
 class Cylinder extends Mesh {
   constructor(

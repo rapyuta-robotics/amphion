@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import * as THREE from 'three';
+
+const { THREE } = window;
 
 import Core from '../core';
 import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';

@@ -1,10 +1,11 @@
 import _ from 'lodash';
-import * as THREE from 'three';
 import Core from '../core';
 import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
+
+const { THREE } = window;
 
 class DisplayOdometry extends Core {
   constructor(ros, topicName, controlledObject) {
@@ -12,11 +13,11 @@ class DisplayOdometry extends Core {
 
     this.object = null;
     this.objectPool = [];
-    this.keepSize = 7;
+    this.keepSize = 100;
     this.currentObject = -1;
     this.tolerance = {
-      position: 0.5,
-      angle: 0.01,
+      position: 0.1,
+      angle: 0.1,
     };
     this.setVizType(controlledObject);
   }

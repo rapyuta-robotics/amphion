@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 import Core from '../core';
 import { MESSAGE_TYPE_MARKERARRAY } from '../utils/constants';
 import Group from '../primitives/Group';

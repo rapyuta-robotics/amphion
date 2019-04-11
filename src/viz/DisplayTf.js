@@ -1,10 +1,18 @@
 import _ from 'lodash';
-import Core from '../core';
-import { MESSAGE_TYPE_DISPLAYTF } from '../utils/constants';
+import ROSLIB from 'roslib';
 
+import Core from '../core';
+import { TF_TOPICS } from '../utils/constants';
+
+const { THREE } = window;
 class DisplayTf extends Core {
-  constructor(ros, topicName, object) {
-    super(ros, topicName, MESSAGE_TYPE_DISPLAYTF);
+  constructor(ros, object) {
+    super(ros);
+    this.topic = _.map(TF_TOPICS, ([name, messageType]) => new ROSLIB.Topic({
+      ros,
+      name,
+      messageType,
+    }));
     this.object = object;
   }
 
@@ -20,20 +28,27 @@ class DisplayTf extends Core {
         },
       },
     }) => {
-      const [trimmedChildFrame, trimmedParentFrame] = [
-        _.trimStart(childFrame, '/'),
-        _.trimStart(parentFrame, '/'),
+      const [childObject, parentObject] = [
+        this.getObjectOrCreate(childFrame),
+        this.getObjectOrCreate(parentFrame),
       ];
 
-      const childObject = this.object.getObjectByName(trimmedChildFrame);
-      const parentObject = this.object.getObjectByName(trimmedParentFrame);
-
-      if (childObject && parentObject) {
-        childObject.position.set(x, y, z);
-        childObject.quaternion.set(rx, ry, rz, rw);
-        parentObject.add(childObject);
-      }
+      childObject.position.set(x, y, z);
+      childObject.quaternion.set(rx, ry, rz, rw);
+      parentObject.add(childObject);
     });
+  }
+
+  getObjectOrCreate(frameId) {
+    const existingFrame = this.object.getObjectByName(frameId);
+    if (existingFrame) {
+      return existingFrame;
+    }
+
+    const newFrame = new THREE.Group();
+    newFrame.name = frameId;
+    this.object.add(newFrame);
+    return newFrame;
   }
 }
 

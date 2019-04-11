@@ -1,5 +1,6 @@
-import * as THREE from 'three';
 import * as TransformUtils from '../utils/transform';
+
+const { THREE } = window;
 
 class Points extends THREE.Points {
   constructor(points) {

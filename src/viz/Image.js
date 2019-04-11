@@ -1,7 +1,7 @@
-import * as THREE from 'three';
 import Core from '../core';
 import { MESSAGE_TYPE_IMAGE } from '../utils/constants';
 
+const { THREE } = window;
 
 class Image extends Core {
   constructor(ros, topicName, imageEle) {

@@ -1,15 +1,16 @@
 import ROSLIB from 'roslib';
+import _ from 'lodash';
 
 class Core {
   constructor(ros, topicName, messageType) {
     this.ros = ros;
     this.topicName = topicName;
     this.messageType = messageType;
-    this.topic = new ROSLIB.Topic({
+    this.topic = topicName ? new ROSLIB.Topic({
       ros,
       name: topicName,
       messageType,
-    });
+    }) : null;
     this.update = this.update.bind(this);
   }
 
@@ -30,11 +31,23 @@ class Core {
   reset() {}
 
   subscribe() {
-    this.topic.subscribe(this.update);
+    if (_.isArray(this.topic)) {
+      _.each(this.topic, (t) => {
+        t.subscribe(this.update);
+      });
+    } else {
+      this.topic.subscribe(this.update);
+    }
   }
 
   unsubscribe() {
-    this.topic.unsubscribe();
+    if (_.isArray(this.topic)) {
+      _.each(this.topic, (t) => {
+        t.unsubscribe();
+      });
+    } else {
+      this.topic.unsubscribe();
+    }
   }
 
   update(message) {

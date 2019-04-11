@@ -1,4 +1,5 @@
-import { Object3D, Quaternion } from 'three';
+const { THREE } = window;
+const { Object3D, Quaternion } = THREE;
 
 class URDFLink extends Object3D {
 

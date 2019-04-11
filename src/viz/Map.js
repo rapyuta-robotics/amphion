@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import Core from '../core';
 import { MESSAGE_TYPE_OCCUPANCYGRID } from '../utils/constants';
 import {
@@ -6,6 +5,8 @@ import {
   populateImageDataFromNavMsg
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
+
+const { THREE } = window;
 
 class Map extends Core {
   constructor(ros, topicName) {

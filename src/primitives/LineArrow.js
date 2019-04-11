@@ -1,8 +1,8 @@
-import * as THREE from 'three';
-import _ from 'lodash';
 import * as TransformUtils from '../utils/transform';
 import Group from './Group';
 import Line from './Line';
+
+const { THREE } = window;
 
 class LineArrow extends Group {
   constructor(color, linewidth = 1) {

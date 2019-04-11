@@ -1,6 +1,7 @@
-import * as THREE from 'three';
 import _ from 'lodash';
 import Mesh from './Mesh';
+
+const { THREE } = window;
 
 class Triangle extends Mesh {
   constructor(sides) {

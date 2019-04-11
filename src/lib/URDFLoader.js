@@ -1,4 +1,3 @@
-// import * as THREE from 'three';
 // import { STLLoader } from 'three/examples/js/loaders/STLLoader';
 // import { ColladaLoader } from 'three/examples/js/loaders/ColladaLoader';
 import { URDFRobot, URDFJoint, URDFLink } from './URDFClasses';
