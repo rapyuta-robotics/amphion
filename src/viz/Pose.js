@@ -14,6 +14,12 @@ export const POSE_VIZ_TYPES = {
   flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
 
+export const SHAFT_LENGTH = 1;
+export const SHAFT_RADIUS = 0.05;
+
+export const HEAD_LENGTH = 0.3;
+export const HEAD_RADIUS = 0.1;
+
 class Pose extends Core {
   constructor(ros, topicName) {
     super(ros, topicName, MESSAGE_TYPE_POSESTAMPED);
@@ -27,7 +33,8 @@ class Pose extends Core {
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
         newObject = new Arrow();
-        newObject.setScale({ x: 1, y: 1, z: 1 });
+        newObject.setHead({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
+        newObject.setShaft({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();

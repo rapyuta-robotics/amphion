@@ -4,6 +4,7 @@ import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
+import { HEAD_LENGTH, HEAD_RADIUS, SHAFT_LENGTH, SHAFT_RADIUS } from './Pose';
 
 const { THREE } = window;
 
@@ -100,7 +101,8 @@ class DisplayOdometry extends Core {
     }
 
     const newObject = new Arrow();
-    newObject.setScale({ x: 0.5, y: 0.5, z: 0.5 });
+    newObject.setShaft({ length: SHAFT_LENGTH, radius: SHAFT_RADIUS });
+    newObject.setHead({ length: HEAD_LENGTH, radius: HEAD_RADIUS });
 
     this.objectPool.push(newObject);
     this.currentObject += 1;

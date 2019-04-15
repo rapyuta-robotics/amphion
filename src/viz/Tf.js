@@ -37,9 +37,10 @@ class Tf extends Core {
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
       childFrame.arrow.lookAt(parentFrame.position);
-      childFrame.arrow.rotateY(-Math.PI / 2); //.rotateX(Math.PI / 2);
-      const arrowLength = childFrame.position.length();
-      childFrame.arrow.scale.setX(arrowLength || 0.0001);
+      childFrame.arrow.rotateY(-Math.PI / 2);
+
+      const arrowConeLength = childFrame.arrow.cone.scale.y;
+      childFrame.arrow.setShaft({ length: childFrame.position.length() - arrowConeLength });
     });
   }
 

@@ -8,7 +8,7 @@ import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
 import Group from '../primitives/Group';
-
+import { SHAFT_LENGTH, SHAFT_RADIUS, HEAD_LENGTH, HEAD_RADIUS } from './Pose';
 export default class MarkerManager {
   constructor(rootObject) {
     this.objectMap = {};
@@ -80,8 +80,12 @@ export default class MarkerManager {
       case MARKERARRAY_TYPES.CUBE_LIST:
         return new Cube();
       case MARKERARRAY_TYPES.ARROW:
-      default:
-        return new Arrow();
+      default: {
+        const arrow = new Arrow();
+        arrow.setHead({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
+        arrow.setShaft({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
+        return arrow;
+      }
     }
   }
 }
