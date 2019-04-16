@@ -17,7 +17,7 @@ class TfFrame extends Group {
     this.add(textObject);
     this.arrow = new Arrow();
     this.arrow.setHead({ length: HEAD_LENGTH / 2, radius: HEAD_RADIUS / 2 });
-    this.arrow.setShaft({ length: SHAFT_LENGTH, radius: SHAFT_RADIUS / 5 });
+    this.arrow.setShaft({ length: SHAFT_LENGTH, radius: SHAFT_RADIUS / 6 });
     this.arrow.setColor({ cone: new THREE.Color('#FF1493'), cylinder: new THREE.Color(DEFAULT_COLOR_ARROW) });
     this.add(this.arrow);
     this.name = TfFrame.getName(frameId);
