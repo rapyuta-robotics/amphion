@@ -52,6 +52,9 @@ class Arrow extends Group {
   }
 
   setHead({ radius, length }) {
+    radius = parseFloat(radius);
+    length = parseFloat(length);
+
     if (radius) {
       const { x, y, z } = this.cone.scale;
       this.cone.setScale({ x: radius, y, z: radius });
@@ -61,11 +64,14 @@ class Arrow extends Group {
       const { x, y, z } = this.cone.scale;
       this.cone.setScale({ x, y: length, z });
       this.cone.position.set(0, 0, 0);
-      this.cone.translateY(this.cylinder.scale.y + length / 2);
+      this.cone.translateY(this.cylinder.scale.y + (length / 2));
     }
   }
 
   setShaft({ radius, length }) {
+    radius = parseFloat(radius);
+    length = parseFloat(length);
+
     if (radius) {
       const { x, y, z } = this.cylinder.scale;
       this.cylinder.setScale({ x: radius, y, z: radius });
@@ -78,6 +84,11 @@ class Arrow extends Group {
       this.cylinder.translateY(length / 2);
       this.setHead({ length: this.cone.scale.y });
     }
+  }
+
+  setAlpha(alpha) {
+    this.cylinder.setAlpha(alpha);
+    this.cone.setAlpha(alpha);
   }
 }
 

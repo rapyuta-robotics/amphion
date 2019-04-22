@@ -39,9 +39,6 @@ class Pose extends Core {
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
         break;
-      case POSE_VIZ_TYPES.flatArrow:
-        newObject = new LineArrow();
-        break;
     }
     return newObject;
   }
@@ -53,6 +50,40 @@ class Pose extends Core {
     });
     this.object.add(newObject);
     Object.setPrototypeOf(this.object, Object.getPrototypeOf(newObject));
+  }
+
+  updateOptions(options) {
+    const { type } = options;
+
+    if (type !== this.object.children[0]) {
+      this.setVizType(type);
+    }
+
+    const currentObjType = this.object.children[0];
+
+    switch (type) {
+      case POSE_VIZ_TYPES.arrow: {
+        const {
+          alpha,
+          shaftLength,
+          shaftRadius,
+          headLength,
+          headRadius
+        } = options;
+
+        currentObjType.setHead({ radius: headRadius, length: headLength });
+        currentObjType.setShaft({ radius: shaftRadius, length: shaftLength });
+        currentObjType.setAlpha(alpha);
+        break;
+      }
+      case POSE_VIZ_TYPES.axes: {
+        const { axesLength, axesRadius, alpha } = options;
+
+        currentObjType.setLength(axesLength);
+        currentObjType.setRadius(axesRadius);
+        break;
+      }
+    }
   }
 
   update(message) {
