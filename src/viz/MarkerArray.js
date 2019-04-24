@@ -4,10 +4,24 @@ import Group from '../primitives/Group';
 import MarkerManager from './MarkerManager';
 
 class MarkerArray extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options) {
     super(ros, topicName, MESSAGE_TYPE_MARKERARRAY);
     this.object = new Group();
     this.markerManager = new MarkerManager(this.object);
+  }
+
+  updateOptions(options) {
+    this.markerManager.updateOptions(options);
+  }
+
+  onChange() {
+    if (this.callback) {
+      this.callback();
+    }
+  }
+
+  setCallback(callback) {
+    this.callback = callback;
   }
 
   update(message) {

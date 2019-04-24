@@ -8,11 +8,19 @@ import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
 import Group from '../primitives/Group';
-import { SHAFT_LENGTH, SHAFT_RADIUS, HEAD_LENGTH, HEAD_RADIUS } from './Pose';
+import {
+  SHAFT_LENGTH,
+  SHAFT_RADIUS,
+  HEAD_LENGTH,
+  HEAD_RADIUS
+} from './Pose';
+
 export default class MarkerManager {
-  constructor(rootObject) {
+  constructor(rootObject, onChangeCb) {
     this.objectMap = {};
     this.object = rootObject;
+    this.namespaces = {};
+    this.onChangeCb = onChangeCb;
   }
 
   getMarkerOrCreate(marker) {
@@ -22,7 +30,29 @@ export default class MarkerManager {
       this.objectMap[id] = object;
       this.object.add(object);
     }
+
+    this.objectMap[id].visible = this.namespaces[marker.ns];
     return this.objectMap[id];
+  }
+
+  extractNameSpace(str) {
+    const tokens = str.split("-");
+    return tokens[0];
+  }
+
+  updateOptions(options) {
+    const { namespaces } = options;
+    let newNamespaces = { ...namespaces };
+    this.namespaces = newNamespaces;
+
+    Object.keys(this.objectMap).forEach((key) => {
+      const namespace = this.extractNameSpace(key);
+      this.objectMap[key].visible = this.namespaces[namespace];
+    });
+  }
+
+  onChange() {
+    this.onChangeCb();
   }
 
   updateMarker(marker) {
@@ -41,6 +71,12 @@ export default class MarkerManager {
     if (markerObject.setColor) {
       markerObject.setColor(marker.color);
     }
+
+    const { ns } = marker;
+    if (!this.namespaces.hasOwnProperty(ns)) {
+      this.namespaces[ns] = true;
+      this.onChange();
+    }
   }
 
   removeObject(id) {
@@ -50,6 +86,9 @@ export default class MarkerManager {
   }
 
   reset() {
+    this.namespaces = {};
+    this.onChange();
+
     Object.keys(this.objectMap).forEach((id) => {
       this.removeObject(id);
     });
