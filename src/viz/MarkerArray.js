@@ -5,13 +5,16 @@ import MarkerManager from './MarkerManager';
 
 class MarkerArray extends Core {
   constructor(ros, topicName, options) {
-    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY);
+    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, options);
+
+    const { queueSize } = options;
     this.object = new Group();
     this.markerManager = new MarkerManager(this.object);
+    this.queueSize = queueSize;
   }
 
   updateOptions(options) {
-    this.markerManager.updateOptions(options);
+    this.markerManager.updateOptions(options, this);
   }
 
   onChange() {

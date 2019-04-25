@@ -14,6 +14,7 @@ import {
   HEAD_LENGTH,
   HEAD_RADIUS
 } from './Pose';
+import ROSLIB from 'roslib';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -40,7 +41,29 @@ export default class MarkerManager {
     return tokens[0];
   }
 
-  updateOptions(options) {
+  setQueueSize(queueSize, context) {
+    context.unsubscribe();
+
+    context.queueSize = queueSize;
+
+    context.topic = new ROSLIB.Topic({
+      ros: context.ros,
+      name: context.topicName,
+      messageType: context.messageType,
+      queue_size: queueSize,
+    });
+
+    context.subscribe();
+  }
+
+  updateOptions(options, context) {
+    const { queueSize } = options;
+    const { queueSize: currentQueueSize } = context;
+
+    if (currentQueueSize != queueSize) {
+      this.setQueueSize(queueSize, context);
+    }
+
     const { namespaces } = options;
     let newNamespaces = { ...namespaces };
     this.namespaces = newNamespaces;

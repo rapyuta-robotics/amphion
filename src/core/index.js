@@ -2,7 +2,8 @@ import ROSLIB from 'roslib';
 import _ from 'lodash';
 
 class Core {
-  constructor(ros, topicName, messageType) {
+  constructor(ros, topicName, messageType, options) {
+    const { queueSize } = options || {};
     this.ros = ros;
     this.topicName = topicName;
     this.messageType = messageType;
@@ -10,6 +11,7 @@ class Core {
       ros,
       name: topicName,
       messageType,
+      queue_size: queueSize,
     }) : null;
     this.update = this.update.bind(this);
   }
