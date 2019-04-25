@@ -22,6 +22,10 @@ class LineArrow extends Group {
     this.scale.set(0.1, 0.1, 0.1);
   }
 
+  setLength(length) {
+    this.scale.set(length, length, length);
+  }
+
   setColor(colors) {
     TransformUtils.setColor(this, colors);
   }

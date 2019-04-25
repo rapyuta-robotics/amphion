@@ -6,19 +6,62 @@ import * as TransformUtils from '../utils/transform';
 const { THREE } = window;
 
 class PoseArray extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options) {
     super(ros, topicName, MESSAGE_TYPE_POSEARRAY);
     this.object = new THREE.Group();
+    this.options = options || {};
+  }
+
+  updateShapeDimensions(object) {
+    const { type } = this.options;
+
+    switch (type) {
+      case POSE_VIZ_TYPES.arrow: {
+        const {
+          alpha,
+          shaftLength,
+          shaftRadius,
+          headLength,
+          headRadius
+        } = this.options;
+
+        object.setHead({ radius: headRadius, length: headLength });
+        object.setShaft({ radius: shaftRadius, length: shaftLength });
+        object.setAlpha(alpha);
+        break;
+      }
+      case POSE_VIZ_TYPES.axes: {
+        const { axesLength, axesRadius } = this.options;
+
+        object.setLength(axesLength);
+        object.setRadius(axesRadius);
+        break;
+      }
+      case POSE_VIZ_TYPES.flatArrow: {
+        const { arrowLength } = this.options;
+
+        object.setLength(arrowLength);
+        break;
+      }
+    }
+  }
+
+  updateOptions(options) {
+    const newOptions = { ...options };
+    this.options = newOptions;
   }
 
   update(message) {
-    for (let i = this.object.children.length - 1; i >= message.poses.length; i -= 1) {
-      const child = this.object.children[i];
-      child.parent.remove(child);
-    }
+    const { type } = this.options;
 
-    for (let i = this.object.children.length; i < message.poses.length; i++) {
-      this.object.add(Pose.getNewPrimitive(POSE_VIZ_TYPES.flatArrow));
+    this.object.children.forEach((obj, index) => {
+      obj.parent.remove(obj);
+      // delete this.object.children[index];
+    });
+    this.object.children = [];
+
+    for (let i = 0; i < message.poses.length; i++) {
+      this.object.add(Pose.getNewPrimitive(type));
     }
 
     for (let i = 0; i < message.poses.length; i++) {
@@ -26,6 +69,7 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
+      this.updateShapeDimensions(this.object.children[i]);
     }
   }
 }

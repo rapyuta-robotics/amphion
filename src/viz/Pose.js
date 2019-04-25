@@ -39,6 +39,9 @@ class Pose extends Core {
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
         break;
+      case POSE_VIZ_TYPES.flatArrow:
+        newObject = new LineArrow();
+        break;
     }
     return newObject;
   }
