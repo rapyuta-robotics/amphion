@@ -18,6 +18,7 @@ class PoseArray extends Core {
     switch (type) {
       case POSE_VIZ_TYPES.arrow: {
         const {
+          color,
           alpha,
           shaftLength,
           shaftRadius,
@@ -28,6 +29,7 @@ class PoseArray extends Core {
         object.setHead({ radius: headRadius, length: headLength });
         object.setShaft({ radius: shaftRadius, length: shaftLength });
         object.setAlpha(alpha);
+        object.setColor({cone: new THREE.Color(color), cylinder: new THREE.Color(color)});
         break;
       }
       case POSE_VIZ_TYPES.axes: {
@@ -38,9 +40,10 @@ class PoseArray extends Core {
         break;
       }
       case POSE_VIZ_TYPES.flatArrow: {
-        const { arrowLength } = this.options;
+        const { arrowLength, color } = this.options;
 
         object.setLength(arrowLength);
+        object.setColor(new THREE.Color(color));
         break;
       }
     }
@@ -52,15 +55,13 @@ class PoseArray extends Core {
   }
 
   update(message) {
-    const { type } = this.options;
-
     this.object.children.forEach((obj, index) => {
       obj.parent.remove(obj);
     });
     this.object.children = [];
 
     for (let i = 0; i < message.poses.length; i++) {
-      this.object.add(Pose.getNewPrimitive(type));
+      this.object.add(Pose.getNewPrimitive(this.options));
     }
 
     for (let i = 0; i < message.poses.length; i++) {

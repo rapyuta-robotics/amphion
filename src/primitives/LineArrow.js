@@ -26,8 +26,10 @@ class LineArrow extends Group {
     this.scale.set(length, length, length);
   }
 
-  setColor(colors) {
-    TransformUtils.setColor(this, colors);
+  setColor(color) {
+    const { r, g, b } = color;
+    this.arrowTop.material.color.setRGB(r, g, b);
+    this.arrowLength.material.color.setRGB(r, g, b);
   }
 }
 
