@@ -7,10 +7,12 @@ class Marker extends Core {
   constructor(ros, topicName, options) {
     super(ros, topicName, MESSAGE_TYPE_MARKER, options);
 
-    const { queueSize } = options;
     this.object = new Group();
     this.onChange = this.onChange.bind(this);
+
+    const { queueSize } = options;
     this.markerManager = new MarkerManager(this.object, this.onChange);
+    this.queueSize = queueSize;
   }
 
   updateOptions(options) {

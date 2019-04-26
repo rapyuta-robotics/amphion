@@ -56,7 +56,6 @@ class PoseArray extends Core {
 
     this.object.children.forEach((obj, index) => {
       obj.parent.remove(obj);
-      // delete this.object.children[index];
     });
     this.object.children = [];
 

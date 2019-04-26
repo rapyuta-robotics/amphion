@@ -17,7 +17,6 @@ class DisplayTf extends Core {
   }
 
   update(message) {
-    super.update(message);
     message.transforms.forEach(({
       child_frame_id: childFrame,
       header: { frame_id: parentFrame },

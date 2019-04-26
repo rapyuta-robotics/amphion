@@ -43,6 +43,10 @@ class Core {
   }
 
   unsubscribe() {
+    if (!this.topic) {
+      return;
+    }
+
     if (_.isArray(this.topic)) {
       _.each(this.topic, (t) => {
         t.unsubscribe();
@@ -57,6 +61,7 @@ class Core {
 
   changeTopic(newTopic) {
     this.unsubscribe();
+
     this.topicName = newTopic;
 
     this.reset();
