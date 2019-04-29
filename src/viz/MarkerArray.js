@@ -4,7 +4,7 @@ import Group from '../primitives/Group';
 import MarkerManager from './MarkerManager';
 
 class MarkerArray extends Core {
-  constructor(ros, topicName, options) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, options);
 
     this.object = new Group();
@@ -25,7 +25,7 @@ class MarkerArray extends Core {
     }
   }
 
-  setCallback(callback) {
+  onNamespaceChange(callback) {
     this.callback = callback;
   }
 

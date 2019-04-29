@@ -8,6 +8,7 @@ import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
 import { DEFAULT_COLOR_X_AXIS } from '../utils/defaults';
+import { setObjectDimension } from '../utils/helpers';
 
 export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
@@ -22,9 +23,9 @@ export const HEAD_LENGTH = 0.3;
 export const HEAD_RADIUS = 0.1;
 
 class Pose extends Core {
-  constructor(ros, topicName, options) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_POSESTAMPED);
-    this.options = options || {};
+    this.options = options;
     this.object = new THREE.Group();
     this.setVizType(POSE_VIZ_TYPES.arrow);
   }
@@ -44,18 +45,6 @@ class Pose extends Core {
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
         newObject = new Arrow();
-        newObject.setHead({
-          radius: headRadius || HEAD_RADIUS,
-          length: headLength || HEAD_LENGTH
-        });
-        newObject.setShaft({
-          radius: shaftRadius || SHAFT_RADIUS,
-          length: shaftLength || SHAFT_LENGTH
-        });
-        newObject.setAlpha(alpha || 1);
-        if (color) {
-          newObject.setColor({ cone: new THREE.Color(color), cylinder: new THREE.Color(color) });
-        }
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
@@ -64,6 +53,9 @@ class Pose extends Core {
         newObject = new LineArrow();
         break;
     }
+
+    setObjectDimension(newObject, options);
+
     return newObject;
   }
 
@@ -77,39 +69,16 @@ class Pose extends Core {
   }
 
   updateOptions(options) {
+    this.options = options;
+
     const { type } = options;
+    const currentObjType = this.object.children[0];
 
     if (type !== this.object.children[0]) {
       this.setVizType(type);
     }
 
-    const currentObjType = this.object.children[0];
-
-    switch (type) {
-      case POSE_VIZ_TYPES.arrow: {
-        const {
-          color,
-          alpha,
-          shaftLength,
-          shaftRadius,
-          headLength,
-          headRadius
-        } = options;
-
-        currentObjType.setHead({ radius: headRadius, length: headLength });
-        currentObjType.setShaft({ radius: shaftRadius, length: shaftLength });
-        currentObjType.setAlpha(alpha);
-        currentObjType.setColor({ cone: new THREE.Color(color), cylinder: new THREE.Color(color) });
-        break;
-      }
-      case POSE_VIZ_TYPES.axes: {
-        const { axesLength, axesRadius, alpha } = options;
-
-        currentObjType.setLength(axesLength);
-        currentObjType.setRadius(axesRadius);
-        break;
-      }
-    }
+    setObjectDimension(currentObjType, options);
   }
 
   update(message) {

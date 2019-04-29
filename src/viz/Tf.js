@@ -8,7 +8,7 @@ import { TF_TOPICS } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
 
 class Tf extends Core {
-  constructor(ros) {
+  constructor(ros, options = {}) {
     super(ros);
     this.topic = _.map(TF_TOPICS, ([name, messageType]) => new ROSLIB.Topic({
       ros,
@@ -16,7 +16,6 @@ class Tf extends Core {
       messageType,
     }));
     this.object = new THREE.Group();
-    this.object.name = 'temp';
   }
 
   update(message) {
@@ -46,7 +45,9 @@ class Tf extends Core {
         childFrame.arrow.rotateY(-Math.PI / 2);
 
         const arrowConeLength = childFrame.arrow.cone.scale.y;
-        childFrame.arrow.setShaft({ length: childFrame.position.length() - arrowConeLength });
+        childFrame.arrow.setShaftDimensions({
+          length: childFrame.position.length() - arrowConeLength
+        });
       }
     });
   }

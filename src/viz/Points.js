@@ -1,3 +1,5 @@
+import Group from '../primitives/Group'
+
 const { THREE } = window;
 
 class Points {
@@ -24,7 +26,6 @@ class Points {
 
       this.material = new THREE.PointsMaterial({ color: 0x888888, size: 0.1 });
       this.object = new THREE.Points(this.geom, this.material);
-
       this.rootObject.add(this.object);
     }
     return (this.messageCount++ % this.messageRatio) === 0;

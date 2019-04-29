@@ -2,51 +2,15 @@ import Core from '../core';
 import { MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
 import Pose, { POSE_VIZ_TYPES } from './Pose';
 import * as TransformUtils from '../utils/transform';
+import { setObjectDimension } from '../utils/helpers';
 
 const { THREE } = window;
 
 class PoseArray extends Core {
-  constructor(ros, topicName, options) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_POSEARRAY);
     this.object = new THREE.Group();
-    this.options = options || {};
-  }
-
-  updateShapeDimensions(object) {
-    const { type } = this.options;
-
-    switch (type) {
-      case POSE_VIZ_TYPES.arrow: {
-        const {
-          color,
-          alpha,
-          shaftLength,
-          shaftRadius,
-          headLength,
-          headRadius
-        } = this.options;
-
-        object.setHead({ radius: headRadius, length: headLength });
-        object.setShaft({ radius: shaftRadius, length: shaftLength });
-        object.setAlpha(alpha);
-        object.setColor({cone: new THREE.Color(color), cylinder: new THREE.Color(color)});
-        break;
-      }
-      case POSE_VIZ_TYPES.axes: {
-        const { axesLength, axesRadius } = this.options;
-
-        object.setLength(axesLength);
-        object.setRadius(axesRadius);
-        break;
-      }
-      case POSE_VIZ_TYPES.flatArrow: {
-        const { arrowLength, color } = this.options;
-
-        object.setLength(arrowLength);
-        object.setColor(new THREE.Color(color));
-        break;
-      }
-    }
+    this.options = options;
   }
 
   updateOptions(options) {
@@ -69,7 +33,7 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
-      this.updateShapeDimensions(this.object.children[i]);
+      setObjectDimension(this.object.children[i], options);
     }
   }
 }

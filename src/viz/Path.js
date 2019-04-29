@@ -5,8 +5,9 @@ import Group from '../primitives/Group';
 import Line from '../primitives/Line';
 
 class Path extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_PATH);
+    this.options = options;
     this.object = new Group();
   }
 

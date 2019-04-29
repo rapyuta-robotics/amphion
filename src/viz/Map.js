@@ -9,8 +9,9 @@ import Plane from '../primitives/Plane';
 const { THREE } = window;
 
 class Map extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID);
+    this.options = options;
     this.object = new Plane();
     this.object.material.transparent = true;
     this.object.material.opacity = 0.7;

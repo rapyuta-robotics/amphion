@@ -144,8 +144,8 @@ export default class MarkerManager {
       case MARKERARRAY_TYPES.ARROW:
       default: {
         const arrow = new Arrow();
-        arrow.setHead({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
-        arrow.setShaft({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
+        arrow.setHeadDimensions({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
+        arrow.setShaftDimensions({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
         return arrow;
       }
     }
