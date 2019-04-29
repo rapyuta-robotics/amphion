@@ -6,6 +6,7 @@ const { THREE } = window;
 import Core from '../core';
 import { TF_TOPICS } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
+import { Vector3 } from 'three';
 
 class Tf extends Core {
   constructor(ros, options = {}) {
@@ -38,10 +39,10 @@ class Tf extends Core {
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
 
-      if (childFrame.position.length() < 0.01) {
+      if (childFrame.position.length() < 0.1) {
         childFrame.arrow.visible = false;
       } else {
-        childFrame.arrow.lookAt(parentFrame.position);
+        childFrame.arrow.lookAt(parentFrame.getWorldPosition(new Vector3()));
         childFrame.arrow.rotateY(-Math.PI / 2);
 
         const arrowConeLength = childFrame.arrow.cone.scale.y;
