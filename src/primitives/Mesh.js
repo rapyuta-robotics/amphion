@@ -14,6 +14,10 @@ class Mesh extends THREE.Mesh {
   setColor(colors) {
     TransformUtils.setColor(this, colors);
   }
+
+  setAlpha(alpha) {
+    this.material.opacity = THREE.Math.clamp(alpha, 0, 1);
+  }
 }
 
 export default Mesh;

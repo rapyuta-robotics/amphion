@@ -6,9 +6,10 @@ const { THREE } = window;
 import Core from '../core';
 import { TF_TOPICS } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
+import { Vector3 } from 'three';
 
 class Tf extends Core {
-  constructor(ros) {
+  constructor(ros, options = {}) {
     super(ros);
     this.topic = _.map(TF_TOPICS, ([name, messageType]) => new ROSLIB.Topic({
       ros,
@@ -16,7 +17,6 @@ class Tf extends Core {
       messageType,
     }));
     this.object = new THREE.Group();
-    this.object.name = 'temp';
   }
 
   update(message) {
@@ -39,14 +39,16 @@ class Tf extends Core {
       parentFrame.add(childFrame);
       childFrame.setTransform(transform);
 
-      if (childFrame.position.length() < 0.01) {
+      if (childFrame.position.length() < 0.1) {
         childFrame.arrow.visible = false;
       } else {
-        childFrame.arrow.lookAt(parentFrame.position);
+        childFrame.arrow.lookAt(parentFrame.getWorldPosition(new Vector3()));
         childFrame.arrow.rotateY(-Math.PI / 2);
 
         const arrowConeLength = childFrame.arrow.cone.scale.y;
-        childFrame.arrow.setShaft({ length: childFrame.position.length() - arrowConeLength });
+        childFrame.arrow.setShaftDimensions({
+          length: childFrame.position.length() - arrowConeLength
+        });
       }
     });
   }

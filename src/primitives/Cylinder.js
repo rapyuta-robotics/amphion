@@ -21,6 +21,7 @@ class Cylinder extends Mesh {
       DEFAULT_RADIAL_SEGMENTS
     );
     this.material = new THREE.MeshStandardMaterial({ color });
+    this.material.transparent = true;
     this.rotateX(Math.PI / 2);
   }
 }

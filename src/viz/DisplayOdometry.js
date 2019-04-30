@@ -4,23 +4,22 @@ import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
-import { HEAD_LENGTH, HEAD_RADIUS, SHAFT_LENGTH, SHAFT_RADIUS } from './Pose';
+import { HEAD_LENGTH, HEAD_RADIUS, POSE_VIZ_TYPES, SHAFT_LENGTH, SHAFT_RADIUS } from './Pose';
+import Axes from '../primitives/Axes';
+import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
 
 const { THREE } = window;
 
 class DisplayOdometry extends Core {
-  constructor(ros, topicName, controlledObject) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_ODOMETRY);
 
     this.object = null;
     this.objectPool = [];
     this.keepSize = 100;
     this.currentObject = -1;
-    this.tolerance = {
-      position: 0.1,
-      angle: 0.1,
-    };
-    this.setVizType(controlledObject);
+    this.options = options;
+    this.setVizType(options.controlledObject);
   }
 
   setVizType(controlledObject) {
@@ -35,7 +34,6 @@ class DisplayOdometry extends Core {
     let newKeepList = [];
 
     if (size === 0) {
-      this.removeAllObjects();
       this.keepSize = 0;
       return;
     }
@@ -64,20 +62,76 @@ class DisplayOdometry extends Core {
     this.objectPool = [];
   }
 
-  checkTolerance(position, rotation) {
+  checkToleranceThresholdExceed(newPose) {
     if (this.objectPool.length === 0) {
-      return false;
-    }
-
-    const positionTolerance = this.objectPool[this.currentObject]
-      .position.distanceTo(position) < this.tolerance.position;
-    const angleTolerance = this.objectPool[this.currentObject]
-      .quaternion.angleTo(rotation) < this.tolerance.angle;
-    if (positionTolerance && angleTolerance) {
       return true;
     }
 
-    return false;
+    const oldPose = {
+      position: this.objectPool[this.currentObject].position,
+      quaternion: this.objectPool[this.currentObject].quaternion,
+    };
+
+    return checkToleranceThresholdExceed(oldPose, newPose, this.options);
+  }
+
+  getObject() {
+    const { type } = this.options;
+    switch (type) {
+      case POSE_VIZ_TYPES.arrow:
+        return new Arrow();
+      case POSE_VIZ_TYPES.axes:
+        return new Axes();
+    }
+
+    return new THREE.Object3D();
+  }
+
+  changeObjectPoolType() {
+    const tempObjectPool = [];
+
+    // remove prev type objects and push the new ones in place of them.
+    this.objectPool.forEach((object, index) => {
+      const { position, quaternion } = object;
+      object.parent.remove(object);
+      delete this.objectPool[index];
+
+      const newObj = this.getObject();
+      newObj.position.set(position.x, position.y, position.z);
+      newObj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+      tempObjectPool.push(newObj);
+      this.object.add(newObj);
+      setObjectDimension(newObj, this.options);
+    });
+
+    this.objectPool = tempObjectPool;
+  }
+
+  updateOptions(options) {
+    const { type: currentType } = this.options;
+    const {
+      type,
+      positionTolerance,
+      angleTolerance,
+      keep,
+      alpha,
+      shaftLength,
+      shaftRadius,
+      headLength,
+      headRadius
+    } = options;
+
+    this.options = options;
+
+    if (type !== currentType) {
+      this.changeObjectPoolType();
+    }
+
+    this.objectPool.forEach((object) => {
+      setObjectDimension(object, this.options);
+    });
+
+    this.setKeepSize(keep);
   }
 
   update(message) {
@@ -92,32 +146,31 @@ class DisplayOdometry extends Core {
       rotation: orientation
     };
 
-    const checkTolerance = this.checkTolerance(
-      new THREE.Vector3(position.x, position.y, position.z),
-      new THREE.Quaternion(orientation.x, orientation.y, orientation.z, orientation.w)
-    );
-    if (checkTolerance) {
-      return;
-    }
+    const newPose = {
+      position: new THREE.Vector3(position.x, position.y, position.z),
+      quaternion: new THREE.Quaternion(orientation.x, orientation.y, orientation.z, orientation.w),
+    };
+    const toleranceThresholdExceed = this.checkToleranceThresholdExceed(newPose);
 
-    const newObject = new Arrow();
-    newObject.setShaft({ length: SHAFT_LENGTH, radius: SHAFT_RADIUS });
-    newObject.setHead({ length: HEAD_LENGTH, radius: HEAD_RADIUS });
+    if (toleranceThresholdExceed) {
+      const newObject = this.getObject();
+      setObjectDimension(newObject, this.options);
 
-    this.objectPool.push(newObject);
-    this.currentObject += 1;
-    this.currentObject = THREE.Math.clamp(this.currentObject, 0, this.keepSize - 1);
-    this.object.add(newObject);
-    TransformUtils.setTransform(newObject, transform);
+      this.objectPool.push(newObject);
+      this.currentObject += 1;
+      this.currentObject = THREE.Math.clamp(this.currentObject, 0, this.keepSize - 1);
+      this.object.add(newObject);
+      TransformUtils.setTransform(newObject, transform);
 
-    // remove excess object from object pool wrt to keepsize
-    if (this.objectPool.length > this.keepSize) {
-      const objToRemove = this.objectPool[0];
-      this.object.remove(objToRemove);
-      delete this.objectPool[0];
+      // remove excess object from object pool wrt to keepsize
+      if (this.objectPool.length > this.keepSize) {
+        const objToRemove = this.objectPool[0];
+        this.object.remove(objToRemove);
+        delete this.objectPool[0];
 
-      const newObjectPool = this.objectPool.slice(1);
-      this.objectPool = [...newObjectPool];
+        const newObjectPool = this.objectPool.slice(1);
+        this.objectPool = [...newObjectPool];
+      }
     }
   }
 }

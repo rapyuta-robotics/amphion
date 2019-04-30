@@ -27,6 +27,26 @@ class Axes extends Group {
     this.add(this.y);
     this.add(this.z);
   }
+
+  setLength(length) {
+    length = parseFloat(length);
+    this.children.forEach((child) => {
+      const { x, y, z } = child.scale;
+      child.position.set(0, 0, 0);
+      child.scale.set(x, length, z);
+    });
+
+    this.x.translateY(length / 2);
+    this.y.translateY(-length / 2);
+    this.z.translateY(length / 2);
+  }
+
+  setRadius(radius) {
+    this.children.forEach((child) => {
+      const { x, y, z } = child.scale;
+      child.scale.set(parseFloat(radius), y, parseFloat(radius));
+    });
+  }
 }
 
 export default Axes;

@@ -2,23 +2,30 @@ import Core from '../core';
 import { MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
 import Pose, { POSE_VIZ_TYPES } from './Pose';
 import * as TransformUtils from '../utils/transform';
+import { setObjectDimension } from '../utils/helpers';
 
 const { THREE } = window;
 
 class PoseArray extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_POSEARRAY);
     this.object = new THREE.Group();
+    this.options = options;
+  }
+
+  updateOptions(options) {
+    const newOptions = { ...options };
+    this.options = newOptions;
   }
 
   update(message) {
-    for (let i = this.object.children.length - 1; i >= message.poses.length; i -= 1) {
-      const child = this.object.children[i];
-      child.parent.remove(child);
-    }
+    this.object.children.forEach((obj, index) => {
+      obj.parent.remove(obj);
+    });
+    this.object.children = [];
 
-    for (let i = this.object.children.length; i < message.poses.length; i++) {
-      this.object.add(Pose.getNewPrimitive(POSE_VIZ_TYPES.flatArrow));
+    for (let i = 0; i < message.poses.length; i++) {
+      this.object.add(Pose.getNewPrimitive(this.options));
     }
 
     for (let i = 0; i < message.poses.length; i++) {
@@ -26,6 +33,7 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
+      setObjectDimension(this.object.children[i], options);
     }
   }
 }

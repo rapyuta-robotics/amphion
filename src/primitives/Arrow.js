@@ -51,33 +51,44 @@ class Arrow extends Group {
     }
   }
 
-  setHead({ radius, length }) {
-    if (radius) {
-      const { x, y, z } = this.cone.scale;
+  setHeadDimensions({ radius, length }) {
+    const parsedRadius = parseFloat(radius);
+    const parsedLength = parseFloat(length);
+
+    if (parsedRadius) {
+      const { y } = this.cone.scale;
       this.cone.setScale({ x: radius, y, z: radius });
     }
 
-    if (length) {
-      const { x, y, z } = this.cone.scale;
-      this.cone.setScale({ x, y: length, z });
+    if (parsedLength) {
+      const { x, z } = this.cone.scale;
+      this.cone.setScale({ x, y: parsedLength, z });
       this.cone.position.set(0, 0, 0);
-      this.cone.translateY(this.cylinder.scale.y + length / 2);
+      this.cone.translateY(this.cylinder.scale.y + (parsedLength / 2));
     }
   }
 
-  setShaft({ radius, length }) {
+  setShaftDimensions({ radius, length }) {
+    const parsedRadius = parseFloat(radius);
+    const parsedLength = parseFloat(length);
+
     if (radius) {
-      const { x, y, z } = this.cylinder.scale;
-      this.cylinder.setScale({ x: radius, y, z: radius });
+      const { y } = this.cylinder.scale;
+      this.cylinder.setScale({ x: parsedRadius, y, z: parsedRadius });
     }
 
     if (length) {
-      const { x, y, z } = this.cylinder.scale;
-      this.cylinder.setScale({ x, y: length, z });
+      const { x, z } = this.cylinder.scale;
+      this.cylinder.setScale({ x, y: parsedLength, z });
       this.cylinder.position.set(0, 0, 0);
-      this.cylinder.translateY(length / 2);
-      this.setHead({ length: this.cone.scale.y });
+      this.cylinder.translateY(parsedLength / 2);
+      this.setHeadDimensions({ length: this.cone.scale.y });
     }
+  }
+
+  setAlpha(alpha) {
+    this.cylinder.setAlpha(alpha);
+    this.cone.setAlpha(alpha);
   }
 }
 

@@ -7,6 +7,8 @@ import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_T
 import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
+import { DEFAULT_COLOR_X_AXIS } from '../utils/defaults';
+import { setObjectDimension } from '../utils/helpers';
 
 export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
@@ -21,20 +23,28 @@ export const HEAD_LENGTH = 0.3;
 export const HEAD_RADIUS = 0.1;
 
 class Pose extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_POSESTAMPED);
-
+    this.options = options;
     this.object = new THREE.Group();
     this.setVizType(POSE_VIZ_TYPES.arrow);
   }
 
-  static getNewPrimitive(type) {
+  static getNewPrimitive(options) {
+    const {
+      color,
+      alpha,
+      shaftLength,
+      shaftRadius,
+      headLength,
+      headRadius,
+      type
+    } = options;
     let newObject = null;
+
     switch (type) {
       case POSE_VIZ_TYPES.arrow:
         newObject = new Arrow();
-        newObject.setHead({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
-        newObject.setShaft({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
         break;
       case POSE_VIZ_TYPES.axes:
         newObject = new Axes();
@@ -43,16 +53,32 @@ class Pose extends Core {
         newObject = new LineArrow();
         break;
     }
+
+    setObjectDimension(newObject, options);
+
     return newObject;
   }
 
   setVizType(type) {
-    const newObject = Pose.getNewPrimitive(type);
+    const newObject = Pose.getNewPrimitive(this.options);
     _.each(this.object.children, (child) => {
       child.parent.remove(child);
     });
     this.object.add(newObject);
     Object.setPrototypeOf(this.object, Object.getPrototypeOf(newObject));
+  }
+
+  updateOptions(options) {
+    this.options = options;
+
+    const { type } = options;
+    const currentObjType = this.object.children[0];
+
+    if (type !== this.object.children[0]) {
+      this.setVizType(type);
+    }
+
+    setObjectDimension(currentObjType, options);
   }
 
   update(message) {

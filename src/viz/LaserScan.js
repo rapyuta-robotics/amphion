@@ -3,8 +3,9 @@ import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
 import Points from './Points';
 
 class LaserScan extends Core {
-  constructor(ros, topicName) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_LASERSCAN);
+    this.options = options;
     this.points = new Points();
     this.object = this.points.rootObject;
   }
