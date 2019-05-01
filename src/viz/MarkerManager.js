@@ -127,8 +127,11 @@ export default class MarkerManager {
         return new Cube();
       case MARKERARRAY_TYPES.SPHERE:
         return new Sphere();
-      case MARKERARRAY_TYPES.CYLINDER:
-        return new Cylinder();
+      case MARKERARRAY_TYPES.CYLINDER: {
+        const group = new Group();
+        group.add(new Cylinder());
+        return group;
+      }
       case MARKERARRAY_TYPES.LINE_LIST:
         return new LineSegments();
       case MARKERARRAY_TYPES.LINE_STRIP:

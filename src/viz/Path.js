@@ -11,6 +11,10 @@ class Path extends Core {
     this.object = new Group();
   }
 
+  updateOptions(options) {
+
+  }
+
   update(message) {
     const { poses } = message;
     const points = [];

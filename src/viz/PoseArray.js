@@ -33,7 +33,7 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
-      setObjectDimension(this.object.children[i], options);
+      setObjectDimension(this.object.children[i], this.options);
     }
   }
 }

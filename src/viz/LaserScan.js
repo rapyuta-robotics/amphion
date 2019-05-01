@@ -2,6 +2,31 @@ import Core from '../core';
 import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
 import Points from './Points';
 
+export const STYLE = {
+  SQUARES: 'Squares',
+  POINTS: 'Points',
+  FLAT_SQUARES: 'Flat Squares',
+  SPHERES: 'Spheres',
+  BOXES: 'Boxes',
+};
+
+export const COLOR_TRANSFORMERS = {
+  INTENSITY: 'Intensity',
+  AXIS_COLOR: 'AxisColor',
+  FLAT_COLOR: 'FlatColor',
+};
+
+export const AXIS_OPTIONS = {
+  X: 'x',
+  Y: 'y',
+  Z: 'z',
+};
+
+export const INTENSITY_CHANNEL_OPTIONS = {
+  INTENSITY: 'intensity',
+  ...AXIS_OPTIONS,
+}
+
 class LaserScan extends Core {
   constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_LASERSCAN);
@@ -9,6 +34,14 @@ class LaserScan extends Core {
     this.points = new Points();
     this.object = this.points.rootObject;
   }
+
+  updateOptions(options) {
+    this.options = options;
+
+    this.setStyle();
+  }
+
+  setStyle(){}
 
   update(message) {
     if (!this.points.setup(message.header.frame_id)) {

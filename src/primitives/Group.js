@@ -10,6 +10,12 @@ class Group extends THREE.Group {
   setScale(scale) {
     TransformUtils.setScale(this, scale);
   }
+
+  setColor(colors) {
+    this.children.forEach((child) => {
+      TransformUtils.setColor(child, colors);
+    });
+  }
 }
 
 export default Group;
