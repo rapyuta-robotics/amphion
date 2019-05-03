@@ -65,11 +65,12 @@ class Image extends Core {
       case 'bgr8': {
         const offset = 3;
 
+        let j = 0;
         for (let i = 0; i <  step * height; i += offset) {
-          imgData.data[i + 0] = encodedDataView.getUint8(i + 2, !isBigEndian);
-          imgData.data[i + 1] = encodedDataView.getUint8(i + 0, !isBigEndian);
-          imgData.data[i + 2] = encodedDataView.getUint8(i + 1, !isBigEndian);
-          imgData.data[i + 3] = 255;
+          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 0,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
+          imgData.data[j++] = 255;
         }
         break;
       }
