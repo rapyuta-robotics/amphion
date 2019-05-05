@@ -30,6 +30,7 @@ class MarkerArray extends Core {
   }
 
   update(message) {
+    super.update(message);
     if (message.markers.length > 0) {
       message.markers.forEach((marker) => {
         this.markerManager.updateMarker(marker);

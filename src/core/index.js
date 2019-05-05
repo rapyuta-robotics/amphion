@@ -2,17 +2,19 @@ import ROSLIB from 'roslib';
 import _ from 'lodash';
 
 class Core {
-  constructor(ros, topicName, messageType, options) {
-    const { queueSize } = options || {};
+  constructor(ros, topicName, messageType, options = {}) {
+    const { queueSize } = options;
     this.ros = ros;
     this.topicName = topicName;
     this.messageType = messageType;
+    this.headerFrameId = '';
     this.topic = topicName ? new ROSLIB.Topic({
       ros,
       name: topicName,
       messageType,
       queue_size: queueSize,
     }) : null;
+    this.onHeaderChange = options.onHeaderChange || (() => {});
     this.update = this.update.bind(this);
   }
 
@@ -57,6 +59,11 @@ class Core {
   }
 
   update(message) {
+    const header = _.get(message, 'header.frame_id');
+    if (header !== this.headerFrameId) {
+      this.headerFrameId = header;
+      this.onHeaderChange(this.headerFrameId);
+    }
   }
 
   changeTopic(newTopic) {

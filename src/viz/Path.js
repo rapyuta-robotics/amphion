@@ -16,6 +16,7 @@ class Path extends Core {
   }
 
   update(message) {
+    super.update(message);
     const { poses } = message;
     const points = [];
 

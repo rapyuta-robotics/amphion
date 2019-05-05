@@ -62,6 +62,7 @@ class Map extends Core {
   }
 
   update(message) {
+    super.update(message);
     if (this.callback) {
       this.callback(message);
     }

@@ -28,7 +28,7 @@ export const AXIS_OPTIONS = {
 export const INTENSITY_CHANNEL_OPTIONS = {
   INTENSITY: 'intensity',
   ...AXIS_OPTIONS,
-}
+};
 
 class LaserScan extends Core {
   constructor(ros, topicName, options = {}) {
@@ -218,6 +218,7 @@ class LaserScan extends Core {
   }
 
   update(message) {
+    super.update(message);
     this.setStyleDimensions(message);
   }
 }

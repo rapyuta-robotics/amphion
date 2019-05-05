@@ -14,11 +14,11 @@ class PoseArray extends Core {
   }
 
   updateOptions(options) {
-    const newOptions = { ...options };
-    this.options = newOptions;
+    this.options = options;
   }
 
   update(message) {
+    super.update(message);
     this.object.children.forEach((obj, index) => {
       obj.parent.remove(obj);
     });

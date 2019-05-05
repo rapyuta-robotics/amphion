@@ -116,6 +116,7 @@ class PointCloud extends Core {
   }
 
   update(message) {
+    super.update(message);
     const { positions, colors } = editPointCloudPoints(message);
     this.updatePointCloudGeometry(
       positions,

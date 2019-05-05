@@ -135,6 +135,7 @@ class DisplayOdometry extends Core {
   }
 
   update(message) {
+    super.update(message);
     if (!this.keepSize) {
       this.removeAllObjects();
       return;
