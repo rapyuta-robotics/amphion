@@ -7,16 +7,23 @@ class Line extends THREE.Line {
   constructor(color = DEFAULT_COLOR_LINE, linewidth = 5) {
     super();
     this.geometry = new THREE.Geometry();
-    this.material = new THREE.LineBasicMaterial({ color, linewidth });
+    this.material = new THREE.LineBasicMaterial({ linewidth, vertexColors: THREE.VertexColors });
   }
 
   setColor(colors) {
     TransformUtils.setColor(this, colors);
   }
 
-  updatePoints(points) {
+  updatePoints(points, colors) {
     this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
+    const color = [];
+    _.each(colors, ({ r, g, b }) =>  {
+      color.push(new THREE.Color(r, g, b));
+    });
+
+    this.geometry.colors = color;
     this.geometry.verticesNeedUpdate = true;
+    this.geometry.colorsNeedUpdate = true;
   }
 
   setTransform(transform) {

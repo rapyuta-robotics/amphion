@@ -16,6 +16,7 @@ class Tf extends Core {
       messageType,
     }));
     this.object = new THREE.Group();
+    this.object.name = 'test';
   }
 
   update(message) {
@@ -43,12 +44,17 @@ class Tf extends Core {
       } else {
         childFrame.arrow.lookAt(parentFrame.getWorldPosition(new THREE.Vector3()));
         childFrame.arrow.rotateY(-Math.PI / 2);
+        childFrame.arrow.visible = true;
 
         const arrowConeLength = childFrame.arrow.cone.scale.y;
         childFrame.arrow.setShaftDimensions({
           length: childFrame.position.length() - arrowConeLength
         });
       }
+    });
+
+    this.object.children.forEach((child) => {
+      child.arrow.visible = false;
     });
   }
 

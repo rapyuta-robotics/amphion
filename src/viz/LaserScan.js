@@ -39,6 +39,7 @@ class LaserScan extends Core {
     this.points = new Points(STYLE.POINTS, size, alpha);
     this.object = new Group();
     this.object.add(this.points.rootObject);
+    this.prevMessage = null;
   }
 
   getNormalizedIntensity(data) {
@@ -215,11 +216,14 @@ class LaserScan extends Core {
   updateOptions(options) {
     const newOptions = { ...options };
     this.options = newOptions;
+
+    this.setStyleDimensions(this.prevMessage);
   }
 
   update(message) {
     super.update(message);
     this.setStyleDimensions(message);
+    this.prevMessage = message;
   }
 }
 

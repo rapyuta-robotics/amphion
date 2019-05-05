@@ -79,20 +79,19 @@ export default class MarkerManager {
   }
 
   updateMarker(marker) {
-    const { pose: { position, orientation }, scale } = marker;
+    const { pose: { position, orientation }, scale, color, colors, points } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 
-    if (marker.type === MARKERARRAY_TYPES.LINE_STRIP
-      || marker.type === MARKERARRAY_TYPES.LINE_LIST) {
-      markerObject.updatePoints(marker.points);
+    if (markerObject.updatePoints) {
+      markerObject.updatePoints(points, colors);
     }
 
     markerObject.setTransform({ translation: position, rotation: orientation });
     if (markerObject.setScale) {
       markerObject.setScale({ x: scale.x, y: scale.y, z: scale.z });
     }
-    if (markerObject.setColor) {
-      markerObject.setColor(marker.color);
+    if (markerObject.setColor && colors.length <= 0) {
+      markerObject.setColor(color);
     }
 
     const { ns } = marker;
