@@ -34,22 +34,19 @@ class Image extends Core {
   }
 
   applyImageData(message) {
-    const { data, step } = message;
-    const { width, height, is_bigendian: isBigEndian } = message;
+    const { data, step, width, height, is_bigendian: isBigEndian, encoding } = message;
 
     const ctx = this.imageCanvas.getContext('2d');
     const imgData = ctx.createImageData(width, height);
-    const { encoding } = message;
 
-    const newData = [];
     const decodedData = atob(data);
+    const newData = [];
     decodedData.split('').forEach((data, index) => {
       newData.push(decodedData.charCodeAt(index));
     });
 
     const encodeToUInt8 = Uint8Array.from(newData);
     const encodedDataView = new DataView(encodeToUInt8.buffer);
-    console.log(encodedDataView);
 
     switch (encoding) {
       case 'mono8': {
@@ -83,7 +80,6 @@ class Image extends Core {
 
   update(message) {
     if (this.imageCanvas) {
-      const { data } = message;
       const { width, height } = message;
 
       this.imageCanvas.width = width;
