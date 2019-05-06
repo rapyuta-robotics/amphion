@@ -46,6 +46,10 @@ class Map extends Core {
     } else {
       this.object.material.side = THREE.frontSide;
     }
+
+    if (this.prevMessage) {
+      this.setCanvasData(this.prevMessage);
+    }
   }
 
   updateCanvasDimensions(message) {
@@ -61,12 +65,7 @@ class Map extends Core {
     this.object.position.set(translatedX, translatedY, 0);
   }
 
-  update(message) {
-    super.update(message);
-    if (this.callback) {
-      this.callback(message);
-    }
-
+  setCanvasData(message) {
     const { colorScheme } = this.options;
     const {
       data,
@@ -96,9 +95,21 @@ class Map extends Core {
     }
 
     this.object.material.map = new THREE.CanvasTexture(bitmapCanvas);
+    this.object.material.map.minFilter = THREE.NearestFilter;
+    this.object.material.map.magFilter = THREE.NearestFilter;
     this.object.material.needsUpdate = true;
 
     this.updateCanvasDimensions(message);
+  }
+
+  update(message) {
+    super.update(message);
+    if (this.callback) {
+      this.callback(message);
+    }
+
+    this.setCanvasData(message);
+    this.prevMessage = message;
   }
 }
 

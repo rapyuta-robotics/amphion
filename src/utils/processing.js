@@ -1,6 +1,7 @@
 export const COLOR_TYPES = {
   OCCUPIED: 100,
   UNOCCUPIED: 0,
+  UNKNOWN: -1,
   OTHER: 127,
 };
 
@@ -24,11 +25,16 @@ export const populateImageDataFromNavMsg = (
           val = 0;
           break;
         }
+        case COLOR_TYPES.UNKNOWN: {
+          val = 127;
+          break;
+        }
         default: {
-          val = COLOR_TYPES.OTHER;
+          val = data;
         }
       }
       let i = (col + row * width) * 4;
+
       imageData.data[i] = val;
       imageData.data[++i] = val;
       imageData.data[++i] = val;
@@ -49,10 +55,18 @@ export const populateRawImageDataFromNavMsg = (
       const data = dataSource[mapI];
 
       let i = (col + row * width) * 4;
-      imageData.data[i] = data;
-      imageData.data[++i] = data;
-      imageData.data[++i] = data;
-      imageData.data[++i] = 255;
+
+      if (data === COLOR_TYPES.UNKNOWN) {
+        imageData.data[i] = 127;
+        imageData.data[++i] = 127;
+        imageData.data[++i] = 127;
+        imageData.data[++i] = 255;
+      } else {
+        imageData.data[i] = data;
+        imageData.data[++i] = data;
+        imageData.data[++i] = data;
+        imageData.data[++i] = data;
+      }
     }
   }
 };
@@ -69,16 +83,29 @@ export const populateConstImageDataFromNavMsg = (
       const data = dataSource[mapI];
 
       let i = (col + row * width) * 4;
-      if (data === COLOR_TYPES.OCCUPIED) {
-        imageData.data[i] = 252;
-        imageData.data[++i] = 15;
-        imageData.data[++i] = 192;
-        imageData.data[++i] = 255;
-      } else {
-        imageData.data[i] = 0;
-        imageData.data[++i] = 0;
-        imageData.data[++i] = 0;
-        imageData.data[++i] = 0;
+
+
+      switch (data) {
+        case COLOR_TYPES.OCCUPIED: {
+          imageData.data[i] = 252;
+          imageData.data[++i] = 15;
+          imageData.data[++i] = 192;
+          imageData.data[++i] = 255;
+          break;
+        }
+        case COLOR_TYPES.UNKNOWN: {
+          imageData.data[i] = 127;
+          imageData.data[++i] = 127;
+          imageData.data[++i] = 127;
+          imageData.data[++i] = 255;
+          break;
+        }
+        default: {
+          imageData.data[i] = data;
+          imageData.data[++i] = data;
+          imageData.data[++i] = data;
+          imageData.data[++i] = 255;
+        }
       }
     }
   }
