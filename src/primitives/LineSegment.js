@@ -13,16 +13,17 @@ class LineSegments extends THREE.LineSegments {
   }
 
   setColor(colors) {
-    return;
     TransformUtils.setColor(this, colors);
   }
 
   updatePoints(points, colors) {
-    console.log(points, colors);
     this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
-    this.geometry.colors = _.map(colors, ({ r, g, b }) => new THREE.Color(r, g, b));
     this.geometry.verticesNeedUpdate = true;
-    this.geometry.colorsNeedUpdate = true;
+
+    if (colors.length > 0) {
+      this.geometry.colors = _.map(colors, ({ r, g, b }) => new THREE.Color(r, g, b));
+      this.geometry.colorsNeedUpdate = true;
+    }
   }
 
   setTransform(transform) {

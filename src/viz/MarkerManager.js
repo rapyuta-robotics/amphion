@@ -140,7 +140,7 @@ export default class MarkerManager {
       case MARKERARRAY_TYPES.POINTS:
         return new Points(marker.points);
       case MARKERARRAY_TYPES.TRIANGLE_LIST:
-        return new TriangleList(marker.points);
+        return new TriangleList();
       case MARKERARRAY_TYPES.CUBE_LIST:
         return new Cube();
       case MARKERARRAY_TYPES.ARROW:
