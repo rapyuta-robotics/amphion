@@ -15,15 +15,20 @@ class Line extends THREE.Line {
   }
 
   updatePoints(points, colors) {
-    this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
     const color = [];
-    _.each(colors, ({ r, g, b }) =>  {
-      color.push(new THREE.Color(r, g, b));
-    });
 
-    this.geometry.colors = color;
+    this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
     this.geometry.verticesNeedUpdate = true;
-    this.geometry.colorsNeedUpdate = true;
+
+    if (colors.length >= 0) {
+      _.each(colors, ({ r, g, b }) =>  {
+        color.push(new THREE.Color(r, g, b));
+      });
+
+      this.geometry.colors = color;
+
+      this.geometry.colorsNeedUpdate = true;
+    }
   }
 
   setTransform(transform) {

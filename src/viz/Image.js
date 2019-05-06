@@ -24,9 +24,10 @@ function decode64(x) {
 }
 
 class Image extends Core {
-  constructor(ros, topicName, imageEle) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_IMAGE);
     this.object = new THREE.Group();
+    this.options = options;
   }
 
   setImageRef(ref) {
@@ -34,7 +35,14 @@ class Image extends Core {
   }
 
   applyImageData(message) {
-    const { data, step, width, height, is_bigendian: isBigEndian, encoding } = message;
+    const {
+      data,
+      step,
+      width,
+      height,
+      is_bigendian: isBigEndian,
+      encoding
+    } = message;
 
     const ctx = this.imageCanvas.getContext('2d');
     const imgData = ctx.createImageData(width, height);
@@ -76,6 +84,10 @@ class Image extends Core {
     }
 
     ctx.putImageData(imgData, 0, 0);
+  }
+
+  updateOptions(options) {
+    this.options = options;
   }
 
   update(message) {
