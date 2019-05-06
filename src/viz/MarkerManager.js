@@ -138,7 +138,7 @@ export default class MarkerManager {
       case MARKERARRAY_TYPES.SPHERE_LIST:
         return new Sphere();
       case MARKERARRAY_TYPES.POINTS:
-        return new Points(marker.points);
+        return new Points();
       case MARKERARRAY_TYPES.TRIANGLE_LIST:
         return new TriangleList();
       case MARKERARRAY_TYPES.CUBE_LIST:
