@@ -95,7 +95,7 @@ class LaserScan extends Core {
         normI = this.getNormalizedAxisValue(x);
         break;
       case AXIS_OPTIONS.Y:
-        normI = this.getNormalizedAxisValue(x);
+        normI = this.getNormalizedAxisValue(y);
         break;
       case AXIS_OPTIONS.Z:
         normI = this.getNormalizedAxisValue(z);

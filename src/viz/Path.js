@@ -12,12 +12,13 @@ class Path extends Core {
   }
 
   updateOptions(options) {
-
+    this.options = options;
   }
 
   update(message) {
     super.update(message);
     const { poses } = message;
+    const { color, alpha } = this.options;
     const points = [];
 
     poses.forEach((poseData) => {
@@ -30,7 +31,8 @@ class Path extends Core {
       this.object.remove(children);
     });
 
-    const line = new Line(0x00ff00);
+    const line = new Line(null, 5, true);
+    line.setColor(new THREE.Color(color));
     line.updatePoints(points);
     this.object.add(line);
   }
