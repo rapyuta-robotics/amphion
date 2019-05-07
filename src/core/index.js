@@ -12,7 +12,7 @@ class Core {
       ros,
       name: topicName,
       messageType,
-      queue_size: queueSize,
+      queue_size: queueSize | 100,
     }) : null;
     this.onHeaderChange = options.onHeaderChange || (() => {});
     this.update = this.update.bind(this);

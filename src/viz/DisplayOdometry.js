@@ -38,13 +38,16 @@ class DisplayOdometry extends Core {
       return;
     }
 
-    if (size < this.keepSize) {
-      const removeCount = this.keepSize - size;
+    if (size < this.keepSize && size < this.objectPool.length) {
+      const removeCount = this.objectPool.length - size;
       for (let i = 0; i < removeCount; i++) {
         this.object.remove(this.objectPool[i]);
       }
 
-      const slicedList = this.objectPool.slice(this.keepSize - size, this.objectPool.length);
+      const slicedList = this.objectPool.slice(
+        this.objectPool.length - size,
+        this.objectPool.length
+      );
       newKeepList = [...slicedList];
     } else {
       newKeepList = [...this.objectPool];
@@ -52,6 +55,7 @@ class DisplayOdometry extends Core {
 
     this.objectPool = newKeepList;
     this.keepSize = size;
+    this.currentObject = this.objectPool.length - 1;
   }
 
   removeAllObjects() {
@@ -71,6 +75,7 @@ class DisplayOdometry extends Core {
       position: this.objectPool[this.currentObject].position,
       quaternion: this.objectPool[this.currentObject].quaternion,
     };
+
 
     return checkToleranceThresholdExceed(oldPose, newPose, this.options);
   }

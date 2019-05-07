@@ -69,11 +69,10 @@ const editPointCloudPoints = function (message) {
 
 
 class PointCloud extends Core {
-  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2) {
+  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2, options = {}) {
     super(ros, topicName, messageType);
-
     const cloudMaterial = new THREE.PointsMaterial({
-      size: 0.01,
+      size: 0.1,
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
