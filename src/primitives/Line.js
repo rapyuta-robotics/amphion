@@ -28,7 +28,7 @@ class Line extends THREE.Line {
     this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
     this.geometry.verticesNeedUpdate = true;
 
-    if (colors.length >= 0) {
+    if (colors) {
       _.each(colors, ({ r, g, b }) =>  {
         color.push(new THREE.Color(r, g, b));
       });
