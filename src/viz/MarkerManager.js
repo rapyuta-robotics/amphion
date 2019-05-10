@@ -3,6 +3,7 @@ import Arrow from '../primitives/Arrow';
 import Cylinder from '../primitives/Cylinder';
 import Line from '../primitives/Line';
 import Cube from '../primitives/Cube';
+import CubeList from '../primitives/CubeList';
 import Sphere from '../primitives/Sphere';
 import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
@@ -15,6 +16,7 @@ import {
   HEAD_RADIUS
 } from './Pose';
 import ROSLIB from 'roslib';
+import SphereList from '../primitives/SphereList';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -83,11 +85,13 @@ export default class MarkerManager {
     const markerObject = this.getMarkerOrCreate(marker);
 
     if (markerObject.updatePoints) {
-      markerObject.updatePoints(points, colors);
+      markerObject.updatePoints(points, colors, marker);
     }
 
     markerObject.setTransform({ translation: position, rotation: orientation });
-    if (markerObject.setScale) {
+
+    // To avoid settings these properties for list types: LINE, TRIANGLE, CUBELIST etc
+    if (markerObject.setScale && !markerObject.updatePoints) {
       markerObject.setScale({ x: scale.x, y: scale.y, z: scale.z });
     }
     if (markerObject.setColor && colors.length <= 0) {
@@ -136,13 +140,13 @@ export default class MarkerManager {
       case MARKERARRAY_TYPES.LINE_STRIP:
         return new Line();
       case MARKERARRAY_TYPES.SPHERE_LIST:
-        return new Sphere();
+        return new SphereList();
       case MARKERARRAY_TYPES.POINTS:
         return new Points();
       case MARKERARRAY_TYPES.TRIANGLE_LIST:
         return new TriangleList();
       case MARKERARRAY_TYPES.CUBE_LIST:
-        return new Cube();
+        return new CubeList();
       case MARKERARRAY_TYPES.ARROW:
       default: {
         const arrow = new Arrow();

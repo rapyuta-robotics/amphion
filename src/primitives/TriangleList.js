@@ -16,10 +16,12 @@ class TriangleList extends Mesh {
     this.material.side = THREE.DoubleSide;
   }
 
-  updatePoints(points, colors = []) {
+  updatePoints(points, colors = [], options) {
     const vertices = [];
     const faces = [];
+    const { scale: { x, y, z } } = options;
 
+    this.scale.set(x, y, z);
     _.chunk(points, 3).forEach((verticesArray, index) => {
       _.map(verticesArray, (side) => {
         vertices.push(new THREE.Vector3(side.x, side.y, side.z));

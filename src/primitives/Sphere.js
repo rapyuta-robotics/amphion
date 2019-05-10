@@ -11,8 +11,7 @@ class Sphere extends Mesh {
       DEFAULT_RADIAL_SEGMENTS,
       DEFAULT_RADIAL_SEGMENTS
     );
-    this.material = new THREE.MeshStandardMaterial({ color });
-    this.rotateX(Math.PI / 2);
+    this.material = new THREE.MeshStandardMaterial();
   }
 }
 

@@ -45,3 +45,9 @@ export const setObjectDimension = (object, options) => {
     }
   }
 };
+
+export const removeChildren = (object) => {
+  while (object.children.length > 0) {
+    object.remove(object.children[0]);
+  }
+};
