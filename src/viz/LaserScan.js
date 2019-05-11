@@ -4,6 +4,7 @@ import Points from './Points';
 import Group from '../primitives/Group';
 import Sphere from '../primitives/Sphere';
 import Cube from '../primitives/Cube';
+import { removeChildren } from '../utils/helpers';
 
 export const STYLE = {
   SQUARES: 'Squares',
@@ -123,12 +124,6 @@ class LaserScan extends Core {
     }
   }
 
-  removeObjects() {
-    this.object.children.forEach(child => {
-      this.object.remove(child);
-    });
-  }
-
   setupPoints({j, position, color}) {
     this.points.colors.array[j] = color.r;
     this.points.positions.array[j++] = position.x;
@@ -141,8 +136,10 @@ class LaserScan extends Core {
   addSphere({ position, color }) {
     const { size, alpha } = this.options;
     const { x, y, z } = position;
-    const sphere = new Sphere(color.getHex(), size);
+    const sphere = new Sphere(null, size);
 
+    sphere.material.transparent = true;
+    sphere.setColor(color);
     sphere.setAlpha(alpha);
     sphere.position.set(x, y, z);
     this.object.add(sphere);
@@ -153,6 +150,7 @@ class LaserScan extends Core {
     const { x, y, z } = position;
     const box = new Cube();
 
+    box.material.transparent = true;
     box.setAlpha(alpha);
     box.setScale({x: size});
     box.position.set(x, y, z);
@@ -160,11 +158,16 @@ class LaserScan extends Core {
   }
 
   setStyleDimensions(message){
-    const { style, size, alpha } = this.options;
+    const { style, alpha } = this.options;
+    let { size } = this.options
     const { ranges , intensities } = message;
     const n = ranges.length;
 
-    this.removeObjects();
+    if (size < 0.001 || !size) {
+      return;
+    }
+
+    removeChildren(this.object);
 
     if (style === STYLE.POINTS || style === STYLE.SQUARES || style === STYLE.FLAT_SQUARES) {
       this.object.add(this.points.rootObject);

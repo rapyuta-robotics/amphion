@@ -14,8 +14,12 @@ class Points extends THREE.Points {
     TransformUtils.setTransform(this, transform);
   }
 
-  updatePoints(points, colors) {
-    this.geometry.vertices = _.map(points, vertex => new THREE.Vector3(vertex.x, vertex.y, vertex.z));
+  updatePoints(points, colors, options = {}) {
+    const { scale: { x } } = options;
+
+    this.material.size = x;
+    this.geometry.vertices = _.map(points,
+      vertex => new THREE.Vector3(vertex.x, vertex.y, vertex.z));
     this.geometry.verticesNeedUpdate = true;
 
     if (colors.length > 0) {
