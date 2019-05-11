@@ -35,6 +35,10 @@ class Core {
   reset() {}
 
   subscribe() {
+    if (!this.topic) {
+      return;
+    }
+
     if (_.isArray(this.topic)) {
       _.each(this.topic, (t) => {
         t.subscribe(this.update);

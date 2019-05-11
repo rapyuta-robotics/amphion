@@ -79,6 +79,18 @@ class Image extends Core {
         }
         break;
       }
+      case 'rgb8': {
+        const offset = 3;
+
+        let j = 0;
+        for (let i = 0; i <  step * height; i += offset) {
+          imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 1,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
+          imgData.data[j++] = 255;
+        }
+        break;
+      }
       default:
         break;
     }
@@ -99,6 +111,11 @@ class Image extends Core {
 
       this.applyImageData(message);
     }
+  }
+
+  hide() {
+    super.hide();
+    this.imageCanvas = null;
   }
 }
 
