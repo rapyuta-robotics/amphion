@@ -2,9 +2,8 @@ import Core from '../core';
 import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
 import Points from './Points';
 import Group from '../primitives/Group';
-import Sphere from '../primitives/Sphere';
-import Cube from '../primitives/Cube';
-import { removeChildren } from '../utils/helpers';
+import SphereList from '../primitives/SphereList';
+import CubeList from '../primitives/CubeList';
 
 export const STYLE = {
   SQUARES: 'Squares',
@@ -38,13 +37,18 @@ class LaserScan extends Core {
 
     const { size, alpha } = options;
     this.points = new Points(STYLE.POINTS, size, alpha);
+    this.sphereList = new SphereList();
+    this.cubeList = new CubeList();
+
     this.object = new Group();
     this.object.add(this.points.rootObject);
+    this.object.add(this.sphereList);
+    this.object.add(this.cubeList);
     this.prevMessage = null;
   }
 
   getNormalizedIntensity(data) {
-    const { minIntensity, maxIntensity } = this.options
+    const { minIntensity, maxIntensity } = this.options;
 
     return (data - minIntensity) / (maxIntensity - minIntensity);
   }
@@ -106,7 +110,7 @@ class LaserScan extends Core {
     }
 
     const finalColor = (normI * maxAxisValue) + ((1 - normI) * minAxisValue);
-    return new THREE.Color(finalColor);;
+    return new THREE.Color(finalColor);
   }
 
   colorTransformer(intensity, position) {
@@ -133,53 +137,32 @@ class LaserScan extends Core {
     this.points.positions.array[j++] = position.z;
   }
 
-  addSphere({ position, color }) {
-    const { size, alpha } = this.options;
-    const { x, y, z } = position;
-    const sphere = new Sphere(null, size);
-
-    sphere.material.transparent = true;
-    sphere.setColor(color);
-    sphere.setAlpha(alpha);
-    sphere.position.set(x, y, z);
-    this.object.add(sphere);
-  }
-
-  addBox({ position, color }) {
-    const { size, alpha } = this.options;
-    const { x, y, z } = position;
-    const box = new Cube();
-
-    box.material.transparent = true;
-    box.setAlpha(alpha);
-    box.setScale({x: size});
-    box.position.set(x, y, z);
-    this.object.add(box);
+  hideAllObjects() {
+    this.points.rootObject.visible = false;
+    this.sphereList.visible = false;
+    this.cubeList.visible = false;
   }
 
   setStyleDimensions(message){
     const { style, alpha } = this.options;
-    let { size } = this.options
+    let { size } = this.options;
     const { ranges , intensities } = message;
     const n = ranges.length;
+    const positions = [];
+    const colors = [];
 
     if (size < 0.001 || !size) {
       return;
     }
 
-    removeChildren(this.object);
-
-    if (style === STYLE.POINTS || style === STYLE.SQUARES || style === STYLE.FLAT_SQUARES) {
-      this.object.add(this.points.rootObject);
-      this.points.setup(style, size, alpha);
-    }
+    this.hideAllObjects();
+    this.points.setup(style, size, alpha);
 
     let j = 0;
     for (let i = 0; i < n; i ++) {
       const range = message.ranges[i];
 
       if (range >= message.range_min && range <= message.range_max) {
-
         const angle = message.angle_min + i * message.angle_increment;
         const position = {
           x: range * Math.cos(angle),
@@ -197,22 +180,31 @@ class LaserScan extends Core {
             j += 3;
             break;
           }
-          case STYLE.SPHERES: {
-            this.addSphere({ position, color });
-            break;
-          }
-          case STYLE.BOXES: {
-            this.addBox({ position, color });
-            break;
-          }
           default:
+            positions.push(position);
+            colors.push(color);
             break;
         }
       }
     }
 
-    if (style === STYLE.POINTS || style === STYLE.SQUARES || style === STYLE.FLAT_SQUARES) {
-      this.points.update(j/3);
+    const options = { scale: {x: size, y: size, z: size}};
+
+    switch (style) {
+      case STYLE.SPHERES: {
+        this.sphereList.visible = true;
+        this.sphereList.updatePoints(positions, colors, options);
+        break;
+      }
+      case STYLE.BOXES: {
+        this.cubeList.visible = true;
+        this.cubeList.updatePoints(positions, colors, options);
+        break;
+      }
+      default:
+        this.points.rootObject.visible = true;
+        this.points.update(j/3);
+        break;
     }
   }
 

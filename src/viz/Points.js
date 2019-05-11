@@ -34,7 +34,7 @@ class Points {
     this.geomtry.addAttribute('position', this.positions.setDynamic(true));
     this.geomtry.addAttribute('color', this.colors.setDynamic(true));
 
-    this.material = new THREE.PointsMaterial({ color: 0x888888, size: size, ...options});
+    this.material = new THREE.PointsMaterial({ color: 0x888888, size, ...options});
     this.material.vertexColors = THREE.VertexColors;
     this.material.transparent = true;
     this.material.opacity = alpha;
