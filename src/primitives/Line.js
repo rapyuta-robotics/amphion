@@ -7,7 +7,7 @@ class Line extends THREE.Line {
   constructor(color = DEFAULT_COLOR_LINE, linewidth = 5, disableVertexColor) {
     super();
     this.geometry = new THREE.Geometry();
-    const colorOptions = {}
+    const colorOptions = {};
 
     if (!disableVertexColor) {
       colorOptions.vertexColors = THREE.VertexColors;

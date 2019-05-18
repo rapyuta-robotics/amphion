@@ -1,6 +1,6 @@
 import Core from '../core';
 import { MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
-import Pose, { POSE_VIZ_TYPES } from './Pose';
+import Pose  from './Pose';
 import * as TransformUtils from '../utils/transform';
 import { setObjectDimension } from '../utils/helpers';
 

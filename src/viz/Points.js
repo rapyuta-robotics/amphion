@@ -1,11 +1,9 @@
-import Group from '../primitives/Group'
 import { STYLE } from './LaserScan';
 
 const { THREE } = window;
 
 class Points {
   constructor(options = {}) {
-    const { style } = options;
     this.max_pts = options.max_pts || 10000;
     this.rootObject = options.rootObject || new THREE.Object3D();
   }

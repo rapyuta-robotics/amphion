@@ -1,6 +1,4 @@
 import {
-  DEFAULT_ARROW_HEIGHT,
-  DEFAULT_ARROW_RADIUS,
   DEFAULT_COLOR_X_AXIS,
   DEFAULT_CONE_HEIGHT,
   DEFAULT_CONE_RADIUS,
@@ -27,7 +25,7 @@ class Arrow extends Group {
       x: DEFAULT_CONE_RADIUS,
       y: DEFAULT_CONE_HEIGHT,
       z: DEFAULT_CONE_RADIUS
-    })
+    });
 
     this.cylinder.setScale({
       x: DEFAULT_CYLINDER_RADIUS,

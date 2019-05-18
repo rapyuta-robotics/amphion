@@ -1,4 +1,3 @@
-import * as TransformUtils from '../utils/transform';
 import Group from './Group';
 import Line from './Line';
 import { OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
@@ -6,7 +5,7 @@ import { OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
 const { THREE } = window;
 
 class LineArrow extends Group {
-  constructor(color, linewidth = 1) {
+  constructor() {
     super();
     this.type = OBJECT_TYPE_FLAT_ARROW;
     this.arrowTop = new Line(0xff0000,  1, true);

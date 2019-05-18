@@ -12,8 +12,6 @@ class SphereList extends Mesh {
   }
 
   updatePoints(points, colors, options = {}) {
-    const { scale } = options;
-
     options.subtype = MARKERARRAY_TYPES.SPHERE;
 
     if (points.length < this.children.length) {

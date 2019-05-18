@@ -12,8 +12,6 @@ class CubeList extends Mesh {
   }
 
   updatePoints(points, colors, options = {}) {
-    const { scale } = options;
-
     options.subtype = MARKERARRAY_TYPES.CUBE;
 
     if (points.length < this.children.length) {

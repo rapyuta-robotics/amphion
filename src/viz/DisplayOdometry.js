@@ -4,7 +4,7 @@ import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
-import { HEAD_LENGTH, HEAD_RADIUS, POSE_VIZ_TYPES, SHAFT_LENGTH, SHAFT_RADIUS } from './Pose';
+import { POSE_VIZ_TYPES } from './Pose';
 import Axes from '../primitives/Axes';
 import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
 
@@ -116,14 +116,7 @@ class DisplayOdometry extends Core {
     const { type: currentType } = this.options;
     const {
       type,
-      positionTolerance,
-      angleTolerance,
       keep,
-      alpha,
-      shaftLength,
-      shaftRadius,
-      headLength,
-      headRadius
     } = options;
 
     this.options = options;

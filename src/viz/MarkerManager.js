@@ -1,3 +1,6 @@
+import _ from 'lodash';
+
+import ROSLIB from 'roslib';
 import { MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Cylinder from '../primitives/Cylinder';
@@ -15,7 +18,6 @@ import {
   HEAD_LENGTH,
   HEAD_RADIUS
 } from './Pose';
-import ROSLIB from 'roslib';
 import SphereList from '../primitives/SphereList';
 
 export default class MarkerManager {
@@ -39,7 +41,7 @@ export default class MarkerManager {
   }
 
   extractNameSpace(str) {
-    const tokens = str.split("-");
+    const tokens = str.split('-');
     return tokens[0];
   }
 
@@ -59,20 +61,18 @@ export default class MarkerManager {
   }
 
   updateOptions(options, context) {
-    const { queueSize } = options;
+    const { queueSize, namespaces } = options;
     const { queueSize: currentQueueSize } = context;
 
-    if (currentQueueSize != queueSize) {
+    if (currentQueueSize !== queueSize) {
       this.setQueueSize(queueSize, context);
     }
 
-    const { namespaces } = options;
-    let newNamespaces = { ...namespaces };
-    this.namespaces = newNamespaces;
+    this.namespaces = namespaces;
 
-    Object.keys(this.objectMap).forEach((key) => {
+    _.each(this.objectMap, (object, key) => {
       const namespace = this.extractNameSpace(key);
-      this.objectMap[key].visible = this.namespaces[namespace];
+      object.visible = this.namespaces[namespace];
     });
   }
 
@@ -81,7 +81,9 @@ export default class MarkerManager {
   }
 
   updateMarker(marker) {
-    const { pose: { position, orientation }, scale, color, colors, points } = marker;
+    const {
+      pose: { position, orientation }, scale, color, colors, points
+    } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 
     if (markerObject.updatePoints) {
@@ -99,7 +101,7 @@ export default class MarkerManager {
     }
 
     const { ns } = marker;
-    if (!this.namespaces.hasOwnProperty(ns)) {
+    if (!(ns in this.namespaces)) {
       this.namespaces[ns] = true;
       this.onChange();
     }

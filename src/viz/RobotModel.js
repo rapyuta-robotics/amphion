@@ -1,11 +1,8 @@
 import ROSLIB from 'roslib';
 import URDFLoader from '../lib/URDFLoader';
-// import { URDFRobot } from '../lib/URDFClasses';
 import Group from '../primitives/Group';
 
 const { THREE } = window;
-
-// const { URDFLoader } = window;
 
 class RobotModel extends URDFLoader {
   constructor(ros, paramName) {

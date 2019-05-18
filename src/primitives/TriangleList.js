@@ -1,12 +1,10 @@
 import _ from 'lodash';
-import Group from './Group';
-import { DEFAULT_COLOR_X_AXIS } from '../utils/defaults';
 import Mesh from './Mesh';
 
 const { THREE } = window;
 
 class TriangleList extends Mesh {
-  constructor(points) {
+  constructor() {
     super();
     this.geometry = new THREE.Geometry();
 

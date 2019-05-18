@@ -1,5 +1,6 @@
-import * as TransformUtils from '../utils/transform';
 import _ from 'lodash';
+
+import * as TransformUtils from '../utils/transform';
 
 const { THREE } = window;
 
