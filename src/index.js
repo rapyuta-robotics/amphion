@@ -13,6 +13,7 @@ import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
 import Marker from './viz/Marker';
+import InteractiveMarker from './viz/InteractiveMarkers';
 
 export default {
   DisplayTf,
@@ -30,4 +31,5 @@ export default {
   Path,
   Image,
   Marker,
+  InteractiveMarker
 };

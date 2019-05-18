@@ -16,6 +16,7 @@ class Core {
     }) : null;
     this.onHeaderChange = options.onHeaderChange || (() => {});
     this.update = this.update.bind(this);
+    this.isVizObject = true;
   }
 
   hide() {
