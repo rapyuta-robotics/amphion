@@ -22,11 +22,6 @@ const ROTATE_MAP = {
   E: 'E',
 };
 
-const SPACE = {
-  LOCAL: 'local',
-  WORLD: 'world',
-}
-
 class TransformControls {
   constructor(object, options) {
     const {

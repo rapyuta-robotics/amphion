@@ -7,13 +7,7 @@ const { THREE } = window;
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;
   const rgb = dataView.getUint32(baseOffset + offsets.rgb, !isBigendian);
-  const rgba = new DataView(Uint32Array.from([rgb]).buffer);
-  const hex = new THREE.Color(
-    rgba.getUint8(0, !isBigendian),
-    rgba.getUint8(1, !isBigendian),
-    rgba.getUint8(2, !isBigendian),
-  ).getHexString();
-
+  const hex = _.padStart(rgb.toString(16), 6, '0');
   return {
     x: dataView.getFloat32(baseOffset + offsets.x, !isBigendian),
     y: dataView.getFloat32(baseOffset + offsets.y, !isBigendian),
