@@ -24,6 +24,13 @@ class RobotModel extends URDFLoader {
     });
   }
 
+  getPackages(onComplete) {
+    this.param.get((robotString) => {
+      const parser = new DOMParser();
+      const urdf = parser.parseFromString(robotString, 'text/xml');
+    });
+  }
+
   destroy() {
     this.object.parent.remove(this.object);
   }

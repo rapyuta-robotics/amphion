@@ -5,7 +5,10 @@ import MarkerManager from './MarkerManager';
 
 class MarkerArray extends Core {
   constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, options);
+    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, {
+      ...options,
+      throttleRate: 500,
+    });
 
     this.object = new Group();
     this.onChange = this.onChange.bind(this);

@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {
-    const { queueSize } = options;
+    const { queueSize, throttleRate } = options;
     this.ros = ros;
     this.topicName = topicName;
     this.messageType = messageType;
@@ -12,7 +12,8 @@ class Core {
       ros,
       name: topicName,
       messageType,
-      queue_size: queueSize | 100,
+      throttle_rate: throttleRate || 0,
+      queue_size: queueSize || 10,
     }) : null;
     this.onHeaderChange = options.onHeaderChange || (() => {});
     this.update = this.update.bind(this);
