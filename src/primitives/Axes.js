@@ -33,17 +33,13 @@ class Axes extends Group {
   setLength(length) {
     length = parseFloat(length);
     _.each([this.x, this.y, this.z], (axis) => {
-      // axis.position.set(0, 0, 0);
+      axis.position.set(0, 0, 0);
       axis.scale.setY(length);
     });
 
-    // this.x.translateY(length / 2);
-    // this.y.translateY(-length / 2);
-    // this.z.translateY(length / 2);
-
-    this.x.position.set(0, length / 2, 0);
-    this.y.position.set(0, -length / 2, 0);
-    this.z.position.set(0, length / 2, 0);
+    this.x.translateY(length / 2);
+    this.y.translateY(-length / 2);
+    this.z.translateY(length / 2);
   }
 
   setRadius(radius) {
