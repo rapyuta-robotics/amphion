@@ -20,6 +20,7 @@ class Marker extends Core {
   }
 
   update(message) {
+    super.update(message);
     this.markerManager.updateMarker(message);
   }
 

@@ -7,7 +7,6 @@ class Cube extends Mesh {
     super();
     this.geometry = new THREE.BoxGeometry();
     this.material = new THREE.MeshStandardMaterial();
-    this.rotateX(Math.PI / 2);
   }
 
   setScale({ x }) {

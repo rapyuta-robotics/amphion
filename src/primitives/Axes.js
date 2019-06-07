@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import Cylinder from './Cylinder';
 import {
   DEFAULT_COLOR_X_AXIS,
@@ -30,10 +32,9 @@ class Axes extends Group {
 
   setLength(length) {
     length = parseFloat(length);
-    this.children.forEach((child) => {
-      const { x, y, z } = child.scale;
-      child.position.set(0, 0, 0);
-      child.scale.set(x, length, z);
+    _.each([this.x, this.y, this.z], (axis) => {
+      axis.position.set(0, 0, 0);
+      axis.scale.setY(length);
     });
 
     this.x.translateY(length / 2);
@@ -42,9 +43,9 @@ class Axes extends Group {
   }
 
   setRadius(radius) {
-    this.children.forEach((child) => {
-      const { x, y, z } = child.scale;
-      child.scale.set(parseFloat(radius), y, parseFloat(radius));
+    _.each(this.children, (child) => {
+      child.scale.setX(parseFloat(radius));
+      child.scale.setZ(parseFloat(radius));
     });
   }
 }

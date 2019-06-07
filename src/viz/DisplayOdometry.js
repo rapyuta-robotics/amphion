@@ -4,7 +4,7 @@ import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
-import { HEAD_LENGTH, HEAD_RADIUS, POSE_VIZ_TYPES, SHAFT_LENGTH, SHAFT_RADIUS } from './Pose';
+import { POSE_VIZ_TYPES } from './Pose';
 import Axes from '../primitives/Axes';
 import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
 
@@ -38,13 +38,16 @@ class DisplayOdometry extends Core {
       return;
     }
 
-    if (size < this.keepSize) {
-      const removeCount = this.keepSize - size;
+    if (size < this.keepSize && size < this.objectPool.length) {
+      const removeCount = this.objectPool.length - size;
       for (let i = 0; i < removeCount; i++) {
         this.object.remove(this.objectPool[i]);
       }
 
-      const slicedList = this.objectPool.slice(this.keepSize - size, this.objectPool.length);
+      const slicedList = this.objectPool.slice(
+        this.objectPool.length - size,
+        this.objectPool.length
+      );
       newKeepList = [...slicedList];
     } else {
       newKeepList = [...this.objectPool];
@@ -52,6 +55,7 @@ class DisplayOdometry extends Core {
 
     this.objectPool = newKeepList;
     this.keepSize = size;
+    this.currentObject = this.objectPool.length - 1;
   }
 
   removeAllObjects() {
@@ -71,6 +75,7 @@ class DisplayOdometry extends Core {
       position: this.objectPool[this.currentObject].position,
       quaternion: this.objectPool[this.currentObject].quaternion,
     };
+
 
     return checkToleranceThresholdExceed(oldPose, newPose, this.options);
   }
@@ -111,14 +116,7 @@ class DisplayOdometry extends Core {
     const { type: currentType } = this.options;
     const {
       type,
-      positionTolerance,
-      angleTolerance,
       keep,
-      alpha,
-      shaftLength,
-      shaftRadius,
-      headLength,
-      headRadius
     } = options;
 
     this.options = options;
@@ -135,6 +133,7 @@ class DisplayOdometry extends Core {
   }
 
   update(message) {
+    super.update(message);
     if (!this.keepSize) {
       this.removeAllObjects();
       return;

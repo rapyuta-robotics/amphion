@@ -1,6 +1,6 @@
 import Core from '../core';
 import { MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
-import Pose, { POSE_VIZ_TYPES } from './Pose';
+import Pose  from './Pose';
 import * as TransformUtils from '../utils/transform';
 import { setObjectDimension } from '../utils/helpers';
 
@@ -14,11 +14,11 @@ class PoseArray extends Core {
   }
 
   updateOptions(options) {
-    const newOptions = { ...options };
-    this.options = newOptions;
+    this.options = options;
   }
 
   update(message) {
+    super.update(message);
     this.object.children.forEach((obj, index) => {
       obj.parent.remove(obj);
     });
@@ -33,7 +33,7 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
-      setObjectDimension(this.object.children[i], options);
+      setObjectDimension(this.object.children[i], this.options);
     }
   }
 }

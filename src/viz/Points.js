@@ -1,41 +1,60 @@
-import Group from '../primitives/Group'
+import { STYLE } from './LaserScan';
 
 const { THREE } = window;
 
 class Points {
   constructor(options = {}) {
     this.max_pts = options.max_pts || 10000;
-    this.pointRatio = options.pointRatio || 1;
-    this.messageRatio = options.messageRatio || 1;
-    this.messageCount = 0;
     this.rootObject = options.rootObject || new THREE.Object3D();
   }
 
-  setup(frame, pointStep, fields) {
-    if (this.rootObject.children.length === 0) {
-      // turn fields to a map
-      fields = fields || [];
-      this.fields = {};
-      for (let i = 0; i < fields.length; i++) {
-        this.fields[fields[i].name] = fields[i];
-      }
-      this.geom = new THREE.BufferGeometry();
+  setup(type, size, alpha) {
+    this.rootObject.children.forEach(child => {
+      this.rootObject.remove(child);
+    });
 
-      this.positions = new THREE.BufferAttribute(new Float32Array(this.max_pts * 3), 3, false);
-      this.geom.addAttribute('position', this.positions.setDynamic(true));
+    this.positions = new THREE.BufferAttribute(new Float32Array(this.max_pts * 3), 3, false);
+    this.colors = new THREE.BufferAttribute(new Float32Array(this.max_pts * 3), 3, false);
 
-      this.material = new THREE.PointsMaterial({ color: 0x888888, size: 0.1 });
-      this.object = new THREE.Points(this.geom, this.material);
-      this.rootObject.add(this.object);
+    let options = {};
+
+    if (type === STYLE.POINTS) {
+      const sprite = new THREE.TextureLoader()
+        .load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/circle.png');
+
+      options = {
+        map: sprite,
+        alphaTest: 0.5,
+      };
     }
-    return (this.messageCount++ % this.messageRatio) === 0;
+
+    this.geomtry = new THREE.BufferGeometry();
+    this.geomtry.addAttribute('position', this.positions.setDynamic(true));
+    this.geomtry.addAttribute('color', this.colors.setDynamic(true));
+
+    this.material = new THREE.PointsMaterial({ color: 0x888888, size, ...options});
+    this.material.vertexColors = THREE.VertexColors;
+    this.material.transparent = true;
+    this.material.opacity = alpha;
+
+    this.object = new THREE.Points(this.geomtry, this.material);
+    this.rootObject.add(this.object);
   }
 
   update(data) {
-    this.geom.setDrawRange(0, data);
-
+    this.geomtry.setDrawRange(0, data);
     this.positions.needsUpdate = true;
+    this.colors.needsUpdate = true;
     this.positions.updateRange.count = data * this.positions.itemSize;
+    this.colors.updateRange.count = data * this.colors.itemSize;
+  }
+
+  setAlpha(alpha) {
+    this.material.opacity = alpha;
+  }
+
+  setSize(size) {
+    this.material.size = size;
   }
 }
 

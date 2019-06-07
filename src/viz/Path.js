@@ -1,4 +1,5 @@
-import ROSLIB from 'roslib';
+import _ from 'lodash';
+
 import Core from '../core';
 import { MESSAGE_TYPE_PATH } from '../utils/constants';
 import Group from '../primitives/Group';
@@ -9,25 +10,27 @@ class Path extends Core {
     super(ros, topicName, MESSAGE_TYPE_PATH);
     this.options = options;
     this.object = new Group();
+    this.line = null;
+  }
+
+  updateOptions(options) {
+    this.options = options;
   }
 
   update(message) {
+    super.update(message);
     const { poses } = message;
-    const points = [];
+    const { color } = this.options;
+    const points = _.map(poses, poseData => poseData.pose.position);
 
-    poses.forEach((poseData) => {
-      const { pose: { position } } = poseData;
-      points.push(position);
-    });
+    if (this.line) {
+      this.object.remove(this.line);
+    }
 
-    // remove previous line
-    this.object.children.forEach((children) => {
-      this.object.remove(children);
-    });
-
-    const line = new Line(0x00ff00);
-    line.updatePoints(points);
-    this.object.add(line);
+    this.line = new Line(null, 5, true);
+    this.line.setColor(new THREE.Color(color));
+    this.line.updatePoints(points);
+    this.object.add(this.line);
   }
 }
 

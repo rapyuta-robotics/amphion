@@ -1,35 +1,121 @@
 import Core from '../core';
 import { MESSAGE_TYPE_IMAGE } from '../utils/constants';
 
+
 const { THREE } = window;
 
+const BASE64 =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+function decode64(x) {
+  const a = [];
+  let z = 0;
+  let bits = 0;
+
+  for (let i = 0, len = x.length; i < len; i++) {
+    z += BASE64.indexOf(x[i]);
+    bits += 6;
+    if (bits >= 8) {
+      bits -= 8;
+      a.push(z >> bits);
+      z &= ((2 ** bits) - 1);
+    }
+    z <<= 6;
+  }
+  return a;
+}
+
 class Image extends Core {
-  constructor(ros, topicName, imageEle) {
+  constructor(ros, topicName, options = {}) {
     super(ros, topicName, MESSAGE_TYPE_IMAGE);
     this.object = new THREE.Group();
-    this.imageEle = imageEle;
+    this.options = options;
   }
 
-  update(message) {
-    const { data } = message;
-    const { width, height } = message;
-    const ctx = this.imageEle.getContext('2d');
+  setImageRef(ref) {
+    this.imageCanvas = ref;
+  }
+
+  applyImageData(message) {
+    const {
+      data,
+      step,
+      width,
+      height,
+      is_bigendian: isBigEndian,
+      encoding
+    } = message;
+
+    const ctx = this.imageCanvas.getContext('2d');
     const imgData = ctx.createImageData(width, height);
-    const encodeToUInt8 = new TextEncoder().encode(data);
 
-    // depends on the data being sent
-    // set to 3 since considering for bgr8 formal only
-    const offset = 3;
+    const decodedData = atob(data);
+    const newData = [];
+    decodedData.split('').forEach((data, index) => {
+      newData.push(decodedData.charCodeAt(index));
+    });
 
-    for (let i = 0; i < encodeToUInt8.length; i += offset) {
-      // Since the encode data is in the bgr order
-      imgData.data[i + 0] = encodeToUInt8[i + 2];
-      imgData.data[i + 1] = encodeToUInt8[i + 1];
-      imgData.data[i + 2] = encodeToUInt8[i + 0];
-      imgData.data[i + 3] = 255;
+    const encodeToUInt8 = Uint8Array.from(newData);
+    const encodedDataView = new DataView(encodeToUInt8.buffer);
+
+    switch (encoding) {
+      case 'mono8': {
+        let j = 0;
+        for (let i = 0; i < step * height; i++) {
+          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
+          imgData.data[j++] = 255;
+        }
+        break;
+      }
+      case 'bgr8': {
+        const offset = 3;
+
+        let j = 0;
+        for (let i = 0; i <  step * height; i += offset) {
+          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 0,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
+          imgData.data[j++] = 255;
+        }
+        break;
+      }
+      case 'rgb8': {
+        const offset = 3;
+
+        let j = 0;
+        for (let i = 0; i <  step * height; i += offset) {
+          imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 1,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
+          imgData.data[j++] = 255;
+        }
+        break;
+      }
+      default:
+        break;
     }
 
     ctx.putImageData(imgData, 0, 0);
+  }
+
+  updateOptions(options) {
+    this.options = options;
+  }
+
+  update(message) {
+    if (this.imageCanvas) {
+      const { width, height } = message;
+
+      this.imageCanvas.width = width;
+      this.imageCanvas.height = height;
+
+      this.applyImageData(message);
+    }
+  }
+
+  hide() {
+    super.hide();
+    this.imageCanvas = null;
   }
 }
 

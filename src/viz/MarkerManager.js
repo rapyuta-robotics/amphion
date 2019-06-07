@@ -1,8 +1,12 @@
+import _ from 'lodash';
+
+import ROSLIB from 'roslib';
 import { MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Cylinder from '../primitives/Cylinder';
 import Line from '../primitives/Line';
 import Cube from '../primitives/Cube';
+import CubeList from '../primitives/CubeList';
 import Sphere from '../primitives/Sphere';
 import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
@@ -14,7 +18,7 @@ import {
   HEAD_LENGTH,
   HEAD_RADIUS
 } from './Pose';
-import ROSLIB from 'roslib';
+import SphereList from '../primitives/SphereList';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -37,7 +41,7 @@ export default class MarkerManager {
   }
 
   extractNameSpace(str) {
-    const tokens = str.split("-");
+    const tokens = str.split('-');
     return tokens[0];
   }
 
@@ -57,20 +61,18 @@ export default class MarkerManager {
   }
 
   updateOptions(options, context) {
-    const { queueSize } = options;
+    const { queueSize, namespaces } = options;
     const { queueSize: currentQueueSize } = context;
 
-    if (currentQueueSize != queueSize) {
+    if (currentQueueSize !== queueSize) {
       this.setQueueSize(queueSize, context);
     }
 
-    const { namespaces } = options;
-    let newNamespaces = { ...namespaces };
-    this.namespaces = newNamespaces;
+    this.namespaces = namespaces;
 
-    Object.keys(this.objectMap).forEach((key) => {
+    _.each(this.objectMap, (object, key) => {
       const namespace = this.extractNameSpace(key);
-      this.objectMap[key].visible = this.namespaces[namespace];
+      object.visible = this.namespaces[namespace];
     });
   }
 
@@ -79,24 +81,27 @@ export default class MarkerManager {
   }
 
   updateMarker(marker) {
-    const { pose: { position, orientation }, scale } = marker;
+    const {
+      pose: { position, orientation }, scale, color, colors, points
+    } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 
-    if (marker.type === MARKERARRAY_TYPES.LINE_STRIP
-      || marker.type === MARKERARRAY_TYPES.LINE_LIST) {
-      markerObject.updatePoints(marker.points);
+    if (markerObject.updatePoints) {
+      markerObject.updatePoints(points, colors, marker);
     }
 
     markerObject.setTransform({ translation: position, rotation: orientation });
-    if (markerObject.setScale) {
+
+    // To avoid settings these properties for list types: LINE, TRIANGLE, CUBELIST etc
+    if (markerObject.setScale && !markerObject.updatePoints) {
       markerObject.setScale({ x: scale.x, y: scale.y, z: scale.z });
     }
-    if (markerObject.setColor) {
-      markerObject.setColor(marker.color);
+    if (markerObject.setColor && colors.length <= 0) {
+      markerObject.setColor(color);
     }
 
     const { ns } = marker;
-    if (!this.namespaces.hasOwnProperty(ns)) {
+    if (!(ns in this.namespaces)) {
       this.namespaces[ns] = true;
       this.onChange();
     }
@@ -127,20 +132,23 @@ export default class MarkerManager {
         return new Cube();
       case MARKERARRAY_TYPES.SPHERE:
         return new Sphere();
-      case MARKERARRAY_TYPES.CYLINDER:
-        return new Cylinder();
+      case MARKERARRAY_TYPES.CYLINDER: {
+        const group = new Group();
+        group.add(new Cylinder());
+        return group;
+      }
       case MARKERARRAY_TYPES.LINE_LIST:
         return new LineSegments();
       case MARKERARRAY_TYPES.LINE_STRIP:
         return new Line();
       case MARKERARRAY_TYPES.SPHERE_LIST:
-        return new Sphere();
+        return new SphereList();
       case MARKERARRAY_TYPES.POINTS:
-        return new Points(marker.points);
+        return new Points();
       case MARKERARRAY_TYPES.TRIANGLE_LIST:
-        return new TriangleList(marker.points);
+        return new TriangleList();
       case MARKERARRAY_TYPES.CUBE_LIST:
-        return new Cube();
+        return new CubeList();
       case MARKERARRAY_TYPES.ARROW:
       default: {
         const arrow = new Arrow();

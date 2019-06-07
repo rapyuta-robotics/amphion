@@ -1,6 +1,7 @@
 export const COLOR_TYPES = {
   OCCUPIED: 100,
   UNOCCUPIED: 0,
+  UNKNOWN: -1,
   OTHER: 127,
 };
 
@@ -14,25 +15,34 @@ export const populateImageDataFromNavMsg = (
     for (let col = 0; col < width; col++) {
       const mapI = col + (height - row - 1) * width;
       const data = dataSource[mapI];
-      let val;
-      switch (data) {
-        case COLOR_TYPES.UNOCCUPIED: {
-          val = 255;
-          break;
-        }
-        case COLOR_TYPES.OCCUPIED: {
-          val = 0;
-          break;
-        }
-        default: {
-          val = COLOR_TYPES.OTHER;
-        }
-      }
+      const val = new DataView(Uint8Array.from([data]).buffer).getUint8(0);
       let i = (col + row * width) * 4;
-      imageData.data[i] = val;
-      imageData.data[++i] = val;
-      imageData.data[++i] = val;
-      imageData.data[++i] = 255;
+
+      if (val >= 0 && val <= 100) {
+        const v = 255 - (255 * val) / 100;
+        imageData.data[i] = v; // red
+        imageData.data[++i] = v; // green
+        imageData.data[++i] = v; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val >= 101 && val <= 127) {
+        // illegal positive values in green
+        imageData.data[i] = 0; // red
+        imageData.data[++i] = 255; // green
+        imageData.data[++i] = 0; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val >= 128 && val <= 254) {
+        // illegal negative (char) values in shades of red/yellow
+        imageData.data[i] = 255; // red
+        imageData.data[++i] = (255 * (val - 128)) / (254 - 128); // green
+        imageData.data[++i] = 0; // blue
+        imageData.data[++i] = 255; // alpha
+      } else {
+        // legal -1 value is tasteful blueish greenish grayish color
+        imageData.data[i] = 0x70; // red
+        imageData.data[++i] = 0x89; // green
+        imageData.data[++i] = 0x86; // blue
+        imageData.data[++i] = 255; // alpha
+      }
     }
   }
 };
@@ -49,9 +59,13 @@ export const populateRawImageDataFromNavMsg = (
       const data = dataSource[mapI];
 
       let i = (col + row * width) * 4;
-      imageData.data[i] = data;
-      imageData.data[++i] = data;
-      imageData.data[++i] = data;
+
+      const Uint8DV = new DataView(Uint8Array.from([data]).buffer);
+      const val = Uint8DV.getUint8(0);
+
+      imageData.data[i] = val;
+      imageData.data[++i] = val;
+      imageData.data[++i] = val;
       imageData.data[++i] = 255;
     }
   }
@@ -67,18 +81,52 @@ export const populateConstImageDataFromNavMsg = (
     for (let col = 0; col < width; col++) {
       const mapI = col + (height - row - 1) * width;
       const data = dataSource[mapI];
+      const val = new DataView(Uint8Array.from([data]).buffer).getUint8(0);
 
       let i = (col + row * width) * 4;
-      if (data === COLOR_TYPES.OCCUPIED) {
-        imageData.data[i] = 252;
-        imageData.data[++i] = 15;
-        imageData.data[++i] = 192;
-        imageData.data[++i] = 255;
-      } else {
+
+      if (val === 0) {
         imageData.data[i] = 0;
         imageData.data[++i] = 0;
         imageData.data[++i] = 0;
-        imageData.data[++i] = 0;
+        imageData.data[++i] = 0; // alpha
+      } else if (val >= 1 && val <= 98) {
+        // Blue to red spectrum for most normal cost values
+        const v = (255 * val) / 100;
+        imageData.data[i] = v; // red
+        imageData.data[++i] = 0; // green
+        imageData.data[++i] = 255 - v; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val === 99) {
+        // inscribed obstacle values (99) in cyan
+        imageData.data[i] = 0; // red
+        imageData.data[++i] = 255; // green
+        imageData.data[++i] = 255; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val === 100) {
+        // lethal obstacle values (100) in purple
+        imageData.data[i] = 255; // red
+        imageData.data[++i] = 0; // green
+        imageData.data[++i] = 255; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val > 100 && val <= 127) {
+        // illegal positive values in green
+        imageData.data[i] = 0; // red
+        imageData.data[++i] = 255; // green
+        imageData.data[++i] = 0; // blue
+        imageData.data[++i] = 255; // alpha
+      } else if (val >= 128 && val <= 254) {
+        // illegal negative (char) values in shades of red/yellow
+        imageData.data[i] = 255; // red
+        imageData.data[++i] = (255 * (val - 128)) / (254 - 128); // green
+        imageData.data[++i] = 0; // blue
+        imageData.data[++i] = 255; // alpha
+      } else {
+        // legal -1 value is tasteful blueish greenish grayish color
+        imageData.data[i] = 0x70; // red
+        imageData.data[++i] = 0x89; // green
+        imageData.data[++i] = 0x86; // blue
+        imageData.data[++i] = 255; // alpha
       }
     }
   }

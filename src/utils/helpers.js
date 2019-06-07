@@ -37,11 +37,17 @@ export const setObjectDimension = (object, options) => {
       break;
     }
     case POSE_VIZ_TYPES.flatArrow: {
-      const { arrowLength, color } = this.options;
+      const { arrowLength, color } = options;
 
       object.setLength(arrowLength);
       object.setColor(new THREE.Color(color));
       break;
     }
+  }
+};
+
+export const removeChildren = (object) => {
+  while (object.children.length > 0) {
+    object.remove(object.children[0]);
   }
 };

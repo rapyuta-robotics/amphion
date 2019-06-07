@@ -7,7 +7,7 @@ const { THREE } = window;
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;
   const rgb = dataView.getUint32(baseOffset + offsets.rgb, !isBigendian);
-  const hex = rgb.toString(16).substring(2);
+  const hex = _.padStart(rgb.toString(16), 6, '0');
   return {
     x: dataView.getFloat32(baseOffset + offsets.x, !isBigendian),
     y: dataView.getFloat32(baseOffset + offsets.y, !isBigendian),
@@ -69,11 +69,10 @@ const editPointCloudPoints = function (message) {
 
 
 class PointCloud extends Core {
-  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2) {
+  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2, options = {}) {
     super(ros, topicName, messageType);
-
     const cloudMaterial = new THREE.PointsMaterial({
-      size: 0.01,
+      size: 0.1,
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
@@ -116,6 +115,7 @@ class PointCloud extends Core {
   }
 
   update(message) {
+    super.update(message);
     const { positions, colors } = editPointCloudPoints(message);
     this.updatePointCloudGeometry(
       positions,

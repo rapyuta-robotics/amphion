@@ -1,14 +1,13 @@
 import _ from 'lodash';
 
-const { THREE } = window;
-
 import Core from '../core';
 import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
-import { DEFAULT_COLOR_X_AXIS } from '../utils/defaults';
 import { setObjectDimension } from '../utils/helpers';
+
+const { THREE } = window;
 
 export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
@@ -32,12 +31,6 @@ class Pose extends Core {
 
   static getNewPrimitive(options) {
     const {
-      color,
-      alpha,
-      shaftLength,
-      shaftRadius,
-      headLength,
-      headRadius,
       type
     } = options;
     let newObject = null;
@@ -59,7 +52,7 @@ class Pose extends Core {
     return newObject;
   }
 
-  setVizType(type) {
+  setVizType() {
     const newObject = Pose.getNewPrimitive(this.options);
     _.each(this.object.children, (child) => {
       child.parent.remove(child);
@@ -82,6 +75,7 @@ class Pose extends Core {
   }
 
   update(message) {
+    super.update(message);
     const { pose: { position, orientation } } = message;
     this.object.setTransform({
       translation: position,

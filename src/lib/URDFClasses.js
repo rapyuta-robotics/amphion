@@ -2,18 +2,14 @@ const { THREE } = window;
 const { Object3D, Quaternion } = THREE;
 
 class URDFLink extends Object3D {
-
   constructor(...args) {
-
     super(...args);
     this.isURDFLink = true;
     this.type = 'URDFLink';
     this.urdfNode = null;
-
   }
 
   copy(source, recursive) {
-
     super.copy(source, recursive);
     source.children.forEach((child) => {
       if (child.type === 'Mesh') {
@@ -23,25 +19,19 @@ class URDFLink extends Object3D {
     this.urdfNode = source.urdfNode;
 
     return this;
-
   }
-
 }
 
 class URDFJoint extends Object3D {
-
   get jointType() {
-
     return this._jointType;
-
   }
-  set jointType(v) {
 
+  set jointType(v) {
     if (this.jointType === v) return;
     this._jointType = v;
 
     switch (v) {
-
       case 'fixed':
       case 'continuous':
       case 'revolute':
@@ -56,15 +46,11 @@ class URDFJoint extends Object3D {
       case 'floating':
         this.jointValue = new Array(6).fill(0);
         break;
-
     }
-
   }
 
   get angle() {
-
     return this.jointValue;
-
   }
 
   constructor(...args) {
@@ -86,7 +72,6 @@ class URDFJoint extends Object3D {
 
   /* Overrides */
   copy(source, recursive) {
-
     super.copy(source, recursive);
 
     this.urdfNode = source.urdfNode;
@@ -110,33 +95,26 @@ class URDFJoint extends Object3D {
   }
 
   setOffset(...values) {
-
     values = values.map(v => parseFloat(v));
 
     if (!this.origPosition || !this.origQuaternion) {
-
       this.origPosition = this.position.clone();
       this.origQuaternion = this.quaternion.clone();
-
     }
 
     switch (this.jointType) {
-
       case 'fixed': {
         break;
       }
       case 'continuous':
       case 'revolute': {
-
         let angle = values[0];
         if (angle == null) break;
         if (angle === this.jointValue) break;
 
         if (!this.ignoreLimits && this.jointType === 'revolute') {
-
           angle = Math.min(this.limit.upper, angle);
           angle = Math.max(this.limit.lower, angle);
-
         }
 
         // FromAxisAngle seems to rotate the opposite of the
@@ -151,16 +129,13 @@ class URDFJoint extends Object3D {
       }
 
       case 'prismatic': {
-
         let angle = values[0];
         if (angle == null) break;
         if (angle === this.jointValue) break;
 
         if (!this.ignoreLimits) {
-
           angle = Math.min(this.limit.upper, angle);
           angle = Math.max(this.limit.lower, angle);
-
         }
 
         this.position.copy(this.origPosition);
@@ -169,26 +144,20 @@ class URDFJoint extends Object3D {
         this.jointValue = angle;
         this.worldMatrixNeedsUpdate = true;
         break;
-
       }
 
       case 'floating':
       case 'planar':
         // TODO: Support these joint types
-        console.warn(`'${ this.jointType }' joint not yet supported`);
-
+        console.warn(`'${this.jointType}' joint not yet supported`);
     }
 
     return this.jointValue;
-
   }
-
 }
 
 class URDFRobot extends URDFLink {
-
   constructor(...args) {
-
     super(...args);
     this.isURDFRobot = true;
     this.urdfNode = null;
@@ -198,11 +167,9 @@ class URDFRobot extends URDFLink {
 
     this.links = null;
     this.joints = null;
-
   }
 
   copy(source, recursive) {
-
     super.copy(source, recursive);
 
     this.urdfRobotNode = source.urdfRobotNode;
@@ -211,44 +178,32 @@ class URDFRobot extends URDFLink {
     this.links = {};
     this.joints = {};
 
-    this.traverse(c => {
-
+    this.traverse((c) => {
       if (c.isURDFJoint && c.name in source.joints) {
-
         this.joints[c.name] = c;
-
       }
 
       if (c.isURDFLink && c.name in source.links) {
-
         this.links[c.name] = c;
       }
-
     });
 
     return this;
-
   }
 
   setAngle(jointName, ...angle) {
-
     const joint = this.joints[jointName];
     if (joint) {
-
       return joint.setAngle(...angle);
-
     }
 
     return null;
   }
 
   setAngles(angles) {
-
     // TODO: How to handle other, multi-dimensional joint types?
     for (const name in angles) this.setAngle(name, angles[name]);
-
   }
-
 }
 
 export { URDFRobot, URDFLink, URDFJoint };

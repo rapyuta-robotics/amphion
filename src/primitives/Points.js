@@ -1,22 +1,36 @@
+import _ from 'lodash';
+
 import * as TransformUtils from '../utils/transform';
 
 const { THREE } = window;
 
 class Points extends THREE.Points {
-  constructor(points) {
+  constructor() {
     super();
     this.geometry = new THREE.Geometry();
-    if (points) {
-      for (let i = 0; i < points.length; i++) {
-        const { x, y, z } = points[i];
-        this.geometry.vertices.push(new THREE.Vector3(x, y, z));
-      }
-    }
-    this.material = new THREE.PointsMaterial();
+    this.material = new THREE.PointsMaterial({ vertexColors: THREE.VertexColors });
   }
 
   setTransform(transform) {
     TransformUtils.setTransform(this, transform);
+  }
+
+  updatePoints(points, colors, options = {}) {
+    const { scale: { x } } = options;
+
+    this.material.size = x;
+    this.geometry.vertices = _.map(points,
+      vertex => new THREE.Vector3(vertex.x, vertex.y, vertex.z));
+    this.geometry.verticesNeedUpdate = true;
+
+    if (colors.length > 0) {
+      this.geometry.colors = _.map(colors, color => new THREE.Color(color.r, color.g, color.b));
+      this.geometry.colorsNeedUpdate = true;
+    }
+  }
+
+  setScale({ x: size }) {
+    this.material.size = size;
   }
 }
 
