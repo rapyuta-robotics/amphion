@@ -1,0 +1,43 @@
+{
+  "name": "amphion",
+  "version": "0.0.3",
+  "description": "roslibjs based web visualization library",
+  "main": "./src/index.js",
+  "scripts": {},
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rapyuta-robotics/amphion.git"
+  },
+  "keywords": [
+    "ros",
+    "robotics",
+    "riz",
+    "javascript",
+    "threejs"
+  ],
+  "author": "Deep <deep@rapyuta-robotics.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rapyuta-robotics/amphion/issues"
+  },
+  "homepage": "https://amphion.rapyuta.io",
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-restricted-globals": "^0.2.0",
+    "object.assign": "^4.1.0",
+    "object.entries": "^1.1.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "roslib": "^1.0.1",
+    "three": "^0.102.1",
+    "urdf-loader": "^0.6.1"
+  }
+}
