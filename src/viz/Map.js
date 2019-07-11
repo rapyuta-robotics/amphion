@@ -35,7 +35,6 @@ class Map extends Core {
 
     const {
       alpha,
-      colorScheme,
       drawBehind,
     } = options;
 
