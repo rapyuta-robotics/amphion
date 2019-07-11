@@ -1,8 +1,8 @@
+import * as THREE from 'three';
+
 import Group from './Group';
 import Line from './Line';
 import { OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
-
-const { THREE } = window;
 
 class LineArrow extends Group {
   constructor() {

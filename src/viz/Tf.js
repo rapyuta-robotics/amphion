@@ -1,7 +1,6 @@
+import * as THREE from 'three';
 import _ from 'lodash';
 import ROSLIB from 'roslib';
-
-const { THREE } = window;
 
 import Core from '../core';
 import { TF_TOPICS } from '../utils/constants';

@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import Core from '../core';
 import { MESSAGE_TYPE_OCCUPANCYGRID } from '../utils/constants';
 import {
@@ -13,8 +15,6 @@ export const COLOR_SCHEMES = {
   CONST_MAP: 'constmap',
   RAW: 'raw',
 };
-
-const { THREE } = window;
 
 class Map extends Core {
   constructor(ros, topicName, options = {}) {
@@ -44,7 +44,7 @@ class Map extends Core {
     if (drawBehind) {
       this.object.material.side = THREE.DoubleSide;
     } else {
-      this.object.material.side = THREE.frontSide;
+      this.object.material.side = THREE.FrontSide;
     }
 
     if (this.prevMessage) {

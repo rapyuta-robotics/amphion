@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import Core from '../core';
 import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
 import Points from './Points';

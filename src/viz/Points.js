@@ -1,6 +1,6 @@
-import { STYLE } from './LaserScan';
+import * as THREE from 'three';
 
-const { THREE } = window;
+import { STYLE } from './LaserScan';
 
 class Points {
   constructor(options = {}) {

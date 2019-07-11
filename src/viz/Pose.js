@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import _ from 'lodash';
 
 import Core from '../core';
@@ -6,8 +7,6 @@ import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
 import { setObjectDimension } from '../utils/helpers';
-
-const { THREE } = window;
 
 export const POSE_VIZ_TYPES = {
   arrow: OBJECT_TYPE_ARROW,

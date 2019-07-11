@@ -1,8 +1,7 @@
+import * as THREE from 'three';
 import _ from 'lodash';
 
 import * as TransformUtils from '../utils/transform';
-
-const { THREE } = window;
 
 class Points extends THREE.Points {
   constructor() {

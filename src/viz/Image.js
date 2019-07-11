@@ -1,8 +1,8 @@
+import * as THREE from 'three';
+
 import Core from '../core';
 import { MESSAGE_TYPE_IMAGE } from '../utils/constants';
 
-
-const { THREE } = window;
 
 const BASE64 =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 function decode64(x) {

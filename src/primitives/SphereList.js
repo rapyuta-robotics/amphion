@@ -1,8 +1,9 @@
+import * as THREE from 'three';
+
 import Mesh from './Mesh';
 import ObjectCacher from '../utils/ObjectCacher';
 import { MARKERARRAY_TYPES } from '../utils/constants';
 
-const { THREE } = window;
 class SphereList extends Mesh {
   constructor() {
     super();

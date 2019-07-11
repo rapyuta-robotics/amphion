@@ -1,8 +1,9 @@
+import * as THREE from 'three';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+
 import Core from '../core';
 import { MESSAGE_TYPE_INTERACTIVEMARKER } from '../utils/constants';
 import Cube from '../primitives/Cube';
-
-const { THREE } = window;
 
 const AXIS_MAP = {
   X: 'X',
@@ -22,7 +23,7 @@ const ROTATE_MAP = {
   E: 'E',
 };
 
-class TransformControls {
+class InteractiveControls {
   constructor(object, options) {
     const {
       domElement,
@@ -42,7 +43,7 @@ class TransformControls {
   }
 
   initTransformControls() {
-    const transformControls = new THREE.TransformControls(
+    const transformControls = new TransformControls(
       this.camera,
       this.domElement.current,
     );
@@ -168,7 +169,7 @@ class InteractiveMarkers extends Core {
   }
 
   attachTransformControls(object) {
-    const transformControls = new TransformControls(object, this.options);
+    const transformControls = new InteractiveControls(object, this.options);
     transformControls.enable6DOF('local');
   }
 

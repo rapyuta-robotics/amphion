@@ -1,10 +1,10 @@
+import * as THREE from 'three';
 import _ from 'lodash';
 import ROSLIB from 'roslib';
 
 import Core from '../core';
 import { TF_TOPICS } from '../utils/constants';
 
-const { THREE } = window;
 class DisplayTf extends Core {
   constructor(ros, object) {
     super(ros);

@@ -1,11 +1,11 @@
+import * as THREE from 'three';
+
 import Axes from './Axes';
 import Group from './Group';
 import Text from './Text';
 import Arrow from './Arrow';
 import { HEAD_LENGTH, HEAD_RADIUS, SHAFT_LENGTH, SHAFT_RADIUS } from '../viz/Pose';
 import { DEFAULT_COLOR_ARROW } from '../utils/defaults';
-
-const { THREE } = window;
 
 class TfFrame extends Group {
   constructor(frameId) {

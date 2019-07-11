@@ -1,6 +1,6 @@
-import Mesh from './Mesh';
+import * as THREE from 'three';
 
-const { THREE } = window;
+import Mesh from './Mesh';
 
 class Cube extends Mesh {
   constructor() {

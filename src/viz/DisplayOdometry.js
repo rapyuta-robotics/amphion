@@ -1,4 +1,6 @@
+import * as THREE from 'three';
 import _ from 'lodash';
+
 import Core from '../core';
 import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
@@ -7,8 +9,6 @@ import * as TransformUtils from '../utils/transform';
 import { POSE_VIZ_TYPES } from './Pose';
 import Axes from '../primitives/Axes';
 import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
-
-const { THREE } = window;
 
 class DisplayOdometry extends Core {
   constructor(ros, topicName, options = {}) {

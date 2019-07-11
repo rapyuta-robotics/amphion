@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 import { POSE_VIZ_TYPES } from '../viz/Pose';
 
 export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {

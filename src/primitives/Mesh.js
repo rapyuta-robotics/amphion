@@ -1,8 +1,8 @@
+import { Mesh as THREEMesh, Math } from 'three';
+
 import * as TransformUtils from '../utils/transform';
 
-const { THREE } = window;
-
-class Mesh extends THREE.Mesh {
+class Mesh extends THREEMesh {
   setTransform(transform) {
     TransformUtils.setTransform(this, transform);
   }
@@ -16,7 +16,7 @@ class Mesh extends THREE.Mesh {
   }
 
   setAlpha(alpha) {
-    this.material.opacity = THREE.Math.clamp(alpha, 0, 1);
+    this.material.opacity = Math.clamp(alpha, 0, 1);
   }
 }
 

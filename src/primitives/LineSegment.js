@@ -1,8 +1,7 @@
+import * as THREE from 'three';
 import _ from 'lodash';
 import * as TransformUtils from '../utils/transform';
 import { DEFAULT_COLOR_LINE } from '../utils/defaults';
-
-const { THREE } = window;
 
 class LineSegments extends THREE.LineSegments {
   constructor(color = DEFAULT_COLOR_LINE, linewidth = 5) {
