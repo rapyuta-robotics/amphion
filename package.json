@@ -1,13 +1,9 @@
 {
   "name": "amphion",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "roslibjs based web visualization library",
   "main": "./src/index.js",
   "scripts": {},
-  "files": [
-    "lib",
-    "src"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rapyuta-robotics/amphion.git"
@@ -19,12 +15,11 @@
     "javascript",
     "threejs"
   ],
-  "author": "Deep <deep@rapyuta-robotics.com>",
+  "author": "Rapyuta Robotics <support@rapyuta-robotics.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rapyuta-robotics/amphion/issues"
   },
-  "homepage": "https://amphion.rapyuta.io",
   "devDependencies": {
     "eslint": "^5.15.1",
     "eslint-config-airbnb": "^17.1.0",
