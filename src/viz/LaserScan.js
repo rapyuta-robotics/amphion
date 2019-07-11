@@ -37,8 +37,7 @@ class LaserScan extends Core {
     super(ros, topicName, MESSAGE_TYPE_LASERSCAN);
     this.options = options;
 
-    const { size, alpha } = options;
-    this.points = new Points(STYLE.POINTS, size, alpha);
+    this.points = new Points(STYLE.POINTS);
     this.sphereList = new SphereList();
     this.cubeList = new CubeList();
 
@@ -75,7 +74,7 @@ class LaserScan extends Core {
         normI = this.getNormalizedIntensity(z);
         break;
       default:
-          break
+        break;
     }
 
     const minColorHex = new THREE.Color(minColor);
@@ -108,7 +107,7 @@ class LaserScan extends Core {
         normI = this.getNormalizedAxisValue(z);
         break;
       default:
-        break
+        break;
     }
 
     const finalColor = (normI * maxAxisValue) + ((1 - normI) * minAxisValue);
@@ -172,7 +171,6 @@ class LaserScan extends Core {
           z: 0
         };
         const color = this.colorTransformer(intensities[i], position);
-        const { x, y, z } = position;
 
         switch (style) {
           case STYLE.POINTS:
