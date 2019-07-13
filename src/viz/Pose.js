@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import Core from '../core';
 import { MESSAGE_TYPE_POSESTAMPED, OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_TYPE_FLAT_ARROW } from '../utils/constants';
@@ -53,7 +52,7 @@ class Pose extends Core {
 
   setVizType() {
     const newObject = Pose.getNewPrimitive(this.options);
-    _.each(this.object.children, (child) => {
+    this.object.children.forEach((child) => {
       child.parent.remove(child);
     });
     this.object.add(newObject);

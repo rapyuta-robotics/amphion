@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import * as TransformUtils from '../utils/transform';
 
@@ -18,12 +17,12 @@ class Points extends THREE.Points {
     const { scale: { x } } = options;
 
     this.material.size = x;
-    this.geometry.vertices = _.map(points,
+    this.geometry.vertices = points.map(
       vertex => new THREE.Vector3(vertex.x, vertex.y, vertex.z));
     this.geometry.verticesNeedUpdate = true;
 
     if (colors.length > 0) {
-      this.geometry.colors = _.map(colors, color => new THREE.Color(color.r, color.g, color.b));
+      this.geometry.colors = colors.map( color => new THREE.Color(color.r, color.g, color.b));
       this.geometry.colorsNeedUpdate = true;
     }
   }

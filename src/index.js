@@ -1,5 +1,3 @@
-import DisplayTf from './viz/DisplayTf';
-import DisplayJointState from './viz/DisplayJointState';
 import Pose from './viz/Pose';
 import Polygon from './viz/Polygon';
 import Tf from './viz/Tf';
@@ -13,11 +11,11 @@ import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
 import Marker from './viz/Marker';
-// import InteractiveMarker from './viz/InteractiveMarkers';
+
+import Viewer2d from './viewer/2d';
+import Viewer3d from './viewer/3d';
 
 export default {
-  DisplayTf,
-  DisplayJointState,
   PointCloud,
   Polygon,
   Pose,
@@ -31,5 +29,7 @@ export default {
   Path,
   Image,
   Marker,
-  // InteractiveMarker
+
+  Viewer2d,
+  Viewer3d,
 };

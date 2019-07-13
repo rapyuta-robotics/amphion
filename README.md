@@ -1,8 +1,10 @@
-# amphion
+# Amphion
 [![NPM package][npm]][npm-url]
 [![Dependencies][dependencies]][dependencies-url]
 [![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
 [![Language Grade][lgtm]][lgtm-url]
+
+Visualization objects for ROS messages based on [three.js](https://threejs.org). Primarily built for use in [Zethus](https://github.com/rapyuta-robotics/zethus)
 
 [npm]: https://badge.fury.io/js/amphion.svg
 [npm-url]: https://www.npmjs.com/package/amphion
