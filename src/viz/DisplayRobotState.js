@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import Core from '../core';
 import { MESSAGE_TYPE_DISPLAYROBOTSTATE } from '../utils/constants';
 
@@ -17,10 +15,10 @@ class DisplayRobotState extends Core {
         multi_dof_joint_state: multiDofJointStates,
       },
     } = message;
-    _.each(jointStates.name, (jointName, messageIndex) => {
+    jointStates.name.forEach((jointName, messageIndex) => {
       this.object.setAngle(jointName, jointStates.angles[messageIndex]);
     });
-    _.each(multiDofJointStates.joint_names, (jointName, messageIndex) => {
+    multiDofJointStates.joint_names.forEach((jointName, messageIndex) => {
       this.setMultiDofJointAngle(jointName, multiDofJointStates.transforms[messageIndex]);
     });
   }

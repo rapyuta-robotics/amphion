@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import Core from '../core';
 import { MESSAGE_TYPE_PATH } from '../utils/constants';
@@ -22,7 +21,7 @@ class Path extends Core {
     super.update(message);
     const { poses } = message;
     const { color } = this.options;
-    const points = _.map(poses, poseData => poseData.pose.position);
+    const points = (poses || []).map(poseData => poseData.pose.position);
 
     if (this.line) {
       this.object.remove(this.line);

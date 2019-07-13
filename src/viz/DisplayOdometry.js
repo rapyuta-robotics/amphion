@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import Core from '../core';
 import { MESSAGE_TYPE_ODOMETRY } from '../utils/constants';
@@ -23,7 +22,7 @@ class DisplayOdometry extends Core {
   }
 
   setVizType(controlledObject) {
-    if (!_.isNil(controlledObject)) {
+    if (controlledObject) {
       this.object = controlledObject;
     } else {
       this.object = new Group();

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import * as TransformUtils from '../utils/transform';
 import { DEFAULT_COLOR_LINE } from '../utils/defaults';
@@ -26,11 +25,11 @@ class Line extends THREE.Line {
   updatePoints(points, colors = []) {
     const color = [];
 
-    this.geometry.vertices = _.map(points, ({ x, y, z }) => new THREE.Vector3(x, y, z));
+    this.geometry.vertices = points.map(({ x, y, z }) => new THREE.Vector3(x, y, z));
     this.geometry.verticesNeedUpdate = true;
 
     if (colors) {
-      _.each(colors, ({ r, g, b }) =>  {
+      colors.forEach(({ r, g, b }) =>  {
         color.push(new THREE.Color(r, g, b));
       });
 

@@ -1,5 +1,4 @@
 import ROSLIB from 'roslib';
-import _ from 'lodash';
 import * as THREE from 'three';
 import URDFLoader from 'urdf-loader';
 import Group from '../primitives/Group';
@@ -28,11 +27,11 @@ class RobotModel extends URDFLoader {
     this.param.get((robotString) => {
       const parser = new DOMParser();
       const urdf = parser.parseFromString(robotString, 'text/xml');
-      const packages = _.map(urdf.querySelectorAll('mesh'), (mesh) => {
+      const packages = [...urdf.querySelectorAll('mesh')].map((mesh) => {
         const [targetPkg] = mesh.getAttribute('filename').replace(/^package:\/\//, '').split(/\/(.+)/);
         return targetPkg;
       });
-      onComplete(_.uniq(packages));
+      onComplete([...new Set(packages)]);
     });
   }
 

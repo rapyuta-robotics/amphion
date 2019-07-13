@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 
 import Core from '../core';
 import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS } from '../utils/constants';
@@ -7,7 +6,7 @@ import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS } from '../utils/consta
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;
   const rgb = dataView.getUint32(baseOffset + offsets.rgb, !isBigendian);
-  const hex = _.padStart(rgb.toString(16), 6, '0');
+  const hex = rgb.toString(16).padStart(6, '0');
   return {
     x: dataView.getFloat32(baseOffset + offsets.x, !isBigendian),
     y: dataView.getFloat32(baseOffset + offsets.y, !isBigendian),
@@ -39,10 +38,13 @@ const editPointCloudPoints = function (message) {
   const positions = [];
   const colors = [];
   if (message) {
-    const offsets = _.mapValues(
-      _.keyBy(message.fields, f => f.name),
-      v => v.offset,
-    );
+    const { fields } = message;
+    const offsets = {};
+
+    fields.forEach(f => {
+      offsets[f.name] = f.offset;
+    });
+
     const n = message.height * message.width;
     const uint8Buffer = Uint8Array.from(decode64(message.data)).buffer;
     const dataView = new DataView(uint8Buffer);

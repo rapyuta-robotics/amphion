@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import ROSLIB from 'roslib';
 import { MARKERARRAY_TYPES } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
@@ -70,10 +68,12 @@ export default class MarkerManager {
 
     this.namespaces = namespaces;
 
-    _.each(this.objectMap, (object, key) => {
-      const namespace = this.extractNameSpace(key);
-      object.visible = this.namespaces[namespace];
-    });
+    for(let key in this.objectMap) {
+      if (this.objectMap.hasOwnProperty(key)) {
+        const namespace = this.extractNameSpace(key);
+        this.objectMap[key].visible = this.namespaces[namespace];
+      }
+    }
   }
 
   onChange() {

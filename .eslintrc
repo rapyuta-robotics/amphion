@@ -1,4 +1,6 @@
 {
+  "extends": ["eslint-config-airbnb", "prettier", "prettier/react"],
+  "plugins": ["prettier"],
     "env": {
       "browser": true,
       "node": true,
@@ -9,8 +11,8 @@
       "ecmaVersion": 2017,
       "sourceType": "module"
     },
-    "extends": "airbnb-base",
     "rules": {
+      "prettier/prettier": "error",
       "semi": 2,
       "func-names": "off",
       "no-plusplus": "off",

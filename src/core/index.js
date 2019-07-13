@@ -1,5 +1,4 @@
 import ROSLIB from 'roslib';
-import _ from 'lodash';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {
@@ -41,8 +40,8 @@ class Core {
       return;
     }
 
-    if (_.isArray(this.topic)) {
-      _.each(this.topic, (t) => {
+    if (Array.isArray(this.topic)) {
+      this.topic.forEach((t) => {
         t.subscribe(this.update);
       });
     } else {
@@ -55,8 +54,8 @@ class Core {
       return;
     }
 
-    if (_.isArray(this.topic)) {
-      _.each(this.topic, (t) => {
+    if (Array.isArray(this.topic)) {
+      this.topic.forEach((t) => {
         t.unsubscribe();
       });
     } else {
@@ -65,7 +64,7 @@ class Core {
   }
 
   update(message) {
-    const header = _.get(message, 'header.frame_id');
+    const header = message.header ? message.header.frame_id : '';
     if (header !== this.headerFrameId) {
       this.headerFrameId = header;
       this.onHeaderChange(this.headerFrameId);

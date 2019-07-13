@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import _ from 'lodash';
 import ROSLIB from 'roslib';
 
 import Core from '../core';
@@ -9,7 +8,7 @@ import TfFrame from '../primitives/TfFrame';
 class Tf extends Core {
   constructor(ros, options = {}) {
     super(ros);
-    this.topic = _.map(TF_TOPICS, ([name, messageType]) => new ROSLIB.Topic({
+    this.topic = TF_TOPICS.map(([name, messageType]) => new ROSLIB.Topic({
       ros,
       name,
       messageType,
