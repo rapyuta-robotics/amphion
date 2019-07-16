@@ -6,14 +6,17 @@ import PointCloud from './viz/PointCloud';
 import MarkerArray from './viz/MarkerArray';
 import LaserScan from './viz/LaserScan';
 import Map from './viz/Map';
-import DisplayOdometry from './viz/DisplayOdometry';
+import Odometry from './viz/Odometry';
 import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
 import Marker from './viz/Marker';
 
+import Scene from './core/scene';
+
 import Viewer2d from './viewer/2d';
 import Viewer3d from './viewer/3d';
+import TfViewer from './viewer/Tf';
 
 export default {
   PointCloud,
@@ -25,11 +28,14 @@ export default {
   MarkerArray,
   LaserScan,
   Map,
-  DisplayOdometry,
+  Odometry,
   Path,
   Image,
   Marker,
 
+  Scene,
+
   Viewer2d,
   Viewer3d,
+  TfViewer,
 };
