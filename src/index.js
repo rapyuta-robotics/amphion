@@ -14,9 +14,9 @@ import Marker from './viz/Marker';
 
 import Scene from './core/scene';
 
-import Viewer2d from './viewer/2d';
-import Viewer3d from './viewer/3d';
-import TfViewer from './viewer/Tf';
+import Viewer2d from './viewers/2d';
+import Viewer3d from './viewers/3d';
+import TfViewer from './viewers/Tf';
 
 export default {
   PointCloud,

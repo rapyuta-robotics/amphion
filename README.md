@@ -1,4 +1,5 @@
-# Amphion
+<img src="./assets/amphion_full.svg" alt="Amphion" height="80"/>
+====== 
 [![NPM package][npm]][npm-url]
 [![Dependencies][dependencies]][dependencies-url]
 [![Dev Dependencies][dev-dependencies]][dev-dependencies-url]
