@@ -29,4 +29,4 @@ An example of visualizations added to `THREE.Scene` with custom controls
 
 #### Multiple views
 An example of the same `Amphion.Scene` used with `Amphion.Viewer2d` and `Amphion.Viewer3d` rendered independently on two different containers
-![](../assets/examples/custom_view.gif)
+![](../assets/examples/multiple_views.gif)
