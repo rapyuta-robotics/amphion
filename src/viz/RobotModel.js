@@ -3,23 +3,73 @@ import * as THREE from 'three';
 import URDFLoader from 'urdf-loader';
 import Group from '../primitives/Group';
 
+const excludedObjects = [
+  'PerspectiveCamera',
+  'OrthographicCamera',
+  'AmbientLight',
+  'DirectionalLight',
+  'HemisphereLight',
+  'Light',
+  'RectAreaLight',
+  'SpotLight',
+  'PointLight',
+];
+
+const removeExcludedObjects = mesh => {
+  const objectArray = [mesh];
+  while (Object.keys(objectArray).length > 0) {
+    const currentItem = objectArray.shift();
+    currentItem.children.forEach(child => {
+      if (!child) {
+        return;
+      }
+      if (excludedObjects.indexOf(child.type) > -1) {
+        const { parent } = child;
+        parent.children = parent.children.filter(c => c !== child);
+      } else {
+        objectArray.push(child);
+      }
+    });
+  }
+};
+
 class RobotModel extends URDFLoader {
-  constructor(ros, paramName) {
+  constructor(ros, paramName, options) {
     super(THREE.DefaultLoadingManager);
+    const { packages } = options;
     this.param = new ROSLIB.Param({
       ros,
       name: paramName,
     });
     this.object = new Group();
+    this.packages = packages || {};
+
+    this.defaultLoadMeshCallback = this.defaultLoadMeshCallback.bind(this);
   }
 
-  load(onComplete = () => {}, options) {
+  static onComplete(object) {
+    removeExcludedObjects(object);
+  }
+
+  load(onComplete = RobotModel.onComplete, options = {}) {
     this.param.get((robotString) => {
-      const robotModel = super.parse(robotString, options);
+      const robotModel = super.parse(robotString, {
+        packages: this.packages,
+        loadMeshCb: options.loadMeshCb || this.defaultLoadMeshCallback,
+        fetchOptions: { mode: 'cors', credentials: 'same-origin' },
+        ...options,
+      });
       this.object.add(robotModel);
       this.object.name = robotModel.robotName;
 
       onComplete(this.object);
+    });
+  }
+
+  defaultLoadMeshCallback(path, ext, done) {
+    super.defaultMeshLoader(path, ext, mesh => {
+      removeExcludedObjects(mesh);
+      done(mesh);
     });
   }
 

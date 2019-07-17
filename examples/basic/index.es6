@@ -1,11 +1,13 @@
 import ROSLIB from 'roslib';
 import Amphion from '../../build/amphion.module';
+import CONFIG from '../config.json';
 
 // Setup ros instance and viewer
 const ros = new ROSLIB.Ros();
-const viewer = new Amphion.Viewer3d(ros);
+const viewer = new Amphion.TfViewer(ros);
+
 viewer.setContainer(document.getElementById('scene'));
-ros.connect('ws://10.91.1.111:9090');
+ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);
 
 // Add path
 const path = new Amphion.Path(ros, '/path_rosbag');
@@ -17,16 +19,9 @@ const marker = new Amphion.Marker(ros, '/cube_list');
 marker.subscribe();
 viewer.addVisualization(marker);
 
-// Add robot model
-const robotModel = new Amphion.RobotModel(
-  ros,
-  'robot_description',
-);
-viewer.addRobot(robotModel, { packages: [
-    {
-      name: 'franka_description',
-      value:
-        'https://storage.googleapis.com/kompose-artifacts/franka_description',
-    }
-  ]
+const robotModel = new Amphion.RobotModel(ros, 'robot_description', {
+  packages: {
+    franka_description: 'https://storage.googleapis.com/kompose-artifacts/franka_description',
+  }
 });
+viewer.addRobot(robotModel);

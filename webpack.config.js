@@ -7,6 +7,11 @@ module.exports = {
   },
   entry: {
     basic: __dirname + '/examples/basic/index.es6',
+    '2d_viewer': __dirname + '/examples/2d_viewer/index.es6',
+    '3d_viewer': __dirname + '/examples/3d_viewer/index.es6',
+    custom_scene: __dirname + '/examples/custom_scene/index.es6',
+    custom_view: __dirname + '/examples/custom_view/index.es6',
+    multiple_views: __dirname + '/examples/multiple_views/index.es6',
   },
   mode: 'development',
   module: {
