@@ -15,7 +15,7 @@
     "threejs"
   ],
   "author": "Rapyuta Robotics <support@rapyuta-robotics.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/rapyuta-robotics/amphion/issues"
   },
