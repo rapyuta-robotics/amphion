@@ -7,6 +7,18 @@
 
 Visualization objects for ROS messages based on [three.js](https://threejs.org). Primarily built for use in [Zethus](https://github.com/rapyuta-robotics/zethus)
 
+### Examples
+All the examples can be run locally. Instructions on setting them up are available in the [README file](./examples)
+
+### Documentation
+Developer documentation is available on the [Github Wiki page]((https://github.com/rapyuta-robotics/amphion/wiki))
+
+### Contributing
+PRs, bug reports, and feature requests are welcome! Please observe [CONTRIBUTING.md](https://github.com/rapyuta-robotics/zethus/blob/devel/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](https://github.com/rapyuta-robotics/zethus/blob/devel/CODE_OF_CONDUCT.md) when making a contribution.
+
+### Maintenance Status
+Active: Rapyuta Robotics is actively working on this project, and we expect to continue for work for the foreseeable future.
+
 [npm]: https://badge.fury.io/js/amphion.svg
 [npm-url]: https://www.npmjs.com/package/amphion
 [dependencies]: https://img.shields.io/david/rapyuta-robotics/amphion.svg
