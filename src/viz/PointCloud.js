@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS } from '../utils/constants';
+import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS, DEFAULT_OPTIONS_POINTCLOUD } from '../utils/constants';
 
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;
@@ -71,8 +71,8 @@ const editPointCloudPoints = function (message) {
 
 
 class PointCloud extends Core {
-  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2, options = {}) {
-    super(ros, topicName, messageType);
+  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2, options = DEFAULT_OPTIONS_POINTCLOUD) {
+    super(ros, topicName, messageType, options);
     const cloudMaterial = new THREE.PointsMaterial({
       size: 0.1,
       vertexColors: THREE.VertexColors,
@@ -95,6 +95,10 @@ class PointCloud extends Core {
     geometry.setDrawRange(0, 0);
     this.object = new THREE.Points(geometry, cloudMaterial);
     this.object.frustumCulled = false;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_POINTCLOUD,
+      ...options,
+    });
   }
 
   updatePointCloudGeometry(positions, colors) {

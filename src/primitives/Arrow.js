@@ -1,13 +1,14 @@
+
 import {
-  DEFAULT_COLOR_X_AXIS,
   DEFAULT_CONE_HEIGHT,
   DEFAULT_CONE_RADIUS,
   DEFAULT_CYLINDER_HEIGHT,
   DEFAULT_CYLINDER_RADIUS,
-} from '../utils/defaults';
+  DEFAULT_COLOR_X_AXIS,
+  OBJECT_TYPE_ARROW
+} from '../utils/constants';
 import Cylinder from './Cylinder';
 import Cone from './Cone';
-import { OBJECT_TYPE_ARROW } from '../utils/constants';
 import Group from './Group';
 import * as TransformUtils from '../utils/transform';
 

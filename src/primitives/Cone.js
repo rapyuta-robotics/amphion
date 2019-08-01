@@ -5,7 +5,7 @@ import {
   DEFAULT_CONE_RADIUS,
   DEFAULT_CONE_HEIGHT,
   DEFAULT_RADIAL_SEGMENTS
-} from '../utils/defaults';
+} from '../utils/constants';
 
 class Cone extends Mesh {
   constructor(color) {

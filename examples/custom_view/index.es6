@@ -51,7 +51,6 @@ function addMarker() {
   ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);
   const marker = new Amphion.Marker(ros, '/cube_list');
   marker.subscribe();
-  window.object = marker.object;
   marker.object.position.set(-0.04, -1.24, -0.04);
   scene.add(marker.object);
 }

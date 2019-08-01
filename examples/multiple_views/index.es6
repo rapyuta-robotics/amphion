@@ -6,10 +6,10 @@ import CONFIG from '../config.json';
 const ros = new ROSLIB.Ros();
 const scene = new Amphion.Scene();
 
-const viewer3d = new Amphion.Viewer3d({ scene });
+const viewer3d = new Amphion.Viewer3d(scene);
 viewer3d.setContainer(document.getElementById('scene3d'));
 
-const viewer2d = new Amphion.Viewer2d({ scene });
+const viewer2d = new Amphion.Viewer2d(scene);
 viewer2d.setContainer(document.getElementById('scene2d'));
 
 ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);

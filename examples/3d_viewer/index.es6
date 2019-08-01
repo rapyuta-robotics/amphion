@@ -4,7 +4,7 @@ import CONFIG from '../config.json';
 
 // Setup ros instance and viewer
 const ros = new ROSLIB.Ros();
-const viewer = new Amphion.Viewer3d(ros);
+const viewer = new Amphion.Viewer3d();
 
 viewer.setContainer(document.getElementById('scene'));
 ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);

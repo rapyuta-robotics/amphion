@@ -1,7 +1,6 @@
 import Core from '../core';
-import { MESSAGE_TYPE_POLYGONSTAMPED } from '../utils/constants';
+import { MESSAGE_TYPE_POLYGONSTAMPED, DEFAULT_COLOR_LINE } from '../utils/constants';
 import Line from '../primitives/Line';
-import { DEFAULT_COLOR_LINE } from '../utils/defaults';
 
 
 class Polygon extends Core {

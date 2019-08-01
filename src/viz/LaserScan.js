@@ -1,43 +1,24 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
-import Points from './Points';
+import {
+  DEFAULT_OPTIONS_LASERSCAN,
+  LASERSCAN_STYLES,
+  MESSAGE_TYPE_LASERSCAN,
+  COLOR_TRANSFORMERS,
+  INTENSITY_CHANNEL_OPTIONS,
+  AXES,
+} from '../utils/constants';
+import Points from '../utils/points';
 import Group from '../primitives/Group';
 import SphereList from '../primitives/SphereList';
 import CubeList from '../primitives/CubeList';
 
-export const STYLE = {
-  SQUARES: 'Squares',
-  POINTS: 'Points',
-  FLAT_SQUARES: 'Flat Squares',
-  SPHERES: 'Spheres',
-  BOXES: 'Boxes',
-};
-
-export const COLOR_TRANSFORMERS = {
-  INTENSITY: 'Intensity',
-  AXIS_COLOR: 'AxisColor',
-  FLAT_COLOR: 'FlatColor',
-};
-
-export const AXIS_OPTIONS = {
-  X: 'x',
-  Y: 'y',
-  Z: 'z',
-};
-
-export const INTENSITY_CHANNEL_OPTIONS = {
-  INTENSITY: 'intensity',
-  ...AXIS_OPTIONS,
-};
-
 class LaserScan extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_LASERSCAN);
-    this.options = options;
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_LASERSCAN) {
+    super(ros, topicName, MESSAGE_TYPE_LASERSCAN, options);
 
-    this.points = new Points(STYLE.POINTS);
+    this.points = new Points(LASERSCAN_STYLES.POINTS);
     this.sphereList = new SphereList();
     this.cubeList = new CubeList();
 
@@ -46,6 +27,10 @@ class LaserScan extends Core {
     this.object.add(this.sphereList);
     this.object.add(this.cubeList);
     this.prevMessage = null;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_LASERSCAN,
+      ...options,
+    });
   }
 
   getNormalizedIntensity(data) {
@@ -97,13 +82,13 @@ class LaserScan extends Core {
     let normI;
 
     switch(axis) {
-      case AXIS_OPTIONS.X:
+      case AXES.X:
         normI = this.getNormalizedAxisValue(x);
         break;
-      case AXIS_OPTIONS.Y:
+      case AXES.Y:
         normI = this.getNormalizedAxisValue(y);
         break;
-      case AXIS_OPTIONS.Z:
+      case AXES.Z:
         normI = this.getNormalizedAxisValue(z);
         break;
       default:
@@ -145,6 +130,9 @@ class LaserScan extends Core {
   }
 
   setStyleDimensions(message){
+    if(!message) {
+      return;
+    }
     const { style, alpha } = this.options;
     let { size } = this.options;
     const { ranges , intensities } = message;
@@ -173,9 +161,9 @@ class LaserScan extends Core {
         const color = this.colorTransformer(intensities[i], position);
 
         switch (style) {
-          case STYLE.POINTS:
-          case STYLE.SQUARES:
-          case STYLE.FLAT_SQUARES: {
+          case LASERSCAN_STYLES.POINTS:
+          case LASERSCAN_STYLES.SQUARES:
+          case LASERSCAN_STYLES.FLAT_SQUARES: {
             this.setupPoints({ j, position, color });
             j += 3;
             break;
@@ -191,12 +179,12 @@ class LaserScan extends Core {
     const options = { scale: {x: size, y: size, z: size}};
 
     switch (style) {
-      case STYLE.SPHERES: {
+      case LASERSCAN_STYLES.SPHERES: {
         this.sphereList.visible = true;
         this.sphereList.updatePoints(positions, colors, options);
         break;
       }
-      case STYLE.BOXES: {
+      case LASERSCAN_STYLES.BOXES: {
         this.cubeList.visible = true;
         this.cubeList.updatePoints(positions, colors, options);
         break;
@@ -209,9 +197,7 @@ class LaserScan extends Core {
   }
 
   updateOptions(options) {
-    const newOptions = { ...options };
-    this.options = newOptions;
-
+    super.updateOptions(options);
     this.setStyleDimensions(this.prevMessage);
   }
 

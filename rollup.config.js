@@ -21,5 +21,6 @@ export default {
       format: 'es',
       file: 'build/amphion.module.js',
     }
-  ]
+  ],
+
 };

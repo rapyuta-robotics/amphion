@@ -1,6 +1,7 @@
 import * as THREE from 'three';
+import { LASERSCAN_STYLES } from './constants';
 
-import { STYLE } from './LaserScan';
+
 
 class Points {
   constructor(options = {}) {
@@ -18,7 +19,7 @@ class Points {
 
     let options = {};
 
-    if (type === STYLE.POINTS) {
+    if (type === LASERSCAN_STYLES.POINTS) {
       const sprite = new THREE.TextureLoader()
         .load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/circle.png');
 

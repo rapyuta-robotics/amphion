@@ -1,17 +1,14 @@
-import * as THREE from 'three';
-
 import Core from '../core';
-import { MESSAGE_TYPE_IMAGE } from '../utils/constants';
+import { DEFAULT_OPTIONS_IMAGE, MESSAGE_TYPE_IMAGE } from '../utils/constants';
 
 class Image extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_IMAGE);
-    this.object = new THREE.Group();
-    this.options = options;
-  }
-
-  setImageRef(ref) {
-    this.imageCanvas = ref;
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_IMAGE) {
+    super(ros, topicName, MESSAGE_TYPE_IMAGE, options);
+    this.object = document.createElement('canvas');
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_IMAGE,
+      ...options,
+    });
   }
 
   applyImageData(message) {
@@ -24,7 +21,7 @@ class Image extends Core {
       encoding
     } = message;
 
-    const ctx = this.imageCanvas.getContext('2d');
+    const ctx = this.object.getContext('2d');
     const imgData = ctx.createImageData(width, height);
 
     const decodedData = atob(data);
@@ -78,24 +75,13 @@ class Image extends Core {
     ctx.putImageData(imgData, 0, 0);
   }
 
-  updateOptions(options) {
-    this.options = options;
-  }
-
   update(message) {
-    if (this.imageCanvas) {
-      const { width, height } = message;
+    const { width, height } = message;
 
-      this.imageCanvas.width = width;
-      this.imageCanvas.height = height;
+    this.object.width = width;
+    this.object.height = height;
 
-      this.applyImageData(message);
-    }
-  }
-
-  hide() {
-    super.hide();
-    this.imageCanvas = null;
+    this.applyImageData(message);
   }
 }
 

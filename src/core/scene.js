@@ -1,20 +1,21 @@
 import * as THREE from 'three';
-import Stats from "stats-js";
+import Stats from 'stats-js';
+
+import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
 
 class Scene extends THREE.Scene {
-  constructor() {
+  constructor(options = {}) {
     super();
-
     this.vizWrapper = new THREE.Group();
     this.vizWrapper.rotateX(-Math.PI / 2);
     this.add(this.vizWrapper);
-    this.background = new THREE.Color(0x000000);
 
     this.stats = new Stats();
     this.stats.showPanel(0);
 
     this.initLights();
     this.initGrid();
+    this.updateOptions(options);
   }
 
   initLights() {
@@ -29,15 +30,8 @@ class Scene extends THREE.Scene {
   }
 
   initGrid() {
-    const grid = new THREE.GridHelper(30, 30, 0x333333, 0x222222);
-
-    this.add(grid);
-    const { array } = grid.geometry.attributes.color;
-    for (let i = 0; i < array.length; i += 60) {
-      for (let j = 0; j < 12; j += 1) {
-        array[i + j] = 0.26;
-      }
-    }
+    this.grid = new THREE.GridHelper(0, 0);
+    this.add(this.grid);
   }
 
   addObject(object) {
@@ -54,11 +48,23 @@ class Scene extends THREE.Scene {
     return this.vizWrapper.getObjectByName(name);
   }
 
-  setBackgroundColor() {
+  updateOptions(options) {
+    this.options = {
+      ...DEFAULT_OPTIONS_SCENE,
+      ...options,
+    };
 
-  }
+    const {
+      backgroundColor,
+      gridSize,
+      gridDivisions,
+      gridColor,
+      gridCenterlineColor,
+    } = this.options;
 
-  setGridSize() {
+    this.grid.copy(new THREE.GridHelper(gridSize, gridDivisions, gridCenterlineColor, gridColor));
+
+    this.background = new THREE.Color(backgroundColor);
 
   }
 }

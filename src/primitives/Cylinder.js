@@ -5,7 +5,7 @@ import {
   DEFAULT_CYLINDER_HEIGHT,
   DEFAULT_RADIAL_SEGMENTS,
   DEFAULT_COLOR_ARROW
-} from '../utils/defaults';
+} from '../utils/constants';
 import Mesh from './Mesh';
 
 class Cylinder extends Mesh {

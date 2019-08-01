@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import Mesh from './Mesh';
-import { DEFAULT_RADIAL_SEGMENTS } from '../utils/defaults';
+import { DEFAULT_RADIAL_SEGMENTS } from '../utils/constants';
 
 class Sphere extends Mesh {
   constructor(color, size = 1) {

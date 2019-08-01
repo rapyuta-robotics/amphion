@@ -1,4 +1,4 @@
-import MarkerManager from '../viz/MarkerManager';
+import MarkerManager from '../utils/markerManager';
 
 class ObjectCacher {
   constructor(objectPool) {

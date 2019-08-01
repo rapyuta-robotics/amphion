@@ -5,12 +5,11 @@ import Viewer3d from './3d';
 import RobotModel from '../viz/RobotModel';
 
 class TfViewer extends Viewer3d {
-  constructor(rosInstance) {
-    super({});
+  constructor(rosInstance, options) {
+    super(null, options);
     this.ros = rosInstance;
     this.framesList = [];
     this.selectedFrame = [];
-    this.robotMeshes = [];
 
     this.initRosEvents();
     this.getTFMessages = this.getTFMessages.bind(this);

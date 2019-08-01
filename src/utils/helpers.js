@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { POSE_VIZ_TYPES } from '../viz/Pose';
+import { OBJECT_TYPE_ARROW, OBJECT_TYPE_AXES, OBJECT_TYPE_FLAT_ARROW } from './constants';
 
 export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
   const { positionTolerance, angleTolerance } = options;
@@ -14,8 +14,8 @@ export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
 };
 
 export const setObjectDimension = (object, options) => {
-  switch (object.type) {
-    case POSE_VIZ_TYPES.arrow: {
+  switch (options.type) {
+    case OBJECT_TYPE_ARROW: {
       const {
         color,
         alpha,
@@ -31,14 +31,14 @@ export const setObjectDimension = (object, options) => {
       object.setColor({ cone: new THREE.Color(color), cylinder: new THREE.Color(color) });
       break;
     }
-    case POSE_VIZ_TYPES.axes: {
+    case OBJECT_TYPE_AXES: {
       const { axesLength, axesRadius } = options;
 
       object.setLength(axesLength);
       object.setRadius(axesRadius);
       break;
     }
-    case POSE_VIZ_TYPES.flatArrow: {
+    case OBJECT_TYPE_FLAT_ARROW: {
       const { arrowLength, color } = options;
 
       object.setLength(arrowLength);

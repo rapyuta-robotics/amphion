@@ -2,6 +2,7 @@ import ROSLIB from 'roslib';
 import * as THREE from 'three';
 import URDFLoader from 'urdf-loader';
 import Group from '../primitives/Group';
+import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
 
 const excludedObjects = [
   'PerspectiveCamera',
@@ -34,7 +35,7 @@ const removeExcludedObjects = mesh => {
 };
 
 class RobotModel extends URDFLoader {
-  constructor(ros, paramName, options) {
+  constructor(ros, paramName, options = DEFAULT_OPTIONS_ROBOTMODEL) {
     super(THREE.DefaultLoadingManager);
     const { packages } = options;
     this.param = new ROSLIB.Param({
@@ -43,12 +44,20 @@ class RobotModel extends URDFLoader {
     });
     this.object = new Group();
     this.packages = packages || {};
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_ROBOTMODEL,
+      ...options,
+    });
 
     this.defaultLoadMeshCallback = this.defaultLoadMeshCallback.bind(this);
   }
 
   static onComplete(object) {
     removeExcludedObjects(object);
+  }
+
+  updateOptions() {
+
   }
 
   load(onComplete = RobotModel.onComplete, options = {}) {
@@ -86,7 +95,9 @@ class RobotModel extends URDFLoader {
   }
 
   destroy() {
-    this.object.parent.remove(this.object);
+    if(this.object.parent) {
+      this.object.parent.remove(this.object);
+    }
   }
 
   hide() {

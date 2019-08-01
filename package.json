@@ -1,6 +1,6 @@
 {
   "name": "amphion",
-  "version": "0.1.4",
+  "version": "0.1.9",
   "description": "roslibjs based web visualization library",
   "main": "./src/index.js",
   "repository": {
@@ -20,6 +20,7 @@
     "url": "https://github.com/rapyuta-robotics/amphion/issues"
   },
   "dependencies": {
+    "@juggle/resize-observer": "^2.2.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "roslib": "^1.0.1",
@@ -29,7 +30,9 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "webpack-dev-server --config webpack.config.js"
+    "examples": "webpack-dev-server --config webpack.config.js",
+    "dev": "rollup -c --watch",
+    "start": "npm-run-all --parallel dev examples"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -42,6 +45,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-restricted-globals": "^0.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "npm-run-all": "^4.1.5",
     "object.assign": "^4.1.0",
     "object.entries": "^1.1.0",
     "rollup": "^1.16.7",

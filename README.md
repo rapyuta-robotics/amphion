@@ -1,4 +1,4 @@
-# <img src="./assets/amphion_full.svg" alt="Amphion" height="70"/>
+# <img src="https://github.com/rapyuta-robotics/amphion/blob/devel/assets/amphion_full.svg" alt="Amphion" height="70"/>
 
 [![NPM package][npm]][npm-url]
 [![Dependencies][dependencies]][dependencies-url]

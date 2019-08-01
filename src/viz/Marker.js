@@ -1,10 +1,10 @@
 import Core from '../core';
-import { MESSAGE_TYPE_MARKER } from '../utils/constants';
+import { DEFAULT_OPTIONS_MARKER, MESSAGE_TYPE_MARKER } from '../utils/constants';
 import Group from '../primitives/Group';
-import MarkerManager from './MarkerManager';
+import MarkerManager from '../utils/markerManager';
 
 class Marker extends Core {
-  constructor(ros, topicName, options = {}) {
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKER) {
     super(ros, topicName, MESSAGE_TYPE_MARKER, options);
 
     this.object = new Group();
@@ -13,10 +13,15 @@ class Marker extends Core {
     const { queueSize } = options;
     this.markerManager = new MarkerManager(this.object, this.onChange);
     this.queueSize = queueSize;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_MARKER,
+      ...options,
+    });
   }
 
   updateOptions(options) {
-    this.markerManager.updateOptions(options, this);
+    super.updateOptions(options);
+    this.markerManager.updateOptions(this.options, this);
   }
 
   update(message) {

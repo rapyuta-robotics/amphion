@@ -1,14 +1,27 @@
 import * as THREE from 'three';
+import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 import { EditorControls } from 'three/examples/jsm/controls/EditorControls';
 
 import Scene from '../core/scene';
+import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
+
+const ResizeObserver = window.ResizeObserver || Polyfill;
 
 class Viewer3d {
-  constructor(options = {}) {
-    const { scene } = options;
-    this.scene = scene || new Scene();
+  constructor(scene, options = {}) {
+    this.options = {
+      ...DEFAULT_OPTIONS_SCENE,
+      ...options,
+    };
+    this.scene = scene || new Scene(this.options);
     this.previousWidth = 0;
     this.previousHeight = 0;
+
+    this.ro = new ResizeObserver((entries) => {
+      if(entries.length > 0) {
+        this.onWindowResize();
+      }
+    });
 
     this.initCamera();
     this.animate = this.animate.bind(this);
@@ -37,7 +50,7 @@ class Viewer3d {
     this.initRenderer(domNode);
     this.controls = new EditorControls(this.camera, this.container);
     this.controls.enableDamping = true;
-    window.addEventListener('resize', this.onWindowResize);
+    this.ro.observe(this.container);
     requestAnimationFrame(this.animate);
     this.onWindowResize();
   }
@@ -52,8 +65,16 @@ class Viewer3d {
     this.container.appendChild(renderer.domElement);
   }
 
+  updateOptions(options) {
+    this.options = {
+      ...this.options,
+      ...options
+    };
+    this.scene.updateOptions(this.options);
+  }
+
   destroy() {
-    window.removeEventListener('resize', this.onWindowResize);
+    // this.container.removeEventListener('resize', this.onWindowResize);
   }
 
   onWindowResize() {

@@ -1,54 +1,30 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import {MESSAGE_TYPE_ODOMETRY, OBJECT_TYPE_ARROW} from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_ODOMETRY,
+  MESSAGE_TYPE_ODOMETRY,
+  ODOMETRY_OBJECT_TYPES,
+} from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
-import { POSE_VIZ_TYPES } from './Pose';
 import Axes from '../primitives/Axes';
 import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
-import {DEFAULT_COLOR_X_AXIS} from "../utils/defaults";
-
-const ARROW_OPTIONS_DEFAULTS = {
-  shaftLength: 1,
-  shaftRadius: 0.05,
-  headLength: 0.3,
-  headRadius: 0.1,
-};
-
-const AXES_OPTIONS_DEFAULTS = {
-  axesLength: 1,
-  axesRadius: 0.1,
-};
-
-const FLAT_ARROW_OPTIONS_DEFAULTS = {
-  arrowLength: 0.3,
-};
-
-const defaultOptions = {
-  type: OBJECT_TYPE_ARROW,
-  color: DEFAULT_COLOR_X_AXIS,
-  alpha: 1,
-  ...ARROW_OPTIONS_DEFAULTS,
-  ...FLAT_ARROW_OPTIONS_DEFAULTS,
-  ...AXES_OPTIONS_DEFAULTS,
-  positionTolerance: 0.1,
-  angleTolerance: 0.1,
-  keep: 100,
-};
 
 class Odometry extends Core {
-  constructor(ros, topicName, options = {}) {
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_ODOMETRY) {
     super(ros, topicName, MESSAGE_TYPE_ODOMETRY);
 
     this.object = null;
     this.objectPool = [];
     this.keepSize = 100;
     this.currentObject = -1;
-    this.options = options;
     this.setVizType(options.controlledObject);
-    this.updateOptions(defaultOptions);
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_ODOMETRY,
+      ...options,
+    });
   }
 
   setVizType(controlledObject) {
@@ -105,16 +81,15 @@ class Odometry extends Core {
       quaternion: this.objectPool[this.currentObject].quaternion,
     };
 
-
     return checkToleranceThresholdExceed(oldPose, newPose, this.options);
   }
 
   getObject() {
     const { type } = this.options;
     switch (type) {
-      case POSE_VIZ_TYPES.arrow:
+      case ODOMETRY_OBJECT_TYPES.arrow:
         return new Arrow();
-      case POSE_VIZ_TYPES.axes:
+      case ODOMETRY_OBJECT_TYPES.axes:
         return new Axes();
     }
 
@@ -143,12 +118,11 @@ class Odometry extends Core {
 
   updateOptions(options) {
     const { type: currentType } = this.options;
+    super.updateOptions(options);
     const {
       type,
       keep,
-    } = options;
-
-    this.options = options;
+    } = this.options;
 
     if (type !== currentType) {
       this.changeObjectPoolType();

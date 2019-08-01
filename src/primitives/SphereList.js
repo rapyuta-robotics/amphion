@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
 import Mesh from './Mesh';
-import ObjectCacher from '../utils/ObjectCacher';
-import { MARKERARRAY_TYPES } from '../utils/constants';
+import ObjectCacher from '../utils/objectCacher';
+import { MARKER_OBJECT_TYPES } from '../utils/constants';
 
 class SphereList extends Mesh {
   constructor() {
@@ -13,7 +13,7 @@ class SphereList extends Mesh {
   }
 
   updatePoints(points, colors, options = {}) {
-    options.subtype = MARKERARRAY_TYPES.SPHERE;
+    options.subtype = MARKER_OBJECT_TYPES.SPHERE;
 
     if (points.length < this.children.length) {
       this.objectCacher.reusePool(points, colors, options);

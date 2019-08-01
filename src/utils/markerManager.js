@@ -1,5 +1,10 @@
 import ROSLIB from 'roslib';
-import { MARKERARRAY_TYPES } from '../utils/constants';
+import {
+  DEFAULT_CONE_HEIGHT, DEFAULT_CONE_RADIUS,
+  DEFAULT_CYLINDER_HEIGHT,
+  DEFAULT_CYLINDER_RADIUS,
+  MARKER_OBJECT_TYPES,
+} from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Cylinder from '../primitives/Cylinder';
 import Line from '../primitives/Line';
@@ -10,12 +15,6 @@ import LineSegments from '../primitives/LineSegment';
 import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
 import Group from '../primitives/Group';
-import {
-  SHAFT_LENGTH,
-  SHAFT_RADIUS,
-  HEAD_LENGTH,
-  HEAD_RADIUS
-} from './Pose';
 import SphereList from '../primitives/SphereList';
 
 export default class MarkerManager {
@@ -128,32 +127,32 @@ export default class MarkerManager {
 
   static getNewPrimitive(marker) {
     switch (marker.type) {
-      case MARKERARRAY_TYPES.CUBE:
+      case MARKER_OBJECT_TYPES.CUBE:
         return new Cube();
-      case MARKERARRAY_TYPES.SPHERE:
+      case MARKER_OBJECT_TYPES.SPHERE:
         return new Sphere();
-      case MARKERARRAY_TYPES.CYLINDER: {
+      case MARKER_OBJECT_TYPES.CYLINDER: {
         const group = new Group();
         group.add(new Cylinder());
         return group;
       }
-      case MARKERARRAY_TYPES.LINE_LIST:
+      case MARKER_OBJECT_TYPES.LINE_LIST:
         return new LineSegments();
-      case MARKERARRAY_TYPES.LINE_STRIP:
+      case MARKER_OBJECT_TYPES.LINE_STRIP:
         return new Line();
-      case MARKERARRAY_TYPES.SPHERE_LIST:
+      case MARKER_OBJECT_TYPES.SPHERE_LIST:
         return new SphereList();
-      case MARKERARRAY_TYPES.POINTS:
+      case MARKER_OBJECT_TYPES.POINTS:
         return new Points();
-      case MARKERARRAY_TYPES.TRIANGLE_LIST:
+      case MARKER_OBJECT_TYPES.TRIANGLE_LIST:
         return new TriangleList();
-      case MARKERARRAY_TYPES.CUBE_LIST:
+      case MARKER_OBJECT_TYPES.CUBE_LIST:
         return new CubeList();
-      case MARKERARRAY_TYPES.ARROW:
+      case MARKER_OBJECT_TYPES.ARROW:
       default: {
         const arrow = new Arrow();
-        arrow.setHeadDimensions({ radius: HEAD_RADIUS, length: HEAD_LENGTH });
-        arrow.setShaftDimensions({ radius: SHAFT_RADIUS, length: SHAFT_LENGTH });
+        arrow.setHeadDimensions({ radius: DEFAULT_CONE_RADIUS * 0.1, length: DEFAULT_CONE_HEIGHT * 0.3 });
+        arrow.setShaftDimensions({ radius: DEFAULT_CYLINDER_RADIUS * 0.05, length: DEFAULT_CYLINDER_HEIGHT });
         return arrow;
       }
     }

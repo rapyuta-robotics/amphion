@@ -1,14 +1,11 @@
 import Core from '../core';
-import { MESSAGE_TYPE_MARKERARRAY } from '../utils/constants';
+import { DEFAULT_OPTIONS_MARKERARRAY, MESSAGE_TYPE_MARKERARRAY } from '../utils/constants';
 import Group from '../primitives/Group';
-import MarkerManager from './MarkerManager';
+import MarkerManager from '../utils/markerManager';
 
 class MarkerArray extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, {
-      ...options,
-      throttleRate: 500,
-    });
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKERARRAY) {
+    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, options);
 
     this.object = new Group();
     this.onChange = this.onChange.bind(this);
@@ -16,10 +13,15 @@ class MarkerArray extends Core {
     const { queueSize } = options;
     this.markerManager = new MarkerManager(this.object, this.onChange);
     this.queueSize = queueSize;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_MARKERARRAY,
+      ...options,
+    });
   }
 
   updateOptions(options) {
-    this.markerManager.updateOptions(options, this);
+    super.updateOptions(options);
+    this.markerManager.updateOptions(this.options, this);
   }
 
   onChange() {

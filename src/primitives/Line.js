@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 
 import * as TransformUtils from '../utils/transform';
-import { DEFAULT_COLOR_LINE } from '../utils/defaults';
+import { DEFAULT_COLOR_LINE } from '../utils/constants';
 
 class Line extends THREE.Line {
-  constructor(color = DEFAULT_COLOR_LINE, linewidth = 5, disableVertexColor) {
+  constructor(color = DEFAULT_COLOR_LINE, disableVertexColor) {
     super();
     this.geometry = new THREE.Geometry();
+    this.geometry.vertices.push(new THREE.Vector3( 0, 0, 0 ));
     const colorOptions = {};
 
     if (!disableVertexColor) {
@@ -14,7 +15,7 @@ class Line extends THREE.Line {
     }
 
 
-    this.material = new THREE.LineBasicMaterial({ linewidth, ...colorOptions });
+    this.material = new THREE.LineBasicMaterial({ ...colorOptions });
     this.material.transparent = true;
   }
 
@@ -23,19 +24,16 @@ class Line extends THREE.Line {
   }
 
   updatePoints(points, colors = []) {
-    const color = [];
-
     this.geometry.vertices = points.map(({ x, y, z }) => new THREE.Vector3(x, y, z));
     this.geometry.verticesNeedUpdate = true;
 
-    if (colors) {
-      colors.forEach(({ r, g, b }) =>  {
-        color.push(new THREE.Color(r, g, b));
-      });
+    const color = [];
+    colors.forEach(({ r, g, b }) =>  {
+      color.push(new THREE.Color(r, g, b));
+    });
 
-      this.geometry.colors = color;
-      this.geometry.colorsNeedUpdate = true;
-    }
+    this.geometry.colors = color;
+    this.geometry.colorsNeedUpdate = true;
   }
 
   setTransform(transform) {

@@ -1,18 +1,12 @@
 import * as THREE from 'three';
-import ROSLIB from 'roslib';
 
 import Core from '../core';
-import { TF_TOPICS } from '../utils/constants';
 import TfFrame from '../primitives/TfFrame';
+import { DEFAULT_OPTIONS_TF } from '../utils/constants';
 
 class Tf extends Core {
-  constructor(ros, options = {}) {
-    super(ros);
-    this.topic = TF_TOPICS.map(([name, messageType]) => new ROSLIB.Topic({
-      ros,
-      name,
-      messageType,
-    }));
+  constructor(ros, topics, options = DEFAULT_OPTIONS_TF) {
+    super(ros, topics, null, options);
     this.object = new THREE.Group();
     this.object.name = 'test';
   }

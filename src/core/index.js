@@ -2,21 +2,13 @@ import ROSLIB from 'roslib';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {
-    const { queueSize, throttleRate } = options;
+    const { onHeaderChange } = options;
+    this.options = options;
     this.ros = ros;
-    this.topicName = topicName;
-    this.messageType = messageType;
     this.headerFrameId = '';
-    this.topic = topicName ? new ROSLIB.Topic({
-      ros,
-      name: topicName,
-      messageType,
-      throttle_rate: throttleRate || 0,
-      queue_size: queueSize || 10,
-    }) : null;
-    this.onHeaderChange = options.onHeaderChange || (() => {});
+    this.changeTopic(topicName, messageType, false);
+    this.onHeaderChange = onHeaderChange || (() => {});
     this.update = this.update.bind(this);
-    this.isVizObject = true;
   }
 
   hide() {
@@ -36,31 +28,21 @@ class Core {
   reset() {}
 
   subscribe() {
-    if (!this.topic) {
+    if (!this.topicInstances) {
       return;
     }
-
-    if (Array.isArray(this.topic)) {
-      this.topic.forEach((t) => {
-        t.subscribe(this.update);
-      });
-    } else {
-      this.topic.subscribe(this.update);
-    }
+    this.topicInstances.forEach((t) => {
+      t.subscribe(this.update);
+    });
   }
 
   unsubscribe() {
-    if (!this.topic) {
+    if (!this.topicInstances) {
       return;
     }
-
-    if (Array.isArray(this.topic)) {
-      this.topic.forEach((t) => {
-        t.unsubscribe();
-      });
-    } else {
-      this.topic.unsubscribe();
-    }
+    this.topicInstances.forEach((t) => {
+      t.unsubscribe();
+    });
   }
 
   update(message) {
@@ -71,20 +53,34 @@ class Core {
     }
   }
 
-  changeTopic(newTopic) {
-    this.unsubscribe();
+  updateOptions(options) {
+    this.options = {
+      ...this.options,
+      ...options,
+    };
+  }
 
-    this.topicName = newTopic;
+  changeTopic(topicName, messageType, autoSubscribe = true) {
+    const { throttleRate, queueSize } = this.options;
 
-    this.reset();
+    if(autoSubscribe) {
+      this.unsubscribe();
+    }
 
-    this.topic = new ROSLIB.Topic({
+    this.topicName = topicName;
+    this.messageType = messageType || this.messageType;
+    this.topicInstances = (Array.isArray(topicName) ? topicName : [{ name: topicName, messageType }]).map(({ name, messageType }) => new ROSLIB.Topic({
       ros: this.ros,
-      name: newTopic,
-      messageType: this.messageType,
-    });
+      name,
+      messageType,
+      throttle_rate: throttleRate || 0,
+      queue_size: queueSize || 10,
+    }));
 
-    this.subscribe();
+    if(autoSubscribe) {
+      this.reset();
+      this.subscribe();
+    }
   }
 }
 

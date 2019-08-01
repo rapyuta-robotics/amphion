@@ -2,10 +2,14 @@ import * as THREE from 'three';
 import { MapControls2D } from '../utils/2dControls';
 
 import Scene from '../core/scene';
+import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
 
 class Viewer2d {
-  constructor(options= {}) {
-    const { scene } = options;
+  constructor(scene, options = {}) {
+    this.options = {
+      ...DEFAULT_OPTIONS_SCENE,
+      ...options,
+    };
     this.scene = scene || new Scene();
     this.previousWidth = 0;
     this.previousHeight = 0;
@@ -51,6 +55,14 @@ class Viewer2d {
     renderer.setSize(this.container.offsetWidth, this.container.offsetHeight);
     this.renderer = renderer;
     this.container.appendChild(renderer.domElement);
+  }
+
+  updateOptions(options) {
+    this.options = {
+      ...this.options,
+      ...options
+    };
+    this.scene.updateOptions(this.options);
   }
 
   destroy() {
