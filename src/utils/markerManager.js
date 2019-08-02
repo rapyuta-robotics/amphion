@@ -16,6 +16,7 @@ import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
 import Group from '../primitives/Group';
 import SphereList from '../primitives/SphereList';
+import Text from '../primitives/Text';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -81,7 +82,7 @@ export default class MarkerManager {
 
   updateMarker(marker) {
     const {
-      pose: { position, orientation }, scale, color, colors, points
+      pose: { position, orientation }, scale, color, colors, points, text
     } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 
@@ -97,6 +98,9 @@ export default class MarkerManager {
     }
     if (markerObject.setColor && colors.length <= 0) {
       markerObject.setColor(color);
+    }
+    if (markerObject.setText) {
+        markerObject.setText(text);
     }
 
     const { ns } = marker;
@@ -148,6 +152,8 @@ export default class MarkerManager {
         return new TriangleList();
       case MARKER_OBJECT_TYPES.CUBE_LIST:
         return new CubeList();
+      case MARKER_OBJECT_TYPES.TEXT_VIEW_FACING:
+        return new Text(marker.text);
       case MARKER_OBJECT_TYPES.ARROW:
       default: {
         const arrow = new Arrow();
