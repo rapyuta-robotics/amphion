@@ -266,6 +266,11 @@ export const DEFAULT_OPTIONS_PATH = {
 
 export const DEFAULT_OPTIONS_POINTCLOUD = {};
 
+export const DEFAULT_OPTIONS_POLYGON = {
+  color: '#ffffff',
+  alpha: 1,
+};
+
 export const DEFAULT_OPTIONS_POSE = {
   color: DEFAULT_COLOR_X_AXIS,
   alpha: 1,
