@@ -9,22 +9,19 @@ class Text extends Mesh {
 
     this.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
     this.loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-      this.geometry = new THREE.TextGeometry(text, {
-        font,
-        size: 5.05,
-        height: 0.005,
-        curveSegments: 12,
-        bevelEnabled: false,
-        bevelThickness: 10,
-        bevelSize: 8,
-        bevelSegments: 5
-      });
+        this.geometry = new THREE.TextGeometry(text, {
+            font,
+            size: 5.05,
+            height: 0.005,
+            curveSegments: 12,
+            bevelEnabled: false,
+            bevelThickness: 10,
+            bevelSize: 8,
+            bevelSegments: 5
+        });
     });
-
-
-
-    this.rotateX(Math.PI / 2);
-    this.rotateY(Math.PI);
+    /*this.rotateX(Math.PI / 2);
+    this.rotateY(Math.PI);*/
   }
   setText(text) {
      this.loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/helvetiker_regular.typeface.json', (font) => {
@@ -40,6 +37,13 @@ class Text extends Mesh {
             });
         });
     };
+    onBeforeRender(renderer, scene , camera, geometry, material, group) {
+        this.lookAt(camera.position);
+    }
+
+    onAfterRender(renderer, scene , camera, geometry, material, group) {
+        this.lookAt(camera.position);
+    }
 }
 
 export default Text;
