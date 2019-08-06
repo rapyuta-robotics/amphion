@@ -152,7 +152,7 @@ export default class MarkerManager {
       default: {
         const arrow = new Arrow();
         arrow.setHeadDimensions({ radius: DEFAULT_CONE_RADIUS * 0.1, length: DEFAULT_CONE_HEIGHT * 0.3 });
-        arrow.setShaftDimensions({ radius: DEFAULT_CYLINDER_RADIUS * 0.05, length: DEFAULT_CYLINDER_HEIGHT });
+        arrow.setShaftDimensions({ radius: DEFAULT_CYLINDER_RADIUS * 0.05, length: DEFAULT_CYLINDER_HEIGHT * 0.7 });
         return arrow;
       }
     }
