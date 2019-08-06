@@ -1,3 +1,5 @@
+import { Quaternion } from 'three';
+
 export const setTransform = (
   object,
   {
@@ -8,7 +10,7 @@ export const setTransform = (
   }
 ) => {
   object.position.set(posX, posY, posZ);
-  object.quaternion.set(orientX, orientY, orientZ, orientW);
+  object.quaternion.copy((new Quaternion(orientX, orientY, orientZ, orientW)).normalize());
 };
 
 export const setScale = (object, { x, y, z }) => {
