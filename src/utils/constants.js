@@ -19,6 +19,7 @@ export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
  * ***************************/
 export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
 export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
+export const MESSAGE_TYPE_POINTSTAMPED =                     'geometry_msgs/PointStamped';
 export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
 export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
 export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
@@ -265,6 +266,15 @@ export const DEFAULT_OPTIONS_PATH = {
 };
 
 export const DEFAULT_OPTIONS_POINTCLOUD = {};
+
+
+export const DEFAULT_OPTIONS_POINT = {
+    color: '#ff0000',
+    alpha: 1,
+    radius: 0.2,
+    widthSegments: 32,
+    heightSegments: 32
+};
 
 export const DEFAULT_OPTIONS_POLYGON = {
   color: '#ffffff',
