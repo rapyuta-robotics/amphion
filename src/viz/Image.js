@@ -18,7 +18,7 @@ class Image extends Core {
       width,
       height,
       is_bigendian: isBigEndian,
-      encoding
+      encoding,
     } = message;
 
     const ctx = this.object.getContext('2d');
@@ -26,7 +26,7 @@ class Image extends Core {
 
     const decodedData = atob(data);
     const newData = [];
-    decodedData.split('').forEach((data, index) => {
+    decodedData.split('').forEach((_, index) => {
       newData.push(decodedData.charCodeAt(index));
     });
 
@@ -48,9 +48,9 @@ class Image extends Core {
         const offset = 3;
 
         let j = 0;
-        for (let i = 0; i <  step * height; i += offset) {
+        for (let i = 0; i < step * height; i += offset) {
           imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 0,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
           imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
           imgData.data[j++] = 255;
         }
@@ -60,9 +60,9 @@ class Image extends Core {
         const offset = 3;
 
         let j = 0;
-        for (let i = 0; i <  step * height; i += offset) {
+        for (let i = 0; i < step * height; i += offset) {
           imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 1,   !isBigEndian);
+          imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
           imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
           imgData.data[j++] = 255;
         }

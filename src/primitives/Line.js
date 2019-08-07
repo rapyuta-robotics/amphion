@@ -7,13 +7,12 @@ class Line extends THREE.Line {
   constructor(color = DEFAULT_COLOR_LINE, disableVertexColor) {
     super();
     this.geometry = new THREE.Geometry();
-    this.geometry.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+    this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));
     const colorOptions = {};
 
     if (!disableVertexColor) {
       colorOptions.vertexColors = THREE.VertexColors;
     }
-
 
     this.material = new THREE.LineBasicMaterial({ ...colorOptions });
     this.material.transparent = true;
@@ -24,11 +23,13 @@ class Line extends THREE.Line {
   }
 
   updatePoints(points, colors = []) {
-    this.geometry.vertices = points.map(({ x, y, z }) => new THREE.Vector3(x, y, z));
+    this.geometry.vertices = points.map(
+      ({ x, y, z }) => new THREE.Vector3(x, y, z),
+    );
     this.geometry.verticesNeedUpdate = true;
 
     const color = [];
-    colors.forEach(({ r, g, b }) =>  {
+    colors.forEach(({ r, g, b }) => {
       color.push(new THREE.Color(r, g, b));
     });
 

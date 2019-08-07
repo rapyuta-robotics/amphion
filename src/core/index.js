@@ -31,7 +31,7 @@ class Core {
     if (!this.topicInstances) {
       return;
     }
-    this.topicInstances.forEach((t) => {
+    this.topicInstances.forEach(t => {
       t.subscribe(this.update);
     });
   }
@@ -40,7 +40,7 @@ class Core {
     if (!this.topicInstances) {
       return;
     }
-    this.topicInstances.forEach((t) => {
+    this.topicInstances.forEach(t => {
       t.unsubscribe();
     });
   }
@@ -60,24 +60,30 @@ class Core {
     };
   }
 
-  changeTopic(topicName, messageType, autoSubscribe = true) {
+  changeTopic(topicName, type, autoSubscribe = true) {
     const { throttleRate, queueSize } = this.options;
 
-    if(autoSubscribe) {
+    if (autoSubscribe) {
       this.unsubscribe();
     }
 
     this.topicName = topicName;
-    this.messageType = messageType || this.messageType;
-    this.topicInstances = (Array.isArray(topicName) ? topicName : [{ name: topicName, messageType }]).map(({ name, messageType }) => new ROSLIB.Topic({
-      ros: this.ros,
-      name,
-      messageType,
-      throttle_rate: throttleRate || 0,
-      queue_size: queueSize || 10,
-    }));
+    this.messageType = type || this.messageType;
+    this.topicInstances = (Array.isArray(topicName)
+      ? topicName
+      : [{ name: topicName, type }]
+    ).map(
+      ({ name, messageType }) =>
+        new ROSLIB.Topic({
+          ros: this.ros,
+          name,
+          messageType,
+          throttle_rate: throttleRate || 0,
+          queue_size: queueSize || 10,
+        }),
+    );
 
-    if(autoSubscribe) {
+    if (autoSubscribe) {
       this.reset();
       this.subscribe();
     }

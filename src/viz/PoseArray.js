@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { DEFAULT_OPTIONS_POSEARRAY, MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
-import Pose  from './Pose';
+import {
+  DEFAULT_OPTIONS_POSEARRAY,
+  MESSAGE_TYPE_POSEARRAY,
+} from '../utils/constants';
+import Pose from './Pose';
 import * as TransformUtils from '../utils/transform';
 import { setObjectDimension } from '../utils/helpers';
 

@@ -1,7 +1,10 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import {DEFAULT_OPTIONS_POLYGON, MESSAGE_TYPE_POLYGONSTAMPED} from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_POLYGON,
+  MESSAGE_TYPE_POLYGONSTAMPED,
+} from '../utils/constants';
 import Group from '../primitives/Group';
 import Line from '../primitives/Line';
 
@@ -12,7 +15,7 @@ class Polygon extends Core {
     this.line = new Line(null, true);
     this.updateOptions({
       ...DEFAULT_OPTIONS_POLYGON,
-      ...options
+      ...options,
     });
   }
 
@@ -25,7 +28,9 @@ class Polygon extends Core {
 
   update(message) {
     super.update(message);
-    const { polygon: { points } } = message;
+    const {
+      polygon: { points },
+    } = message;
     points.push(points[0]);
     this.line.updatePoints(points);
     this.object.add(this.line);

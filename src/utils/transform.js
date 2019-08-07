@@ -2,10 +2,8 @@ export const setTransform = (
   object,
   {
     translation: { x: posX, y: posY, z: posZ },
-    rotation: {
-      x: orientX, y: orientY, z: orientZ, w: orientW
-    }
-  }
+    rotation: { x: orientX, y: orientY, z: orientZ, w: orientW },
+  },
 ) => {
   object.position.set(posX, posY, posZ);
   object.quaternion.set(orientX, orientY, orientZ, orientW);

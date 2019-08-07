@@ -9,7 +9,7 @@ export const populateImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -51,7 +51,7 @@ export const populateRawImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -75,7 +75,7 @@ export const populateConstImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -132,7 +132,7 @@ export const populateConstImageDataFromNavMsg = (
   }
 };
 
-export const imageDataToCanvas = (imageData) => {
+export const imageDataToCanvas = imageData => {
   const canvas = document.createElement('canvas');
   canvas.width = imageData.width;
   canvas.height = imageData.height;

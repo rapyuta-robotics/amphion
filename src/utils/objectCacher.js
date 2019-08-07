@@ -1,8 +1,7 @@
-import MarkerManager from '../utils/markerManager';
-
 class ObjectCacher {
-  constructor(objectPool) {
+  constructor(objectPool, Primitive) {
     this.objectPool = objectPool;
+    this.Primitive = Primitive;
   }
 
   setObjectDimension(object, { x, y, z }, color, scale) {
@@ -36,7 +35,7 @@ class ObjectCacher {
     }
 
     for (let i = currentCount; i < points.length; i++) {
-      const sphere = MarkerManager.getNewPrimitive(newOptions);
+      const sphere = new this.Primitive();
       const { x, y, z } = points[i];
 
       sphere.setColor(colors[i]);

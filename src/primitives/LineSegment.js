@@ -15,11 +15,15 @@ class LineSegments extends THREE.LineSegments {
   }
 
   updatePoints(points, colors) {
-    this.geometry.vertices = points.map(({ x, y, z }) => new THREE.Vector3(x, y, z));
+    this.geometry.vertices = points.map(
+      ({ x, y, z }) => new THREE.Vector3(x, y, z),
+    );
     this.geometry.verticesNeedUpdate = true;
 
     if (colors.length > 0) {
-      this.geometry.colors = colors.map( ({ r, g, b }) => new THREE.Color(r, g, b));
+      this.geometry.colors = colors.map(
+        ({ r, g, b }) => new THREE.Color(r, g, b),
+      );
       this.geometry.colorsNeedUpdate = true;
     }
   }

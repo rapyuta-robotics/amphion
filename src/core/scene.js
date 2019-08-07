@@ -61,10 +61,16 @@ class Scene extends THREE.Scene {
       gridCenterlineColor,
     } = this.options;
 
-    this.grid.copy(new THREE.GridHelper(gridSize, gridDivisions, gridCenterlineColor, gridColor));
+    this.grid.copy(
+      new THREE.GridHelper(
+        gridSize,
+        gridDivisions,
+        gridCenterlineColor,
+        gridColor,
+      ),
+    );
 
     this.background = new THREE.Color(backgroundColor);
-
   }
 }
 

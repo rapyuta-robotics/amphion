@@ -41,11 +41,11 @@ class LaserScan extends Core {
 
   applyIntensityTransform(intensity, position) {
     const { channelName, minColor, maxColor } = this.options;
-    const { x, y, z} = position;
+    const { x, y, z } = position;
 
     let normI;
 
-    switch(channelName) {
+    switch (channelName) {
       case INTENSITY_CHANNEL_OPTIONS.INTENSITY:
         normI = this.getNormalizedIntensity(intensity);
         break;
@@ -65,7 +65,8 @@ class LaserScan extends Core {
     const minColorHex = new THREE.Color(minColor);
     const maxColorHex = new THREE.Color(maxColor);
 
-    const finalColor = (normI * maxColorHex.getHex()) + ((1 - normI) * minColorHex.getHex());
+    const finalColor =
+      normI * maxColorHex.getHex() + (1 - normI) * minColorHex.getHex();
     return new THREE.Color(finalColor);
   }
 
@@ -75,13 +76,13 @@ class LaserScan extends Core {
     return (data - minAxisValue) / (maxAxisValue - minAxisValue);
   }
 
-  applyAxisColorTransform(intensity, position){
+  applyAxisColorTransform(intensity, position) {
     const { axis, minAxisValue, maxAxisValue } = this.options;
     const { x, y, z } = position;
 
     let normI;
 
-    switch(axis) {
+    switch (axis) {
       case AXES.X:
         normI = this.getNormalizedAxisValue(x);
         break;
@@ -95,7 +96,7 @@ class LaserScan extends Core {
         break;
     }
 
-    const finalColor = (normI * maxAxisValue) + ((1 - normI) * minAxisValue);
+    const finalColor = normI * maxAxisValue + (1 - normI) * minAxisValue;
     return new THREE.Color(finalColor);
   }
 
@@ -114,7 +115,7 @@ class LaserScan extends Core {
     }
   }
 
-  setupPoints({j, position, color}) {
+  setupPoints({ j, position, color }) {
     this.points.colors.array[j] = color.r;
     this.points.positions.array[j++] = position.x;
     this.points.colors.array[j] = color.g;
@@ -129,13 +130,13 @@ class LaserScan extends Core {
     this.cubeList.visible = false;
   }
 
-  setStyleDimensions(message){
-    if(!message) {
+  setStyleDimensions(message) {
+    if (!message) {
       return;
     }
     const { style, alpha } = this.options;
-    let { size } = this.options;
-    const { ranges , intensities } = message;
+    const { size } = this.options;
+    const { ranges, intensities } = message;
     const n = ranges.length;
     const positions = [];
     const colors = [];
@@ -148,7 +149,7 @@ class LaserScan extends Core {
     this.points.setup(style, size, alpha);
 
     let j = 0;
-    for (let i = 0; i < n; i ++) {
+    for (let i = 0; i < n; i++) {
       const range = message.ranges[i];
 
       if (range >= message.range_min && range <= message.range_max) {
@@ -156,7 +157,7 @@ class LaserScan extends Core {
         const position = {
           x: range * Math.cos(angle),
           y: range * Math.sin(angle),
-          z: 0
+          z: 0,
         };
         const color = this.colorTransformer(intensities[i], position);
 
@@ -176,7 +177,7 @@ class LaserScan extends Core {
       }
     }
 
-    const options = { scale: {x: size, y: size, z: size}};
+    const options = { scale: { x: size, y: size, z: size } };
 
     switch (style) {
       case LASERSCAN_STYLES.SPHERES: {
@@ -191,7 +192,7 @@ class LaserScan extends Core {
       }
       default:
         this.points.rootObject.visible = true;
-        this.points.update(j/3);
+        this.points.update(j / 3);
         break;
     }
   }
