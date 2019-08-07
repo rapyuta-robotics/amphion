@@ -4,6 +4,4 @@ node_modules
 .vscode/
 .idea
 
-build/
-
 examples/**/*.js
