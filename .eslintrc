@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint-config-airbnb", "prettier", "prettier/react"],
+  "extends": ["eslint-config-airbnb", "prettier"],
   "plugins": ["prettier"],
     "env": {
       "browser": true,

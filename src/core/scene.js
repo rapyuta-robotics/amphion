@@ -7,7 +7,6 @@ class Scene extends THREE.Scene {
   constructor(options = {}) {
     super();
     this.vizWrapper = new THREE.Group();
-    this.vizWrapper.rotateX(-Math.PI / 2);
     this.add(this.vizWrapper);
 
     this.stats = new Stats();
