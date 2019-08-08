@@ -28,13 +28,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint"
+      "pre-commit": "npm run pre-commit"
     }
   },
   "scripts": {
     "build": "rollup -c",
     "examples": "webpack-dev-server --config webpack.config.js",
-    "lint": "prettier src/**/* --write",
+    "lint": "eslint src/**/*.{js,jsx} --fix",
+    "prettier": "prettier src/**/* --write",
+    "add": "git add .",
+    "pre-commit": "npm-run-all lint prettier add",
     "dev": "rollup -c --watch",
     "start": "npm-run-all --parallel dev examples"
   },

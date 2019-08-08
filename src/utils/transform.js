@@ -8,7 +8,9 @@ export const setTransform = (
   },
 ) => {
   object.position.set(posX, posY, posZ);
-  object.quaternion.copy((new Quaternion(orientX, orientY, orientZ, orientW)).normalize());
+  object.quaternion.copy(
+    new Quaternion(orientX, orientY, orientZ, orientW).normalize(),
+  );
 };
 
 export const setScale = (object, { x, y, z }) => {
