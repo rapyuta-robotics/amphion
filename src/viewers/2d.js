@@ -71,7 +71,7 @@ class Viewer2d {
 
   onWindowResize() {
     const { camera } = this;
-    const { offsetWidth, offsetHeight } = this.container;
+    const { offsetHeight, offsetWidth } = this.container;
     if (
       Math.abs(offsetWidth - this.previousWidth) > 10 ||
       Math.abs(offsetHeight - this.previousHeight) > 10

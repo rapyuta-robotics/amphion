@@ -1,10 +1,9 @@
 import * as THREE from 'three';
 
 import * as TransformUtils from '../utils/transform';
-import { DEFAULT_COLOR_LINE } from '../utils/constants';
 
 class Line extends THREE.Line {
-  constructor(color = DEFAULT_COLOR_LINE, disableVertexColor) {
+  constructor(color, disableVertexColor) {
     super();
     this.geometry = new THREE.Geometry();
     this.geometry.vertices.push(new THREE.Vector3(0, 0, 0));

@@ -18,8 +18,11 @@
     "no-plusplus": "off",
     "comma-dangle": "off",
     "import/prefer-default-export": "off",
-    "class-methods-use-this": "warn",
-    "no-unused-vars": "warn",
+    "class-methods-use-this": "off",
+    "no-unused-vars": [
+      "warn",
+      { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
+    ],
     "no-param-reassign": "off",
     "no-unused-expressions": "warn",
     "no-bitwise": "off",

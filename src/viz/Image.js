@@ -14,11 +14,11 @@ class Image extends Core {
   applyImageData(message) {
     const {
       data,
-      step,
-      width,
+      encoding,
       height,
       is_bigendian: isBigEndian,
-      encoding,
+      step,
+      width,
     } = message;
 
     const ctx = this.object.getContext('2d');
@@ -76,7 +76,7 @@ class Image extends Core {
   }
 
   update(message) {
-    const { width, height } = message;
+    const { height, width } = message;
 
     this.object.width = width;
     this.object.height = height;

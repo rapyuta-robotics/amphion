@@ -86,8 +86,8 @@ class TfViewer extends Viewer3d {
 
   setFrameTransform() {
     const {
-      selectedFrame,
       scene: { vizWrapper },
+      selectedFrame,
     } = this;
     if (!selectedFrame) {
       return;
@@ -138,7 +138,7 @@ class TfViewer extends Viewer3d {
     };
   }
 
-  addRobot(robotModel, options) {
+  addRobot(robotModel) {
     robotModel.load(object => {
       RobotModel.onComplete(object);
       super.addVisualization(robotModel);

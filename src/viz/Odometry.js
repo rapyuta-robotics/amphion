@@ -127,7 +127,7 @@ class Odometry extends Core {
   updateOptions(options) {
     const { type: currentType } = this.options;
     super.updateOptions(options);
-    const { type, keep } = this.options;
+    const { keep, type } = this.options;
 
     if (type !== currentType) {
       this.changeObjectPoolType();

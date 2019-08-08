@@ -42,7 +42,7 @@ export default class MarkerManager {
   }
 
   updateOptions(options, context) {
-    const { queueSize, namespaces } = options;
+    const { namespaces, queueSize } = options;
     const { queueSize: currentQueueSize } = context;
 
     if (currentQueueSize !== queueSize) {
@@ -66,11 +66,11 @@ export default class MarkerManager {
 
   updateMarker(marker) {
     const {
-      pose: { position, orientation },
-      scale,
       color,
       colors,
       points,
+      pose: { position, orientation },
+      scale,
     } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 

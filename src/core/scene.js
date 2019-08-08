@@ -55,10 +55,10 @@ class Scene extends THREE.Scene {
 
     const {
       backgroundColor,
-      gridSize,
-      gridDivisions,
-      gridColor,
       gridCenterlineColor,
+      gridColor,
+      gridDivisions,
+      gridSize,
     } = this.options;
 
     this.grid.copy(

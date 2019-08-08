@@ -18,7 +18,7 @@ class Path extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { color, alpha } = this.options;
+    const { alpha, color } = this.options;
     this.line.setColor(new THREE.Color(color));
     this.line.setAlpha(alpha);
   }

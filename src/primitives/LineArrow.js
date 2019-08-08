@@ -31,7 +31,7 @@ class LineArrow extends Group {
   }
 
   setColor(color) {
-    const { r, g, b } = color;
+    const { b, g, r } = color;
     this.arrowTop.material.color.setRGB(r, g, b);
     this.arrowLength.material.color.setRGB(r, g, b);
   }

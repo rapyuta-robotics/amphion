@@ -133,7 +133,7 @@ const MapControls2D = function(object, domElement) {
     pointerOld.set(event.clientX, event.clientY);
   }
 
-  function onMouseUp(event) {
+  function onMouseUp() {
     domElement.removeEventListener('mousemove', onMouseMove, false);
     domElement.removeEventListener('mouseup', onMouseUp, false);
     domElement.removeEventListener('mouseout', onMouseUp, false);

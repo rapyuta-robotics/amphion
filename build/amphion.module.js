@@ -66,7 +66,7 @@ class Core {
   }
 
   changeTopic(topicName, type, autoSubscribe = true) {
-    const { throttleRate, queueSize } = this.options;
+    const { queueSize, throttleRate } = this.options;
 
     if (autoSubscribe) {
       this.unsubscribe();
@@ -194,7 +194,6 @@ const DEFAULT_COLOR_X_AXIS = '#ff0000';
 const DEFAULT_COLOR_Y_AXIS = '#008000';
 const DEFAULT_COLOR_Z_AXIS = '#0000ff';
 const DEFAULT_COLOR_ARROW = '#f0ff00';
-const DEFAULT_COLOR_LINE = '#f0ff00';
 
 const DEFAULT_OPTIONS_SCENE = {
   backgroundColor: DEFAULT_BACKGROUND_COLOR,
@@ -530,7 +529,7 @@ class Axes extends Group {
 }
 
 class Line extends Line$1 {
-  constructor(color = DEFAULT_COLOR_LINE, disableVertexColor) {
+  constructor(color, disableVertexColor) {
     super();
     this.geometry = new Geometry();
     this.geometry.vertices.push(new Vector3(0, 0, 0));
@@ -599,14 +598,14 @@ class LineArrow extends Group {
   }
 
   setColor(color) {
-    const { r, g, b } = color;
+    const { b, g, r } = color;
     this.arrowTop.material.color.setRGB(r, g, b);
     this.arrowLength.material.color.setRGB(r, g, b);
   }
 }
 
 const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
-  const { positionTolerance, angleTolerance } = options;
+  const { angleTolerance, positionTolerance } = options;
   const { position, quaternion } = newPose;
   const { position: oldPosition, quaternion: oldQuaternion } = oldPose;
 
@@ -621,12 +620,12 @@ const setObjectDimension = (object, options) => {
   switch (options.type) {
     case OBJECT_TYPE_ARROW: {
       const {
-        color,
         alpha,
-        shaftLength,
-        shaftRadius,
+        color,
         headLength,
         headRadius,
+        shaftLength,
+        shaftRadius,
       } = options;
 
       object.setHeadDimensions({ radius: headRadius, length: headLength });
@@ -727,7 +726,7 @@ class Polygon extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { color, alpha } = this.options;
+    const { alpha, color } = this.options;
     this.line.setColor(new Color(color));
     this.line.setAlpha(alpha);
   }
@@ -1089,7 +1088,7 @@ class PointCloud extends Core {
 
   update(message) {
     super.update(message);
-    const { positions, colors } = editPointCloudPoints(message);
+    const { colors, positions } = editPointCloudPoints(message);
     this.updatePointCloudGeometry(positions, colors);
   }
 }
@@ -1119,7 +1118,7 @@ class Sphere extends Mesh {
 }
 
 class LineSegments extends LineSegments$1 {
-  constructor(color = DEFAULT_COLOR_LINE, linewidth = 5) {
+  constructor(color, linewidth = 5) {
     super();
     this.geometry = new Geometry();
     this.material = new LineBasicMaterial({ linewidth });
@@ -1177,7 +1176,7 @@ class ObjectCacher {
 
   increasePool(points, colors, options) {
     const currentCount = this.objectPool.children.length;
-    const { scale, subtype } = options;
+    const { scale } = options;
 
     for (let i = 0; i < currentCount; i++) {
       const currentChild = this.objectPool.children[i];
@@ -1403,7 +1402,7 @@ class MarkerManager {
   }
 
   updateOptions(options, context) {
-    const { queueSize, namespaces } = options;
+    const { namespaces, queueSize } = options;
     const { queueSize: currentQueueSize } = context;
 
     if (currentQueueSize !== queueSize) {
@@ -1412,9 +1411,12 @@ class MarkerManager {
 
     this.namespaces = namespaces;
 
-    for (const key of this.objectMap) {
-      const namespace = this.extractNameSpace(key);
-      this.objectMap[key].visible = this.namespaces[namespace];
+    for (const key in this.objectMap) {
+      // eslint-disable-next-line no-prototype-builtins
+      if (this.objectMap.hasOwnProperty(key)) {
+        const namespace = this.extractNameSpace(key);
+        this.objectMap[key].visible = this.namespaces[namespace];
+      }
     }
   }
 
@@ -1424,11 +1426,11 @@ class MarkerManager {
 
   updateMarker(marker) {
     const {
-      pose: { position, orientation },
-      scale,
       color,
       colors,
       points,
+      pose: { position, orientation },
+      scale,
     } = marker;
     const markerObject = this.getMarkerOrCreate(marker);
 
@@ -1607,13 +1609,13 @@ class LaserScan extends Core {
   }
 
   getNormalizedIntensity(data) {
-    const { minIntensity, maxIntensity } = this.options;
+    const { maxIntensity, minIntensity } = this.options;
 
     return (data - minIntensity) / (maxIntensity - minIntensity);
   }
 
   applyIntensityTransform(intensity, position) {
-    const { channelName, minColor, maxColor } = this.options;
+    const { channelName, maxColor, minColor } = this.options;
     const { x, y, z } = position;
 
     let normI;
@@ -1644,13 +1646,13 @@ class LaserScan extends Core {
   }
 
   getNormalizedAxisValue(data) {
-    const { minAxisValue, maxAxisValue } = this.options;
+    const { maxAxisValue, minAxisValue } = this.options;
 
     return (data - minAxisValue) / (maxAxisValue - minAxisValue);
   }
 
   applyAxisColorTransform(intensity, position) {
-    const { axis, minAxisValue, maxAxisValue } = this.options;
+    const { axis, maxAxisValue, minAxisValue } = this.options;
     const { x, y, z } = position;
 
     let normI;
@@ -1707,9 +1709,9 @@ class LaserScan extends Core {
     if (!message) {
       return;
     }
-    const { style, alpha } = this.options;
+    const { alpha, style } = this.options;
     const { size } = this.options;
-    const { ranges, intensities } = message;
+    const { intensities, ranges } = message;
     const n = ranges.length;
     const positions = [];
     const colors = [];
@@ -2127,7 +2129,7 @@ class Odometry extends Core {
   updateOptions(options) {
     const { type: currentType } = this.options;
     super.updateOptions(options);
-    const { type, keep } = this.options;
+    const { keep, type } = this.options;
 
     if (type !== currentType) {
       this.changeObjectPoolType();
@@ -2209,7 +2211,7 @@ class PoseArray extends Core {
 
   update(message) {
     super.update(message);
-    this.object.children.forEach((obj, index) => {
+    this.object.children.forEach(obj => {
       obj.parent.remove(obj);
     });
     this.object.children = [];
@@ -2241,7 +2243,7 @@ class Path extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { color, alpha } = this.options;
+    const { alpha, color } = this.options;
     this.line.setColor(new Color(color));
     this.line.setAlpha(alpha);
   }
@@ -2269,11 +2271,11 @@ class Image extends Core {
   applyImageData(message) {
     const {
       data,
-      step,
-      width,
+      encoding,
       height,
       is_bigendian: isBigEndian,
-      encoding,
+      step,
+      width,
     } = message;
 
     const ctx = this.object.getContext('2d');
@@ -2331,7 +2333,7 @@ class Image extends Core {
   }
 
   update(message) {
-    const { width, height } = message;
+    const { height, width } = message;
 
     this.object.width = width;
     this.object.height = height;
@@ -2433,10 +2435,10 @@ class Scene extends Scene$1 {
 
     const {
       backgroundColor,
-      gridSize,
-      gridDivisions,
-      gridColor,
       gridCenterlineColor,
+      gridColor,
+      gridDivisions,
+      gridSize,
     } = this.options;
 
     this.grid.copy(
@@ -2577,7 +2579,7 @@ const MapControls2D = function(object, domElement) {
     pointerOld.set(event.clientX, event.clientY);
   }
 
-  function onMouseUp(event) {
+  function onMouseUp() {
     domElement.removeEventListener('mousemove', onMouseMove, false);
     domElement.removeEventListener('mouseup', onMouseUp, false);
     domElement.removeEventListener('mouseout', onMouseUp, false);
@@ -2804,7 +2806,7 @@ class Viewer2d {
 
   onWindowResize() {
     const { camera } = this;
-    const { offsetWidth, offsetHeight } = this.container;
+    const { offsetHeight, offsetWidth } = this.container;
     if (
       Math.abs(offsetWidth - this.previousWidth) > 10 ||
       Math.abs(offsetHeight - this.previousHeight) > 10
@@ -2903,7 +2905,7 @@ class Viewer3d {
 
   onWindowResize() {
     const { camera } = this;
-    const { offsetWidth, offsetHeight } = this.container;
+    const { offsetHeight, offsetWidth } = this.container;
     if (
       Math.abs(offsetWidth - this.previousWidth) > 10 ||
       Math.abs(offsetHeight - this.previousHeight) > 10
@@ -3003,8 +3005,8 @@ class TfViewer extends Viewer3d {
 
   setFrameTransform() {
     const {
-      selectedFrame,
       scene: { vizWrapper },
+      selectedFrame,
     } = this;
     if (!selectedFrame) {
       return;
@@ -3055,11 +3057,12 @@ class TfViewer extends Viewer3d {
     };
   }
 
-  addRobot(robotModel, options) {
+  addRobot(robotModel) {
     robotModel.load(object => {
       RobotModel.onComplete(object);
       super.addVisualization(robotModel);
-      for (const linkName of object.children[0].links) {
+      // eslint-disable-next-line guard-for-in
+      for (const linkName in object.children[0].links) {
         const o = object.children[0].links[linkName];
         const existingObject = this.scene.getObjectByName(o.name);
         if (existingObject) {

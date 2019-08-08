@@ -34,13 +34,13 @@ class LaserScan extends Core {
   }
 
   getNormalizedIntensity(data) {
-    const { minIntensity, maxIntensity } = this.options;
+    const { maxIntensity, minIntensity } = this.options;
 
     return (data - minIntensity) / (maxIntensity - minIntensity);
   }
 
   applyIntensityTransform(intensity, position) {
-    const { channelName, minColor, maxColor } = this.options;
+    const { channelName, maxColor, minColor } = this.options;
     const { x, y, z } = position;
 
     let normI;
@@ -71,13 +71,13 @@ class LaserScan extends Core {
   }
 
   getNormalizedAxisValue(data) {
-    const { minAxisValue, maxAxisValue } = this.options;
+    const { maxAxisValue, minAxisValue } = this.options;
 
     return (data - minAxisValue) / (maxAxisValue - minAxisValue);
   }
 
   applyAxisColorTransform(intensity, position) {
-    const { axis, minAxisValue, maxAxisValue } = this.options;
+    const { axis, maxAxisValue, minAxisValue } = this.options;
     const { x, y, z } = position;
 
     let normI;
@@ -134,9 +134,9 @@ class LaserScan extends Core {
     if (!message) {
       return;
     }
-    const { style, alpha } = this.options;
+    const { alpha, style } = this.options;
     const { size } = this.options;
-    const { ranges, intensities } = message;
+    const { intensities, ranges } = message;
     const n = ranges.length;
     const positions = [];
     const colors = [];

@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import * as TransformUtils from '../utils/transform';
-import { DEFAULT_COLOR_LINE } from '../utils/constants';
 
 class LineSegments extends THREE.LineSegments {
-  constructor(color = DEFAULT_COLOR_LINE, linewidth = 5) {
+  constructor(color, linewidth = 5) {
     super();
     this.geometry = new THREE.Geometry();
     this.material = new THREE.LineBasicMaterial({ linewidth });

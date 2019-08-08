@@ -61,7 +61,7 @@ class Core {
   }
 
   changeTopic(topicName, type, autoSubscribe = true) {
-    const { throttleRate, queueSize } = this.options;
+    const { queueSize, throttleRate } = this.options;
 
     if (autoSubscribe) {
       this.unsubscribe();

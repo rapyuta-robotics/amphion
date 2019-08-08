@@ -21,7 +21,7 @@ class PoseArray extends Core {
 
   update(message) {
     super.update(message);
-    this.object.children.forEach((obj, index) => {
+    this.object.children.forEach(obj => {
       obj.parent.remove(obj);
     });
     this.object.children = [];

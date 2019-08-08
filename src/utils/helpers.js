@@ -7,7 +7,7 @@ import {
 } from './constants';
 
 export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
-  const { positionTolerance, angleTolerance } = options;
+  const { angleTolerance, positionTolerance } = options;
   const { position, quaternion } = newPose;
   const { position: oldPosition, quaternion: oldQuaternion } = oldPose;
 
@@ -22,12 +22,12 @@ export const setObjectDimension = (object, options) => {
   switch (options.type) {
     case OBJECT_TYPE_ARROW: {
       const {
-        color,
         alpha,
-        shaftLength,
-        shaftRadius,
+        color,
         headLength,
         headRadius,
+        shaftLength,
+        shaftRadius,
       } = options;
 
       object.setHeadDimensions({ radius: headRadius, length: headLength });

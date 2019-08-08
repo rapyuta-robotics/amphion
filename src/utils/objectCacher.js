@@ -26,8 +26,7 @@ class ObjectCacher {
 
   increasePool(points, colors, options) {
     const currentCount = this.objectPool.children.length;
-    const { scale, subtype } = options;
-    const newOptions = { type: subtype };
+    const { scale } = options;
 
     for (let i = 0; i < currentCount; i++) {
       const currentChild = this.objectPool.children[i];
