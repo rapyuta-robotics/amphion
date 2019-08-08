@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import {DEFAULT_OPTIONS_PATH, MESSAGE_TYPE_PATH} from '../utils/constants';
+import { DEFAULT_OPTIONS_PATH, MESSAGE_TYPE_PATH } from '../utils/constants';
 import Group from '../primitives/Group';
 import Line from '../primitives/Line';
 
@@ -12,13 +12,13 @@ class Path extends Core {
     this.line = new Line(null, true);
     this.updateOptions({
       ...DEFAULT_OPTIONS_PATH,
-      ...options
+      ...options,
     });
   }
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { color, alpha } = this.options;
+    const { alpha, color } = this.options;
     this.line.setColor(new THREE.Color(color));
     this.line.setAlpha(alpha);
   }
@@ -34,5 +34,3 @@ class Path extends Core {
 }
 
 export default Path;
-
-

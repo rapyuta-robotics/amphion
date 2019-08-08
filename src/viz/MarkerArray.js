@@ -1,5 +1,8 @@
 import Core from '../core';
-import { DEFAULT_OPTIONS_MARKERARRAY, MESSAGE_TYPE_MARKERARRAY } from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_MARKERARRAY,
+  MESSAGE_TYPE_MARKERARRAY,
+} from '../utils/constants';
 import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
 
@@ -37,7 +40,7 @@ class MarkerArray extends Core {
   update(message) {
     super.update(message);
     if (message.markers.length > 0) {
-      message.markers.forEach((marker) => {
+      message.markers.forEach(marker => {
         this.markerManager.updateMarker(marker);
       });
     }

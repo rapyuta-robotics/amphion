@@ -10,7 +10,10 @@ import Arrow from '../primitives/Arrow';
 import Group from '../primitives/Group';
 import * as TransformUtils from '../utils/transform';
 import Axes from '../primitives/Axes';
-import { checkToleranceThresholdExceed, setObjectDimension } from '../utils/helpers';
+import {
+  checkToleranceThresholdExceed,
+  setObjectDimension,
+} from '../utils/helpers';
 
 class Odometry extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_ODOMETRY) {
@@ -51,7 +54,7 @@ class Odometry extends Core {
 
       const slicedList = this.objectPool.slice(
         this.objectPool.length - size,
-        this.objectPool.length
+        this.objectPool.length,
       );
       newKeepList = [...slicedList];
     } else {
@@ -107,7 +110,12 @@ class Odometry extends Core {
 
       const newObj = this.getObject();
       newObj.position.set(position.x, position.y, position.z);
-      newObj.quaternion.set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+      newObj.quaternion.set(
+        quaternion.x,
+        quaternion.y,
+        quaternion.z,
+        quaternion.w,
+      );
       tempObjectPool.push(newObj);
       this.object.add(newObj);
       setObjectDimension(newObj, this.options);
@@ -119,16 +127,13 @@ class Odometry extends Core {
   updateOptions(options) {
     const { type: currentType } = this.options;
     super.updateOptions(options);
-    const {
-      type,
-      keep,
-    } = this.options;
+    const { keep, type } = this.options;
 
     if (type !== currentType) {
       this.changeObjectPoolType();
     }
 
-    this.objectPool.forEach((object) => {
+    this.objectPool.forEach(object => {
       setObjectDimension(object, this.options);
     });
 
@@ -142,17 +147,28 @@ class Odometry extends Core {
       return;
     }
 
-    const { pose: { pose: { position, orientation } } } = message;
+    const {
+      pose: {
+        pose: { position, orientation },
+      },
+    } = message;
     const transform = {
       translation: position,
-      rotation: orientation
+      rotation: orientation,
     };
 
     const newPose = {
       position: new THREE.Vector3(position.x, position.y, position.z),
-      quaternion: new THREE.Quaternion(orientation.x, orientation.y, orientation.z, orientation.w),
+      quaternion: new THREE.Quaternion(
+        orientation.x,
+        orientation.y,
+        orientation.z,
+        orientation.w,
+      ),
     };
-    const toleranceThresholdExceed = this.checkToleranceThresholdExceed(newPose);
+    const toleranceThresholdExceed = this.checkToleranceThresholdExceed(
+      newPose,
+    );
 
     if (toleranceThresholdExceed) {
       const newObject = this.getObject();
@@ -160,7 +176,11 @@ class Odometry extends Core {
 
       this.objectPool.push(newObject);
       this.currentObject += 1;
-      this.currentObject = THREE.Math.clamp(this.currentObject, 0, this.keepSize - 1);
+      this.currentObject = THREE.Math.clamp(
+        this.currentObject,
+        0,
+        this.keepSize - 1,
+      );
       this.object.add(newObject);
       TransformUtils.setTransform(newObject, transform);
 

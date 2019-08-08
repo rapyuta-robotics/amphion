@@ -60,7 +60,7 @@ class Viewer2d {
   updateOptions(options) {
     this.options = {
       ...this.options,
-      ...options
+      ...options,
     };
     this.scene.updateOptions(this.options);
   }
@@ -71,12 +71,15 @@ class Viewer2d {
 
   onWindowResize() {
     const { camera } = this;
-    const { offsetWidth, offsetHeight } = this.container;
+    const { offsetHeight, offsetWidth } = this.container;
     if (
       Math.abs(offsetWidth - this.previousWidth) > 10 ||
       Math.abs(offsetHeight - this.previousHeight) > 10
     ) {
-      const [cameraWidth, cameraHeight] = [offsetWidth / 100, offsetHeight / 100];
+      const [cameraWidth, cameraHeight] = [
+        offsetWidth / 100,
+        offsetHeight / 100,
+      ];
       camera.left = -cameraWidth / 2;
       camera.right = cameraWidth / 2;
       camera.top = cameraHeight / 2;

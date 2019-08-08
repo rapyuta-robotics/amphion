@@ -13,7 +13,6 @@ class Sphere extends Mesh {
         );
         this.material = new THREE.MeshStandardMaterial();
         this.material.transparent = true;
-        this.mesh = new Mesh();
     }
 
     updateOptions(color, alpha, radius) {
