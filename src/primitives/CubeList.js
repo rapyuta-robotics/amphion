@@ -3,13 +3,14 @@ import * as THREE from 'three';
 import Mesh from './Mesh';
 import ObjectCacher from '../utils/objectCacher';
 import { MARKER_OBJECT_TYPES } from '../utils/constants';
+import Cube from './Cube';
 
 class CubeList extends Mesh {
   constructor() {
     super();
     this.geometry = new THREE.Geometry();
     this.material = new THREE.MeshBasicMaterial();
-    this.objectCacher = new ObjectCacher(this);
+    this.objectCacher = new ObjectCacher(this, Cube);
   }
 
   updatePoints(points, colors, options = {}) {

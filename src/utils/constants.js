@@ -4,65 +4,54 @@ export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
 export const MAX_POINTCLOUD_POINTS = 100000;
 
-
-
 export const DEFAULT_BACKGROUND_COLOR = '#000000';
 export const DEFAULT_GRID_SIZE = 30;
 export const DEFAULT_GRID_DIVISIONS = 30;
 export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
-
-
-/*****************************
+/** ***************************
  *   Message types
- * ***************************/
-export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
-export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
-export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
-export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
-export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
-export const MESSAGE_TYPE_POSESTAMPED =                      'geometry_msgs/PoseStamped';
-export const MESSAGE_TYPE_TWISTSTAMPED =                     'geometry_msgs/TwistStamped';
-export const MESSAGE_TYPE_VECTOR3STAMPED =                   'geometry_msgs/Vector3Stamped';
-export const MESSAGE_TYPE_WRENCHSTAMPED =                    'geometry_msgs/WrenchStamped';
+ * ************************** */
+export const MESSAGE_TYPE_ROBOT_MODEL = 'robot_description';
+export const MESSAGE_TYPE_ACCELSTAMPED = 'geometry_msgs/AccelStamped';
+export const MESSAGE_TYPE_POLYGONSTAMPED = 'geometry_msgs/PolygonStamped';
+export const MESSAGE_TYPE_POSEARRAY = 'geometry_msgs/PoseArray';
+export const MESSAGE_TYPE_POSECOVARIANCE = 'geometry_msgs/PoseWithCovariance';
+export const MESSAGE_TYPE_POSESTAMPED = 'geometry_msgs/PoseStamped';
+export const MESSAGE_TYPE_TWISTSTAMPED = 'geometry_msgs/TwistStamped';
+export const MESSAGE_TYPE_VECTOR3STAMPED = 'geometry_msgs/Vector3Stamped';
+export const MESSAGE_TYPE_WRENCHSTAMPED = 'geometry_msgs/WrenchStamped';
 
-export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/BoundingVolume';
-export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
-export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
-export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
+export const MESSAGE_TYPE_BOUNDINGVOLUME = 'moveit_msgs/BoundingVolume';
+export const MESSAGE_TYPE_DISPLAYROBOTSTATE = 'moveit_msgs/DisplayRobotState';
+export const MESSAGE_TYPE_DISPLAYTRAJECTORY = 'moveit_msgs/DisplayTrajectory';
+export const MESSAGE_TYPE_PLANNINGSCENE = 'moveit_msgs/PlanningScene';
 
-export const MESSAGE_TYPE_OCCUPANCYGRID =                    'nav_msgs/OccupancyGrid';
-export const MESSAGE_TYPE_ODOMETRY =                         'nav_msgs/Odometry';
-export const MESSAGE_TYPE_PATH =                             'nav_msgs/Path';
+export const MESSAGE_TYPE_OCCUPANCYGRID = 'nav_msgs/OccupancyGrid';
+export const MESSAGE_TYPE_ODOMETRY = 'nav_msgs/Odometry';
+export const MESSAGE_TYPE_PATH = 'nav_msgs/Path';
 
-export const MESSAGE_TYPE_COMPRESSEDIMAGE =                  'sensor_msgs/CompressedImage';
-export const MESSAGE_TYPE_DISPLAYJOINTSTATE =                'sensor_msgs/JointState';
-export const MESSAGE_TYPE_IMAGE =                            'sensor_msgs/Image';
-export const MESSAGE_TYPE_LASERSCAN =                        'sensor_msgs/LaserScan';
-export const MESSAGE_TYPE_MAGNETICFIELD =                    'sensor_msgs/MagneticField';
-export const MESSAGE_TYPE_POINTCLOUD =                       'sensor_msgs/PointCloud';
-export const MESSAGE_TYPE_POINTCLOUD2 =                      'sensor_msgs/PointCloud2';
-export const MESSAGE_TYPE_RANGE =                            'sensor_msgs/Range';
+export const MESSAGE_TYPE_COMPRESSEDIMAGE = 'sensor_msgs/CompressedImage';
+export const MESSAGE_TYPE_DISPLAYJOINTSTATE = 'sensor_msgs/JointState';
+export const MESSAGE_TYPE_IMAGE = 'sensor_msgs/Image';
+export const MESSAGE_TYPE_LASERSCAN = 'sensor_msgs/LaserScan';
+export const MESSAGE_TYPE_MAGNETICFIELD = 'sensor_msgs/MagneticField';
+export const MESSAGE_TYPE_POINTCLOUD = 'sensor_msgs/PointCloud';
+export const MESSAGE_TYPE_POINTCLOUD2 = 'sensor_msgs/PointCloud2';
+export const MESSAGE_TYPE_RANGE = 'sensor_msgs/Range';
 
-export const MESSAGE_TYPE_TF =                               'tf/tfMessage';
-export const MESSAGE_TYPE_TF2 =                              'tf2_msgs/TFMessage';
+export const MESSAGE_TYPE_TF = 'tf/tfMessage';
+export const MESSAGE_TYPE_TF2 = 'tf2_msgs/TFMessage';
 
-export const MESSAGE_TYPE_MARKER =                           'visualization_msgs/Marker';
-export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
-export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs/InteractiveMarkerInit';
+export const MESSAGE_TYPE_MARKER = 'visualization_msgs/Marker';
+export const MESSAGE_TYPE_MARKERARRAY = 'visualization_msgs/MarkerArray';
+export const MESSAGE_TYPE_INTERACTIVEMARKER =
+  'visualization_msgs/InteractiveMarkerInit';
 
-
-
-
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Visualizations
- * ***************************/
+ * ************************** */
 export const VIZ_TYPE_IMAGE = 'Image';
 export const VIZ_TYPE_IMTERACTIVEMARKER = 'InteractiveMarker';
 export const VIZ_TYPE_LASERSCAN = 'LaserScan';
@@ -78,16 +67,9 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
 
-
-
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Viz specific constants
- * ***************************/
+ * ************************** */
 export const MARKER_OBJECT_TYPES = {
   ARROW: 0,
   CUBE: 1,
@@ -150,13 +132,9 @@ export const POSE_OBJECT_TYPES = {
   flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
 
-
-
-
-
-/*****************************
+/** ***************************
  *   Default Options
- * ***************************/
+ * ************************** */
 export const DEFAULT_CYLINDER_HEIGHT = 1;
 export const DEFAULT_CYLINDER_RADIUS = 1;
 export const DEFAULT_RADIAL_SEGMENTS = 32;
@@ -292,14 +270,9 @@ export const DEFAULT_OPTIONS_ROBOTMODEL = {};
 
 export const DEFAULT_OPTIONS_TF = {};
 
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Zethus exports
- * ***************************/
+ * ************************** */
 export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_LASERSCAN,

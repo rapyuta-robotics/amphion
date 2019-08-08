@@ -26,9 +26,15 @@
     "three": "^0.106.2",
     "urdf-loader": "^0.7.1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
   "scripts": {
     "build": "rollup -c",
     "examples": "webpack-dev-server --config webpack.config.js",
+    "lint": "prettier src/**/* --write",
     "dev": "rollup -c --watch",
     "start": "npm-run-all --parallel dev examples"
   },
@@ -36,16 +42,22 @@
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
-    "eslint": "^6.0.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
     "eslint-restricted-globals": "^0.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^3.0.2",
     "npm-run-all": "^4.1.5",
     "object.assign": "^4.1.0",
     "object.entries": "^1.1.0",
+    "prettier": "^1.18.2",
+    "prettier-sort-destructure": "0.0.3",
     "rollup": "^1.16.7",
     "rollup-plugin-local-resolve": "^1.0.7",
     "webpack": "^4.35.3",

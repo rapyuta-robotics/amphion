@@ -9,7 +9,7 @@ class Sphere extends Mesh {
     this.geometry = new THREE.SphereGeometry(
       size,
       DEFAULT_RADIAL_SEGMENTS,
-      DEFAULT_RADIAL_SEGMENTS
+      DEFAULT_RADIAL_SEGMENTS,
     );
     this.material = new THREE.MeshStandardMaterial();
   }

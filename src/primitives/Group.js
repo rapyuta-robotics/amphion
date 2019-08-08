@@ -12,7 +12,7 @@ class Group extends THREE.Group {
   }
 
   setColor(colors) {
-    this.children.forEach((child) => {
+    this.children.forEach(child => {
       TransformUtils.setColor(child, colors);
     });
   }
