@@ -1,5 +1,5 @@
 import ROSLIB from 'roslib';
-import getNewPrimitive from './primitives';
+import getNewPrimitive from './markerTypes';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
