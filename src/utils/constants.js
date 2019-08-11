@@ -1,3 +1,5 @@
+import { Group } from 'three';
+
 export const OBJECT_TYPE_ARROW = 'Arrow';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
@@ -28,6 +30,7 @@ export const MESSAGE_TYPE_VECTOR3STAMPED =                   'geometry_msgs/Vect
 export const MESSAGE_TYPE_WRENCHSTAMPED =                    'geometry_msgs/WrenchStamped';
 
 export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/BoundingVolume';
+export const MESSAGE_TYPE_COLLISION_OBJECT =                 'moveit_msgs/CollisionObject';
 export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
 export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
 export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
@@ -88,6 +91,21 @@ export const VIZ_TYPE_TF = 'Tf';
 /*****************************
  *   Viz specific constants
  * ***************************/
+
+export const COLLISION_OBJECT_OPERATIONS = {
+  ADD: 0,
+  REMOVE: 1,
+  APPEND: 2,
+  MOVE: 3,
+};
+
+export const SOLID_PRIMITIVE_TYPES = {
+  BOX: 1,
+  SPHERE: 2,
+  CYLINDER: 3,
+  CONE: 4,
+};
+
 export const MARKER_OBJECT_TYPES = {
   ARROW: 0,
   CUBE: 1,
@@ -194,6 +212,10 @@ export const DEFAULT_OPTIONS_FLATARROW = {
   arrowLength: 0.3,
 };
 
+export const DEFAULT_OPTIONS_DISPLAYTRAJECTORY = {
+  robot: new Group(),
+};
+
 const DEFAULT_OPTIONS_INTENSITY = {
   channelName: INTENSITY_CHANNEL_OPTIONS.INTENSITY,
   useRainbow: false,
@@ -204,6 +226,8 @@ const DEFAULT_OPTIONS_INTENSITY = {
   maxIntensity: 3730,
   minIntensity: 388,
 };
+
+export const DEFAULT_OPTIONS_COLLISION_OBJECT = {};
 
 const DEFAULT_OPITONS_AXIS_COLOR = {
   axis: AXES.X,
@@ -264,6 +288,8 @@ export const DEFAULT_OPTIONS_PATH = {
   alpha: 1,
 };
 
+export const DEFAULT_OPTIONS_PLANNINGSCENE = {};
+
 export const DEFAULT_OPTIONS_POINTCLOUD = {};
 
 export const DEFAULT_OPTIONS_POLYGON = {
@@ -308,6 +334,7 @@ export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_OCCUPANCYGRID,
   MESSAGE_TYPE_ODOMETRY,
   MESSAGE_TYPE_PATH,
+  MESSAGE_TYPE_PLANNINGSCENE,
   MESSAGE_TYPE_POINTCLOUD2,
   MESSAGE_TYPE_POLYGONSTAMPED,
   MESSAGE_TYPE_POSESTAMPED,
@@ -327,7 +354,6 @@ export const UNSUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_DISPLAYTRAJECTORY,
   MESSAGE_TYPE_INTERACTIVEMARKER,
   MESSAGE_TYPE_MAGNETICFIELD,
-  MESSAGE_TYPE_PLANNINGSCENE,
   MESSAGE_TYPE_POINTCLOUD,
   MESSAGE_TYPE_POSECOVARIANCE,
   MESSAGE_TYPE_RANGE,
