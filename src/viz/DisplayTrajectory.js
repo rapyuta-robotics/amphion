@@ -1,4 +1,4 @@
-import { Mesh, MeshPhongMaterial } from 'three';
+import { MeshPhongMaterial } from 'three';
 
 import Core from '../core';
 import {
