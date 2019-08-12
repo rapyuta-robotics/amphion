@@ -13,7 +13,10 @@ import { setObjectDimension } from '../utils/helpers';
 
 class Pose extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_POSE) {
-    super(ros, topicName, MESSAGE_TYPE_POSESTAMPED, options);
+    super(ros, topicName, MESSAGE_TYPE_POSESTAMPED, {
+      ...DEFAULT_OPTIONS_POSE,
+      ...options,
+    });
     this.object = new THREE.Group();
     this.primitive = null;
     this.updateOptions({

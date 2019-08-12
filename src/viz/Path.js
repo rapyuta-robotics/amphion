@@ -7,7 +7,10 @@ import Line from '../primitives/Line';
 
 class Path extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_PATH) {
-    super(ros, topicName, MESSAGE_TYPE_PATH, options);
+    super(ros, topicName, MESSAGE_TYPE_PATH, {
+      ...DEFAULT_OPTIONS_PATH,
+      ...options,
+    });
     this.object = new Group();
     this.line = new Line(null, true);
     this.updateOptions({

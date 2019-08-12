@@ -21,6 +21,7 @@ const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
 
 const BASE64 =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
 function decode64(x) {
   const a = [];
   let z = 0;
@@ -75,12 +76,11 @@ const editPointCloudPoints = function(message) {
 };
 
 class PointCloud extends Core {
-  constructor(
-    ros,
-    topicName,
-    options = DEFAULT_OPTIONS_POINTCLOUD,
-  ) {
-    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, options);
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_POINTCLOUD) {
+    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, {
+      ...DEFAULT_OPTIONS_POINTCLOUD,
+      ...options,
+    });
     const cloudMaterial = new THREE.PointsMaterial({
       size: 0.1,
       vertexColors: THREE.VertexColors,

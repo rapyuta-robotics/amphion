@@ -6,7 +6,10 @@ import { DEFAULT_OPTIONS_TF } from '../utils/constants';
 
 class Tf extends Core {
   constructor(ros, topics, options = DEFAULT_OPTIONS_TF) {
-    super(ros, topics, null, options);
+    super(ros, topics, null, {
+      ...DEFAULT_OPTIONS_TF,
+      ...options,
+    });
     this.object = new THREE.Group();
     this.object.name = 'test';
   }

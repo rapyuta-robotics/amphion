@@ -16,7 +16,10 @@ import Plane from '../primitives/Plane';
 
 class Map extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_MAP) {
-    super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID, options);
+    super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID, {
+      ...DEFAULT_OPTIONS_MAP,
+      ...options,
+    });
     this.object = new Plane();
     this.object.material.transparent = true;
     this.updateOptions({

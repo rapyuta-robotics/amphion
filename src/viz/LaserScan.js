@@ -127,6 +127,7 @@ class LaserScan extends Core {
   hideAllObjects() {
     this.points.rootObject.visible = false;
     this.sphereList.visible = false;
+    Image;
     this.cubeList.visible = false;
   }
 

@@ -10,7 +10,10 @@ import Box from '../primitives/Box';
 
 class CollisionObject extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_COLLISION_OBJECT) {
-    super(ros, topicName, MESSAGE_TYPE_COLLISION_OBJECT, options);
+    super(ros, topicName, MESSAGE_TYPE_COLLISION_OBJECT, {
+      ...DEFAULT_OPTIONS_COLLISION_OBJECT,
+      ...options,
+    });
 
     this.object = new Group();
     this.updateOptions({
@@ -21,11 +24,11 @@ class CollisionObject extends Core {
 
   update(message) {
     super.update(message);
-    const { operation, id, primitives, primitive_poses: poses } = message;
+    const { id, operation, primitive_poses: poses, primitives } = message;
     const existingObject = this.object.getObjectByName(id);
-    switch(operation) {
+    switch (operation) {
       case COLLISION_OBJECT_OPERATIONS.ADD: {
-        if(existingObject) {
+        if (existingObject) {
           existingObject.parent.remove(existingObject);
         }
         const newObject = new THREE.Group();
@@ -42,11 +45,11 @@ class CollisionObject extends Core {
         break;
       }
       case COLLISION_OBJECT_OPERATIONS.REMOVE: {
-        if(existingObject) {
+        if (existingObject) {
           existingObject.parent.remove(existingObject);
         }
+        break;
       }
-      break;
       case COLLISION_OBJECT_OPERATIONS.APPEND: {
         primitives.forEach(primitiveInfo => {
           const primitive = CollisionObject.getNewPrimitive(primitiveInfo);
@@ -56,17 +59,20 @@ class CollisionObject extends Core {
           });
           existingObject.add(primitive);
         });
+        break;
       }
-      break;
     }
   }
+
   static getNewPrimitive({ type, dimensions }) {
-    switch(type) {
+    switch (type) {
       case SOLID_PRIMITIVE_TYPES.BOX:
         const primitive = new Box();
         const [x, y, z] = dimensions;
         primitive.setScale({ x, y, z });
         return primitive;
+      default:
+        return null;
     }
   }
 }

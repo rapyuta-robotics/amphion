@@ -17,7 +17,10 @@ import {
 
 class Odometry extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_ODOMETRY) {
-    super(ros, topicName, MESSAGE_TYPE_ODOMETRY);
+    super(ros, topicName, MESSAGE_TYPE_ODOMETRY, {
+      ...DEFAULT_OPTIONS_ODOMETRY,
+      ...options,
+    });
 
     this.object = null;
     this.objectPool = [];

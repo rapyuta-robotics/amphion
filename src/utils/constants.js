@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Group } from 'three';
 
 export const OBJECT_TYPE_ARROW = 'Arrow';
@@ -12,9 +13,9 @@ export const DEFAULT_GRID_DIVISIONS = 30;
 export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
-/** ***************************
+/* * ***************************
  *   Message types
- * ***************************/
+ * ************************** */
 export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
 export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
 export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
@@ -69,9 +70,9 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
 
-/** ***************************
+/* * ***************************
  *   Viz specific constants
- * ***************************/
+ * ************************** */
 
 export const COLLISION_OBJECT_OPERATIONS = {
   ADD: 0,
@@ -216,6 +217,8 @@ const DEFAULT_OPITONS_AXIS_COLOR = {
 
 export const DEFAULT_OPTIONS_IMAGE = {
   queueSize: 1,
+  defaultWidth: 320,
+  defaultHeight: 240,
   compression: 'cbor',
 };
 

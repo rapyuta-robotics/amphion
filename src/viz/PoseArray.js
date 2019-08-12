@@ -11,7 +11,10 @@ import { setObjectDimension } from '../utils/helpers';
 
 class PoseArray extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_POSEARRAY) {
-    super(ros, topicName, MESSAGE_TYPE_POSEARRAY, options);
+    super(ros, topicName, MESSAGE_TYPE_POSEARRAY, {
+      ...DEFAULT_OPTIONS_POSEARRAY,
+      ...options,
+    });
     this.object = new THREE.Group();
     this.updateOptions({
       ...DEFAULT_OPTIONS_POSEARRAY,

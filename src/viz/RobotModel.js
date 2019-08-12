@@ -59,7 +59,7 @@ class RobotModel extends URDFLoader {
   updateOptions() {}
 
   load(onComplete = RobotModel.onComplete, options = {}) {
-    this.param.get((robotString) => {
+    this.param.get(robotString => {
       this.loadRobot(robotString, onComplete, options);
     });
   }

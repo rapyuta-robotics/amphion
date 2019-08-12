@@ -21,7 +21,7 @@ class Core {
 
   destroy() {
     this.unsubscribe();
-    if(this.object && this.object.parent) {
+    if (this.object && this.object.parent) {
       this.object.parent.remove(this.object);
       this.object = null;
     }

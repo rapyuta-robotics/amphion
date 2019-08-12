@@ -21,7 +21,7 @@ class DisplayTrajectory extends Core {
     Object.keys(robotCopy.links).forEach(linkName => {
       const link = robotCopy.links[linkName];
       link.traverse(child => {
-        if(child.material) {
+        if (child.material) {
           child.material = new MeshPhongMaterial({ color: '#ff0000' });
         }
       });
@@ -31,56 +31,45 @@ class DisplayTrajectory extends Core {
 
   update(message) {
     super.update(message);
-    console.log(message);
     const {
+      trajectory: [
+        {
+          joint_trajectory: { joint_names: jointNames, points },
+        },
+      ],
       trajectory_start: {
-        joint_state: {
-          name: initialNames,
-          position: initialPositions
-        },
+        joint_state: { name: initialNames, position: initialPositions },
       },
-      trajectory: [{
-        joint_trajectory: {
-          joint_names: jointNames,
-          points,
-        },
-      }],
     } = message;
     const robotClone = this.robotCopy.clone(true);
     this.object.add(robotClone);
     initialNames.forEach((name, index) => {
       const joint = robotClone.getObjectByName(name);
-      if(joint) {
+      if (joint) {
         joint.setAngle(initialPositions[index]);
       }
     });
     points.forEach(point => {
       const {
         positions,
-        time_from_start: {
-          secs,
-          nsecs,
-        },
+        time_from_start: { secs, nsecs },
       } = point;
       setTimeout(() => {
         jointNames.forEach((jointName, index) => {
           const joint = robotClone.getObjectByName(jointName);
-          if(joint) {
+          if (joint) {
             joint.setAngle(positions[index]);
           }
         });
-      }, (1000 * secs) + (nsecs / 1000000));
+      }, 1000 * secs + nsecs / 1000000);
     });
-    if(points.length > 0) {
+    if (points.length > 0) {
       const {
-        time_from_start: {
-          secs: lastSec,
-          nsecs: lastNsec,
-        }
+        time_from_start: { secs: lastSec, nsecs: lastNsec },
       } = points[points.length - 1];
       setTimeout(() => {
         robotClone.parent.remove(robotClone);
-      }, (1000 * lastSec) + (lastNsec / 1000000));
+      }, 1000 * lastSec + lastNsec / 1000000);
     }
   }
 }

@@ -8,7 +8,10 @@ import CollisionObject from './CollisionObject';
 
 class PlanningScene extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_PLANNINGSCENE) {
-    super(ros, topicName, MESSAGE_TYPE_PLANNINGSCENE, options);
+    super(ros, topicName, MESSAGE_TYPE_PLANNINGSCENE, {
+      ...DEFAULT_OPTIONS_PLANNINGSCENE,
+      ...options,
+    });
 
     this.object = new Group();
     this.collisionObjectViz = new CollisionObject();
@@ -23,21 +26,19 @@ class PlanningScene extends Core {
     super.update(message);
     const {
       robot_state: {
-        joint_state: {
-          name,
-          position,
-        },
+        joint_state: { name, position },
       },
-      world: { collision_objects } } = message;
+      world: { collision_objects },
+    } = message;
     collision_objects.forEach(collisionMessage => {
       this.collisionObjectViz.update(collisionMessage);
     });
     name.forEach((jointName, index) => {
       const joint = this.object.getObjectByName(jointName);
-      if(joint) {
+      if (joint) {
         joint.setAngle([position[index]]);
       }
-    })
+    });
   }
 }
 
