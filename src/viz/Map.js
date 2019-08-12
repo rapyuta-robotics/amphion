@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { DEFAULT_OPTIONS_MAP, MAP_COLOR_SCHEMES, MESSAGE_TYPE_OCCUPANCYGRID } from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_MAP,
+  MAP_COLOR_SCHEMES,
+  MESSAGE_TYPE_OCCUPANCYGRID,
+} from '../utils/constants';
 import {
   imageDataToCanvas,
   populateImageDataFromNavMsg,
@@ -17,7 +21,7 @@ class Map extends Core {
     this.object.material.transparent = true;
     this.updateOptions({
       ...DEFAULT_OPTIONS_MAP,
-      ...options
+      ...options,
     });
   }
 
@@ -27,10 +31,7 @@ class Map extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const {
-      alpha,
-      drawBehind,
-    } = this.options;
+    const { alpha, drawBehind } = this.options;
 
     this.object.material.opacity = alpha;
 
@@ -47,9 +48,7 @@ class Map extends Core {
 
   updateCanvasDimensions(message) {
     const {
-      info: {
-        height, width, resolution, origin
-      }
+      info: { height, width, resolution, origin },
     } = message;
 
     this.object.scale.set(width * resolution, -1 * height * resolution, 1);
@@ -62,9 +61,7 @@ class Map extends Core {
     const { colorScheme } = this.options;
     const {
       data,
-      info: {
-        height, width,
-      }
+      info: { height, width },
     } = message;
 
     const imageData = new ImageData(width, height);

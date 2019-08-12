@@ -6,17 +6,13 @@ export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
 export const MAX_POINTCLOUD_POINTS = 100000;
 
-
-
 export const DEFAULT_BACKGROUND_COLOR = '#000000';
 export const DEFAULT_GRID_SIZE = 30;
 export const DEFAULT_GRID_DIVISIONS = 30;
 export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
-
-
-/*****************************
+/** ***************************
  *   Message types
  * ***************************/
 export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
@@ -55,17 +51,9 @@ export const MESSAGE_TYPE_MARKER =                           'visualization_msgs
 export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
 export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs/InteractiveMarkerInit';
 
-
-
-
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Visualizations
- * ***************************/
+ * ************************** */
 export const VIZ_TYPE_IMAGE = 'Image';
 export const VIZ_TYPE_IMTERACTIVEMARKER = 'InteractiveMarker';
 export const VIZ_TYPE_LASERSCAN = 'LaserScan';
@@ -81,14 +69,7 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
 
-
-
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Viz specific constants
  * ***************************/
 
@@ -168,13 +149,9 @@ export const POSE_OBJECT_TYPES = {
   flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
 
-
-
-
-
-/*****************************
+/** ***************************
  *   Default Options
- * ***************************/
+ * ************************** */
 export const DEFAULT_CYLINDER_HEIGHT = 1;
 export const DEFAULT_CYLINDER_RADIUS = 1;
 export const DEFAULT_RADIAL_SEGMENTS = 32;
@@ -318,14 +295,9 @@ export const DEFAULT_OPTIONS_ROBOTMODEL = {};
 
 export const DEFAULT_OPTIONS_TF = {};
 
-
-
-
-
-
-/*****************************
+/** ***************************
  *   Zethus exports
- * ***************************/
+ * ************************** */
 export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_IMAGE,
   MESSAGE_TYPE_LASERSCAN,

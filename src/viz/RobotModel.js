@@ -56,9 +56,7 @@ class RobotModel extends URDFLoader {
     removeExcludedObjects(object);
   }
 
-  updateOptions() {
-
-  }
+  updateOptions() {}
 
   load(onComplete = RobotModel.onComplete, options = {}) {
     this.param.get((robotString) => {
@@ -87,11 +85,14 @@ class RobotModel extends URDFLoader {
   }
 
   getPackages(onComplete) {
-    this.param.get((robotString) => {
+    this.param.get(robotString => {
       const parser = new DOMParser();
       const urdf = parser.parseFromString(robotString, 'text/xml');
-      const packages = [...urdf.querySelectorAll('mesh')].map((mesh) => {
-        const [targetPkg] = mesh.getAttribute('filename').replace(/^package:\/\//, '').split(/\/(.+)/);
+      const packages = [...urdf.querySelectorAll('mesh')].map(mesh => {
+        const [targetPkg] = mesh
+          .getAttribute('filename')
+          .replace(/^package:\/\//, '')
+          .split(/\/(.+)/);
         return targetPkg;
       });
       onComplete([...new Set(packages)]);
@@ -99,7 +100,7 @@ class RobotModel extends URDFLoader {
   }
 
   destroy() {
-    if(this.object.parent) {
+    if (this.object.parent) {
       this.object.parent.remove(this.object);
     }
   }

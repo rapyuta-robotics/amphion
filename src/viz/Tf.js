@@ -13,39 +13,38 @@ class Tf extends Core {
 
   update(message) {
     const { transforms } = message;
-    transforms.forEach(({
-      header: {
-        frame_id: parentFrameId,
+    transforms.forEach(
+      ({
+        header: { frame_id: parentFrameId },
+        child_frame_id: childFrameId,
+        transform,
+      }) => {
+        const [childFrame, parentFrame] = [
+          this.getFrameOrCreate(childFrameId),
+          this.getFrameOrCreate(parentFrameId),
+        ];
+
+        parentFrame.add(childFrame);
+        childFrame.setTransform(transform);
+
+        if (childFrame.position.length() < 0.1) {
+          childFrame.arrow.visible = false;
+        } else {
+          childFrame.arrow.lookAt(
+            parentFrame.getWorldPosition(new THREE.Vector3()),
+          );
+          childFrame.arrow.rotateY(-Math.PI / 2);
+          childFrame.arrow.visible = true;
+
+          const arrowConeLength = childFrame.arrow.cone.scale.y;
+          childFrame.arrow.setShaftDimensions({
+            length: childFrame.position.length() - arrowConeLength,
+          });
+        }
       },
-      child_frame_id: childFrameId,
-      transform,
-    }) => {
-      const [
-        childFrame,
-        parentFrame,
-      ] = [
-        this.getFrameOrCreate(childFrameId),
-        this.getFrameOrCreate(parentFrameId),
-      ];
+    );
 
-      parentFrame.add(childFrame);
-      childFrame.setTransform(transform);
-
-      if (childFrame.position.length() < 0.1) {
-        childFrame.arrow.visible = false;
-      } else {
-        childFrame.arrow.lookAt(parentFrame.getWorldPosition(new THREE.Vector3()));
-        childFrame.arrow.rotateY(-Math.PI / 2);
-        childFrame.arrow.visible = true;
-
-        const arrowConeLength = childFrame.arrow.cone.scale.y;
-        childFrame.arrow.setShaftDimensions({
-          length: childFrame.position.length() - arrowConeLength
-        });
-      }
-    });
-
-    this.object.children.forEach((child) => {
+    this.object.children.forEach(child => {
       child.arrow.visible = false;
     });
   }
