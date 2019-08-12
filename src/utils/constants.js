@@ -216,6 +216,7 @@ const DEFAULT_OPITONS_AXIS_COLOR = {
 
 export const DEFAULT_OPTIONS_IMAGE = {
   queueSize: 1,
+  compression: 'cbor',
 };
 
 export const DEFAULT_OPTIONS_LASERSCAN = {
@@ -225,6 +226,7 @@ export const DEFAULT_OPTIONS_LASERSCAN = {
   alpha: 1,
   decayTime: 0,
   queueSize: 10,
+  compression: 'cbor',
   colorTransformer: COLOR_TRANSFORMERS.INTENSITY,
   flatColor: '#ffffff',
   ...DEFAULT_OPTIONS_INTENSITY,
@@ -234,6 +236,7 @@ export const DEFAULT_OPTIONS_LASERSCAN = {
 export const DEFAULT_OPTIONS_MAP = {
   alpha: 1,
   colorScheme: MAP_COLOR_SCHEMES.MAP,
+  compression: 'cbor',
   drawBehind: false,
 };
 
@@ -267,7 +270,9 @@ export const DEFAULT_OPTIONS_PATH = {
 
 export const DEFAULT_OPTIONS_PLANNINGSCENE = {};
 
-export const DEFAULT_OPTIONS_POINTCLOUD = {};
+export const DEFAULT_OPTIONS_POINTCLOUD = {
+  compression: 'cbor',
+};
 
 export const DEFAULT_OPTIONS_POLYGON = {
   color: '#ffffff',

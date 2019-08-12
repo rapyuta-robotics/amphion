@@ -51,7 +51,7 @@ const editPointCloudPoints = function(message) {
     });
 
     const n = message.height * message.width;
-    const uint8Buffer = Uint8Array.from(decode64(message.data)).buffer;
+    const uint8Buffer = Uint8Array.from(message.data).buffer;
     const dataView = new DataView(uint8Buffer);
     for (let i = 0; i < n; i++) {
       const pt = readPoint(
@@ -78,10 +78,9 @@ class PointCloud extends Core {
   constructor(
     ros,
     topicName,
-    messageType = MESSAGE_TYPE_POINTCLOUD2,
     options = DEFAULT_OPTIONS_POINTCLOUD,
   ) {
-    super(ros, topicName, messageType, options);
+    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, options);
     const cloudMaterial = new THREE.PointsMaterial({
       size: 0.1,
       vertexColors: THREE.VertexColors,

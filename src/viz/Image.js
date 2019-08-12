@@ -24,13 +24,7 @@ class Image extends Core {
     const ctx = this.object.getContext('2d');
     const imgData = ctx.createImageData(width, height);
 
-    const decodedData = atob(data);
-    const newData = [];
-    decodedData.split('').forEach((_, index) => {
-      newData.push(decodedData.charCodeAt(index));
-    });
-
-    const encodeToUInt8 = Uint8Array.from(newData);
+    const encodeToUInt8 = Uint8Array.from(data);
     const encodedDataView = new DataView(encodeToUInt8.buffer);
 
     switch (encoding) {
