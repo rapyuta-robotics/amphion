@@ -1,4 +1,4 @@
-import { Mesh, MeshPhongMaterial } from 'three';
+import { MeshPhongMaterial } from 'three';
 
 import Core from '../core';
 import {
@@ -31,7 +31,6 @@ class DisplayTrajectory extends Core {
 
   update(message) {
     super.update(message);
-    console.log(message);
     const {
       trajectory_start: {
         joint_state: {

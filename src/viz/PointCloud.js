@@ -19,26 +19,6 @@ const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   };
 };
 
-const BASE64 =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-function decode64(x) {
-  const a = [];
-  let z = 0;
-  let bits = 0;
-
-  for (let i = 0, len = x.length; i < len; i++) {
-    z += BASE64.indexOf(x[i]);
-    bits += 6;
-    if (bits >= 8) {
-      bits -= 8;
-      a.push(z >> bits);
-      z &= 2 ** bits - 1;
-    }
-    z <<= 6;
-  }
-  return a;
-}
-
 const editPointCloudPoints = function(message) {
   const positions = [];
   const colors = [];
