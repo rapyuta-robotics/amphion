@@ -3,8 +3,14 @@ import { DEFAULT_OPTIONS_IMAGE, MESSAGE_TYPE_IMAGE } from '../utils/constants';
 
 class Image extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_IMAGE) {
-    super(ros, topicName, MESSAGE_TYPE_IMAGE, options);
+    super(ros, topicName, MESSAGE_TYPE_IMAGE, {
+      ...DEFAULT_OPTIONS_IMAGE,
+      ...options,
+    });
     this.object = document.createElement('canvas');
+    this.shadowObject = document.createElement('canvas');
+    this.ratioX = 1;
+    this.ratioY = 1;
     this.updateOptions({
       ...DEFAULT_OPTIONS_IMAGE,
       ...options,
@@ -22,15 +28,10 @@ class Image extends Core {
     } = message;
 
     const ctx = this.object.getContext('2d');
-    const imgData = ctx.createImageData(width, height);
+    const shadowCtx = this.shadowObject.getContext('2d');
+    const imgData = shadowCtx.createImageData(width, height);
 
-    const decodedData = atob(data);
-    const newData = [];
-    decodedData.split('').forEach((_, index) => {
-      newData.push(decodedData.charCodeAt(index));
-    });
-
-    const encodeToUInt8 = Uint8Array.from(newData);
+    const encodeToUInt8 = Uint8Array.from(data);
     const encodedDataView = new DataView(encodeToUInt8.buffer);
 
     switch (encoding) {
@@ -72,16 +73,47 @@ class Image extends Core {
         break;
     }
 
-    ctx.putImageData(imgData, 0, 0);
+    shadowCtx.putImageData(imgData, 0, 0);
+    ctx.drawImage(
+      this.shadowObject,
+      0,
+      0,
+      width * this.ratioX,
+      height * this.ratioY,
+    );
+  }
+
+  updateDimensions(width, height) {
+    this.object.width = width;
+    this.object.height = height;
+    this.ratioX = width / this.shadowObject.width;
+    this.ratioY = height / this.shadowObject.height;
+  }
+
+  updateOptions(options) {
+    super.updateOptions(options);
+    const { defaultHeight, defaultWidth } = this.options;
+    this.object.width = defaultWidth;
+    this.object.height = defaultHeight;
   }
 
   update(message) {
     const { height, width } = message;
 
-    this.object.width = width;
-    this.object.height = height;
+    this.shadowObject.width = width;
+    this.shadowObject.height = height;
+    this.ratioX = this.object.width / width;
+    this.ratioY = this.object.height / height;
 
     this.applyImageData(message);
+  }
+
+  hide() {
+    this.object.style.visibility = 'hidden';
+  }
+
+  show() {
+    this.object.style.visibility = 'visible';
   }
 }
 

@@ -19,26 +19,6 @@ const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   };
 };
 
-const BASE64 =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-function decode64(x) {
-  const a = [];
-  let z = 0;
-  let bits = 0;
-
-  for (let i = 0, len = x.length; i < len; i++) {
-    z += BASE64.indexOf(x[i]);
-    bits += 6;
-    if (bits >= 8) {
-      bits -= 8;
-      a.push(z >> bits);
-      z &= 2 ** bits - 1;
-    }
-    z <<= 6;
-  }
-  return a;
-}
-
 const editPointCloudPoints = function(message) {
   const positions = [];
   const colors = [];
@@ -51,7 +31,7 @@ const editPointCloudPoints = function(message) {
     });
 
     const n = message.height * message.width;
-    const uint8Buffer = Uint8Array.from(decode64(message.data)).buffer;
+    const uint8Buffer = Uint8Array.from(message.data).buffer;
     const dataView = new DataView(uint8Buffer);
     for (let i = 0; i < n; i++) {
       const pt = readPoint(
@@ -75,13 +55,8 @@ const editPointCloudPoints = function(message) {
 };
 
 class PointCloud extends Core {
-  constructor(
-    ros,
-    topicName,
-    messageType = MESSAGE_TYPE_POINTCLOUD2,
-    options = DEFAULT_OPTIONS_POINTCLOUD,
-  ) {
-    super(ros, topicName, messageType, options);
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_POINTCLOUD) {
+    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, options);
     const cloudMaterial = new THREE.PointsMaterial({
       size: 0.1,
       vertexColors: THREE.VertexColors,

@@ -60,17 +60,21 @@ class RobotModel extends URDFLoader {
 
   load(onComplete = RobotModel.onComplete, options = {}) {
     this.param.get(robotString => {
-      const robotModel = super.parse(robotString, {
-        packages: this.packages,
-        loadMeshCb: options.loadMeshCb || this.defaultLoadMeshCallback,
-        fetchOptions: { mode: 'cors', credentials: 'same-origin' },
-        ...options,
-      });
-      this.object.add(robotModel);
-      this.object.name = robotModel.robotName;
-
-      onComplete(this.object);
+      this.loadRobot(robotString, onComplete, options);
     });
+  }
+
+  loadRobot(robotString, onComplete = RobotModel.onComplete, options = {}) {
+    const robotModel = super.parse(robotString, {
+      packages: this.packages,
+      loadMeshCb: options.loadMeshCb || this.defaultLoadMeshCallback,
+      fetchOptions: { mode: 'cors', credentials: 'same-origin' },
+      ...options,
+    });
+    this.object.add(robotModel);
+    this.object.name = robotModel.robotName;
+
+    onComplete(this.object);
   }
 
   defaultLoadMeshCallback(path, ext, done) {

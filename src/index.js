@@ -1,3 +1,6 @@
+import CollisionObject from './viz/CollisionObject';
+import DisplayTrajectory from './viz/DisplayTrajectory';
+import PlanningScene from './viz/PlanningScene';
 import Pose from './viz/Pose';
 import Polygon from './viz/Polygon';
 import Tf from './viz/Tf';
@@ -19,6 +22,9 @@ import Viewer3d from './viewers/3d';
 import TfViewer from './viewers/Tf';
 
 export default {
+  CollisionObject,
+  DisplayTrajectory,
+  PlanningScene,
   PointCloud,
   Polygon,
   Pose,

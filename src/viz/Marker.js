@@ -8,7 +8,10 @@ import MarkerManager from '../utils/markerManager';
 
 class Marker extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKER) {
-    super(ros, topicName, MESSAGE_TYPE_MARKER, options);
+    super(ros, topicName, MESSAGE_TYPE_MARKER, {
+      ...DEFAULT_OPTIONS_MARKER,
+      ...options,
+    });
 
     this.object = new Group();
     this.onChange = this.onChange.bind(this);

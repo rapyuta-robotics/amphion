@@ -8,7 +8,10 @@ import MarkerManager from '../utils/markerManager';
 
 class MarkerArray extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKERARRAY) {
-    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, options);
+    super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, {
+      ...DEFAULT_OPTIONS_MARKERARRAY,
+      ...options,
+    });
 
     this.object = new Group();
     this.onChange = this.onChange.bind(this);
