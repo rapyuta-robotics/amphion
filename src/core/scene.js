@@ -20,8 +20,8 @@ class Scene extends THREE.Scene {
   initLights() {
     [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(positions => {
       const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
-      [directionalLight.position.x, directionalLight.position.z] = positions;
-      directionalLight.position.y = 1;
+      [directionalLight.position.x, directionalLight.position.y] = positions;
+      directionalLight.position.z = 1;
       this.add(directionalLight);
     });
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -69,6 +69,7 @@ class Scene extends THREE.Scene {
         gridColor,
       ),
     );
+    this.grid.rotateX(-Math.PI / 2);
 
     this.background = new THREE.Color(backgroundColor);
   }

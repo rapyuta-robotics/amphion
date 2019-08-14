@@ -34,7 +34,7 @@
   "scripts": {
     "build": "rollup -c",
     "examples": "webpack-dev-server --config webpack.config.js",
-    "lint": "eslint src/**/*.{js,jsx} --fix",
+    "lint": "eslint src/**/*.js --fix",
     "prettier": "prettier src/**/* --write",
     "add": "git add .",
     "pre-commit": "npm-run-all lint prettier add",
