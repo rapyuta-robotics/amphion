@@ -64,7 +64,7 @@ class Pose extends Core {
   update(message) {
     super.update(message);
     const {
-      pose: { position, orientation },
+      pose: { orientation, position },
     } = message;
     this.primitive.setTransform({
       translation: position,

@@ -23,7 +23,7 @@
     "@juggle/resize-observer": "^2.2.1",
     "roslib": "^1.0.1",
     "stats-js": "^1.0.1",
-    "three": "^0.106.2",
+    "three": "^0.107.0",
     "urdf-loader": "^0.7.1"
   },
   "husky": {
@@ -46,8 +46,8 @@
     "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
     "eslint": "^6.1.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
@@ -60,7 +60,7 @@
     "object.assign": "^4.1.0",
     "object.entries": "^1.1.0",
     "prettier": "^1.18.2",
-    "prettier-sort-destructure": "0.0.3",
+    "prettier-sort-destructure": "0.0.4",
     "rollup": "^1.16.7",
     "rollup-plugin-local-resolve": "^1.0.7",
     "webpack": "^4.35.3",
