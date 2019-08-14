@@ -31,7 +31,7 @@ class CollisionObject extends Core {
         if (existingObject) {
           existingObject.parent.remove(existingObject);
         }
-        const newObject = new THREE.Group();
+        const newObject = new Group();
         newObject.name = id;
         primitives.forEach((primitiveInfo, index) => {
           const primitive = CollisionObject.getNewPrimitive(primitiveInfo);

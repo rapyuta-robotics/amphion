@@ -174,6 +174,10 @@ export const DEFAULT_OPTIONS_SCENE = {
   gridCenterlineColor: DEFAULT_GRID_COLOR_CENTERLINE,
 };
 
+export const DEFAULT_OPTIONS_TF_VIEWER = {
+  selectedFrame: '',
+};
+
 export const DEFAULT_OPTIONS_ARROW = {
   shaftLength: 1,
   shaftRadius: 0.05,
