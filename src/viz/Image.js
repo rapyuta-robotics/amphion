@@ -10,8 +10,6 @@ class Image extends Core {
     });
     this.object = document.createElement('canvas');
     this.shadowObject = document.createElement('canvas');
-    this.ratioX = 1;
-    this.ratioY = 1;
     this.updateOptions({
       ...DEFAULT_OPTIONS_IMAGE,
       ...options,
@@ -21,6 +19,7 @@ class Image extends Core {
   applyImageData(message) {
     const { encoding, height, width } = message;
 
+    const aspectRatio = width / height;
     const ctx = this.object.getContext('2d');
     const shadowCtx = this.shadowObject.getContext('2d');
     const imgData = shadowCtx.createImageData(width, height);
@@ -67,28 +66,49 @@ class Image extends Core {
     }
 
     ctx.clearRect(0, 0, this.object.width, this.object.height);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, this.object.width, this.object.height);
     shadowCtx.clearRect(
       0,
       0,
       this.shadowObject.width,
       this.shadowObject.height,
     );
-
     shadowCtx.putImageData(imgData, 0, 0);
-    ctx.drawImage(
-      this.shadowObject,
-      0,
-      0,
-      width * this.ratioX,
-      height * this.ratioY,
-    );
+
+    const scaledImageHeight = this.object.width / aspectRatio;
+    const scaledImageWidth = this.object.height * aspectRatio;
+
+    if (aspectRatio >= this.object.width / this.object.height) {
+      ctx.drawImage(
+        this.shadowObject,
+        0,
+        0,
+        width,
+        height,
+        0,
+        (this.object.height - scaledImageHeight) / 2,
+        this.object.width,
+        scaledImageHeight,
+      );
+    } else {
+      ctx.drawImage(
+        this.shadowObject,
+        0,
+        0,
+        width,
+        height,
+        (this.object.width - scaledImageWidth) / 2,
+        0,
+        scaledImageWidth,
+        this.object.height,
+      );
+    }
   }
 
   updateDimensions(width, height) {
     this.object.width = width;
     this.object.height = height;
-    this.ratioX = width / this.shadowObject.width;
-    this.ratioY = height / this.shadowObject.height;
   }
 
   updateOptions(options) {
@@ -100,12 +120,8 @@ class Image extends Core {
 
   update(message) {
     const { height, width } = message;
-
     this.shadowObject.width = width;
     this.shadowObject.height = height;
-    this.ratioX = this.object.width / width;
-    this.ratioY = this.object.height / height;
-
     this.applyImageData(message);
   }
 
