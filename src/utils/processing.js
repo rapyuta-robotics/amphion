@@ -140,3 +140,25 @@ export const imageDataToCanvas = imageData => {
   context.putImageData(imageData, 0, 0);
   return canvas;
 };
+
+export const populateImageDataFromImageMsg = (
+  message,
+  offset,
+  rgbaOrder,
+  imageData,
+) => {
+  const { data: rawData, height, step } = message;
+  const typedArray = Uint8Array.from(rawData);
+  // endianness is required for > 8bit encodings
+  const encodedDataView = new DataView(typedArray.buffer);
+
+  let j = 0;
+  for (let i = 0; i < step * height; i += offset) {
+    for (let k = 0; k < rgbaOrder.length; k++) {
+      imageData.data[j++] = encodedDataView.getUint8(i + rgbaOrder[k]);
+    }
+    if (rgbaOrder.length === 3) {
+      imageData.data[j++] = 255;
+    }
+  }
+};

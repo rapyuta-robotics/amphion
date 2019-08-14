@@ -1,5 +1,6 @@
 import Core from '../core';
 import { DEFAULT_OPTIONS_IMAGE, MESSAGE_TYPE_IMAGE } from '../utils/constants';
+import { populateImageDataFromImageMsg } from '../utils/processing';
 
 class Image extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_IMAGE) {
@@ -9,8 +10,6 @@ class Image extends Core {
     });
     this.object = document.createElement('canvas');
     this.shadowObject = document.createElement('canvas');
-    this.ratioX = 1;
-    this.ratioY = 1;
     this.updateOptions({
       ...DEFAULT_OPTIONS_IMAGE,
       ...options,
@@ -18,76 +17,98 @@ class Image extends Core {
   }
 
   applyImageData(message) {
-    const {
-      data,
-      encoding,
-      height,
-      is_bigendian: isBigEndian,
-      step,
-      width,
-    } = message;
+    const { encoding, height, width } = message;
 
+    const aspectRatio = width / height;
     const ctx = this.object.getContext('2d');
     const shadowCtx = this.shadowObject.getContext('2d');
     const imgData = shadowCtx.createImageData(width, height);
 
-    const encodeToUInt8 = Uint8Array.from(data);
-    const encodedDataView = new DataView(encodeToUInt8.buffer);
-
     switch (encoding) {
+      // not using encoding.find(bayer) because js switch statement
+      // is much faster
+      case 'bayer_rggb8':
+      case 'bayer_bggr8':
+      case 'bayer_gbrg8':
+      case 'bayer_grbg8':
+      case 'bayer_rggb16':
+      case 'bayer_bggr16':
+      case 'bayer_gbrg16':
+      case 'bayer_grbg16':
+      case '8UC1':
+      case '8SC1':
       case 'mono8': {
-        let j = 0;
-        for (let i = 0; i < step * height; i++) {
-          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i, !isBigEndian);
-          imgData.data[j++] = 255;
-        }
+        populateImageDataFromImageMsg(message, 1, [0, 0, 0], imgData);
         break;
       }
+      case '8UC3':
+      case '8SC3':
       case 'bgr8': {
-        const offset = 3;
-
-        let j = 0;
-        for (let i = 0; i < step * height; i += offset) {
-          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
-          imgData.data[j++] = 255;
-        }
+        populateImageDataFromImageMsg(message, 3, [2, 1, 0], imgData);
+        break;
+      }
+      case '8UC4':
+      case '8SC4':
+      case 'bgra8': {
+        populateImageDataFromImageMsg(message, 4, [2, 1, 0, 3], imgData);
         break;
       }
       case 'rgb8': {
-        const offset = 3;
-
-        let j = 0;
-        for (let i = 0; i < step * height; i += offset) {
-          imgData.data[j++] = encodedDataView.getUint8(i + 0, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 1, !isBigEndian);
-          imgData.data[j++] = encodedDataView.getUint8(i + 2, !isBigEndian);
-          imgData.data[j++] = 255;
-        }
+        populateImageDataFromImageMsg(message, 3, [0, 1, 2], imgData);
+        break;
+      }
+      case 'rgba8': {
+        populateImageDataFromImageMsg(message, 4, [0, 1, 2, 3], imgData);
         break;
       }
       default:
         break;
     }
 
-    shadowCtx.putImageData(imgData, 0, 0);
-    ctx.drawImage(
-      this.shadowObject,
+    ctx.clearRect(0, 0, this.object.width, this.object.height);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, this.object.width, this.object.height);
+    shadowCtx.clearRect(
       0,
       0,
-      width * this.ratioX,
-      height * this.ratioY,
+      this.shadowObject.width,
+      this.shadowObject.height,
     );
+    shadowCtx.putImageData(imgData, 0, 0);
+
+    const scaledImageHeight = this.object.width / aspectRatio;
+    const scaledImageWidth = this.object.height * aspectRatio;
+
+    if (aspectRatio >= this.object.width / this.object.height) {
+      ctx.drawImage(
+        this.shadowObject,
+        0,
+        0,
+        width,
+        height,
+        0,
+        (this.object.height - scaledImageHeight) / 2,
+        this.object.width,
+        scaledImageHeight,
+      );
+    } else {
+      ctx.drawImage(
+        this.shadowObject,
+        0,
+        0,
+        width,
+        height,
+        (this.object.width - scaledImageWidth) / 2,
+        0,
+        scaledImageWidth,
+        this.object.height,
+      );
+    }
   }
 
   updateDimensions(width, height) {
     this.object.width = width;
     this.object.height = height;
-    this.ratioX = width / this.shadowObject.width;
-    this.ratioY = height / this.shadowObject.height;
   }
 
   updateOptions(options) {
@@ -99,12 +120,8 @@ class Image extends Core {
 
   update(message) {
     const { height, width } = message;
-
     this.shadowObject.width = width;
     this.shadowObject.height = height;
-    this.ratioX = this.object.width / width;
-    this.ratioY = this.object.height / height;
-
     this.applyImageData(message);
   }
 
