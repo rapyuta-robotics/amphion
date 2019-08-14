@@ -3,14 +3,17 @@ import ROSLIB from 'roslib';
 
 import Viewer3d from './3d';
 import RobotModel from '../viz/RobotModel';
+import { DEFAULT_OPTIONS_TF_VIEWER } from '../utils/constants';
 
 class TfViewer extends Viewer3d {
   constructor(rosInstance, options) {
-    super(null, options);
+    super(null, {
+      ...DEFAULT_OPTIONS_TF_VIEWER,
+      ...options,
+    });
     const { onFramesListUpdate } = this.options;
     this.ros = rosInstance;
     this.framesList = [];
-    this.selectedFrame = '';
     this.onFramesListUpdate = onFramesListUpdate || (() => {});
 
     this.initRosEvents();
@@ -79,15 +82,10 @@ class TfViewer extends Viewer3d {
     return newFrame;
   }
 
-  updateSelectedFrame(selectedFrame) {
-    this.selectedFrame = selectedFrame;
-    this.setFrameTransform();
-  }
-
   setFrameTransform() {
     const {
+      options: { selectedFrame },
       scene: { vizWrapper },
-      selectedFrame,
     } = this;
     if (!selectedFrame) {
       return;
@@ -95,37 +93,22 @@ class TfViewer extends Viewer3d {
     const currentFrameObject = vizWrapper.getObjectByName(selectedFrame);
 
     if (currentFrameObject) {
-      const tempObject = new THREE.Object3D();
-      tempObject.position.copy(vizWrapper.position);
-      tempObject.rotation.copy(vizWrapper.rotation);
+      vizWrapper.position.set(0, 0, 0);
+      vizWrapper.quaternion.set(0, 0, 0, 1);
+      vizWrapper.updateMatrixWorld();
 
-      const objectWorldPosition = currentFrameObject.getWorldPosition(
-        new THREE.Vector3(),
-      );
-      const objectWorldQuaternion = currentFrameObject.getWorldQuaternion(
-        new THREE.Quaternion(),
-      );
-      const wrapperWorldPosition = tempObject.getWorldPosition(
-        new THREE.Vector3(),
-      );
-      const wrapperWorldQuaternion = tempObject.getWorldQuaternion(
-        new THREE.Quaternion(),
-      );
+      const worldPos = new THREE.Vector3();
+      const worldQuat = new THREE.Quaternion();
 
-      const relPosition = wrapperWorldPosition.sub(objectWorldPosition);
-      tempObject.position.set(relPosition.x, relPosition.z, -relPosition.y);
-      tempObject.rotation.setFromQuaternion(
-        wrapperWorldQuaternion.premultiply(objectWorldQuaternion.conjugate()),
-      );
-      tempObject.updateMatrixWorld();
-      tempObject.setRotationFromMatrix(
-        new THREE.Matrix4()
-          .makeRotationAxis(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
-          .multiply(tempObject.matrix),
-      );
+      currentFrameObject.getWorldQuaternion(worldQuat);
+      const { w: quatw, x: quatx, y: quaty, z: quatz } = worldQuat;
+      vizWrapper.quaternion.set(-quatx, -quaty, -quatz, quatw);
 
-      vizWrapper.rotation.copy(tempObject.rotation);
-      vizWrapper.position.copy(relPosition);
+      vizWrapper.updateMatrixWorld();
+
+      currentFrameObject.getWorldPosition(worldPos);
+      const oppPos = worldPos.negate();
+      vizWrapper.position.set(oppPos.x, oppPos.y, oppPos.z);
     }
   }
 

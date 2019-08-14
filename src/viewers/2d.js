@@ -31,7 +31,7 @@ class Viewer2d {
   initCamera() {
     this.camera = new THREE.OrthographicCamera(-100, 100, 100, -100, 0.1, 1000);
     this.camera.zoom = 0.5;
-    this.camera.position.set(0, 10, 0);
+    this.camera.position.set(0, 0, 10);
     this.camera.lookAt(new THREE.Vector3());
 
     this.scene.add(this.camera);

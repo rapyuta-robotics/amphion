@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
-import { EditorControls } from 'three/examples/jsm/controls/EditorControls';
+import { EditorControls } from '../utils/editorControls';
 
 import Scene from '../core/scene';
 import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
@@ -40,6 +40,7 @@ class Viewer3d {
   initCamera() {
     this.camera = new THREE.PerspectiveCamera(50, 1, 0.01, 1000);
     this.camera.position.set(0, 5, 10);
+    this.camera.up = new THREE.Vector3(0, 0, 1);
     this.camera.lookAt(new THREE.Vector3());
 
     this.scene.add(this.camera);
