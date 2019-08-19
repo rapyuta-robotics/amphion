@@ -5,7 +5,7 @@ export const OBJECT_TYPE_ARROW = 'Arrow';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
-export const MAX_POINTCLOUD_POINTS = 100000;
+export const MAX_POINTCLOUD_POINTS = 500000;
 
 export const DEFAULT_BACKGROUND_COLOR = '#000000';
 export const DEFAULT_GRID_SIZE = 30;
@@ -74,6 +74,17 @@ export const VIZ_TYPE_TF = 'Tf';
  *   Viz specific constants
  * ************************** */
 
+export const POINT_FIELD_DATATYPES = {
+  INT8: 1,
+  UINT8: 2,
+  INT16: 3,
+  UINT16: 4,
+  INT32: 5,
+  UINT32: 6,
+  FLOAT32: 7,
+  FLOAT64: 8
+};
+
 export const COLLISION_OBJECT_OPERATIONS = {
   ADD: 0,
   REMOVE: 1,
@@ -126,6 +137,11 @@ export const COLOR_TRANSFORMERS = {
   INTENSITY: 'Intensity',
   AXIS_COLOR: 'AxisColor',
   FLAT_COLOR: 'FlatColor',
+};
+
+export const POINTCLOUD_COLOR_CHANNELS = {
+  RGB: 'rgb',
+  INTENSITY: 'intensity',
 };
 
 export const AXES = {
@@ -279,6 +295,9 @@ export const DEFAULT_OPTIONS_PLANNINGSCENE = {};
 
 export const DEFAULT_OPTIONS_POINTCLOUD = {
   compression: 'cbor',
+  colorChannel: 'rgb',
+  size: 0.0125,
+  useRainbow: false
 };
 
 export const DEFAULT_OPTIONS_POLYGON = {

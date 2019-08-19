@@ -2,81 +2,132 @@ import * as THREE from 'three';
 
 import Core from '../core';
 import {
-  MESSAGE_TYPE_POINTCLOUD2,
-  MAX_POINTCLOUD_POINTS,
   DEFAULT_OPTIONS_POINTCLOUD,
+  MAX_POINTCLOUD_POINTS,
+  MESSAGE_TYPE_POINTCLOUD2,
+  POINTCLOUD_COLOR_CHANNELS,
 } from '../utils/constants';
+import {
+  getAccessorForDataType,
+  setOrUpdateGeometryAttribute,
+} from '../utils/pcl';
 
-const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
-  const baseOffset = index * pointStep;
-  const rgb = dataView.getUint32(baseOffset + offsets.rgb, !isBigendian);
-  const hex = rgb.toString(16).padStart(6, '0');
-  return {
-    x: dataView.getFloat32(baseOffset + offsets.x, !isBigendian),
-    y: dataView.getFloat32(baseOffset + offsets.y, !isBigendian),
-    z: dataView.getFloat32(baseOffset + offsets.z, !isBigendian),
-    hex,
-  };
-};
+const editPointCloudPoints = function(message, options) {
+  if (!message) {
+    return {
+      positions: new Float32Array(0),
+      colors: new Float32Array(0),
+      normals: new Float32Array(0),
+    };
+  }
 
-const editPointCloudPoints = function(message) {
-  const positions = [];
-  const colors = [];
-  if (message) {
-    const { fields } = message;
-    const offsets = {};
+  const { colorChannel, useRainbow } = options;
 
-    fields.forEach(f => {
-      offsets[f.name] = f.offset;
-    });
+  const n = message.height * message.width;
+  const positions = new Float32Array(3 * n);
+  const colors = new Float32Array(3 * n);
+  const normals = new Float32Array(3 * n);
 
-    const n = message.height * message.width;
-    const uint8Buffer = Uint8Array.from(message.data).buffer;
-    const dataView = new DataView(uint8Buffer);
-    for (let i = 0; i < n; i++) {
-      const pt = readPoint(
-        offsets,
+  const uint8Buffer = Uint8Array.from(message.data).buffer;
+  const dataView = new DataView(uint8Buffer);
+  const offsets = {};
+  const accessor = {};
+
+  message.fields.forEach(f => {
+    offsets[f.name] = f.offset;
+    accessor[f.name] = getAccessorForDataType(dataView, message.datatype);
+  });
+
+  for (let i = 0; i < n; i++) {
+    const stride = i * message.point_step;
+    if (
+      offsets.x !== undefined &&
+      offsets.y !== undefined &&
+      offsets.z !== undefined
+    ) {
+      positions[3 * i] = accessor.x.call(
         dataView,
-        i,
-        message.is_bigendian,
-        message.point_step,
+        stride + offsets.x,
+        !message.big_endian,
       );
-      if (pt.x && pt.y && pt.z) {
-        positions.push(pt.x, pt.y, pt.z);
-        const color = new THREE.Color(`#${pt.hex}`);
-        colors.push(color.r, color.g, color.b);
-      }
+      positions[3 * i + 1] = accessor.y.call(
+        dataView,
+        stride + offsets.y,
+        !message.big_endian,
+      );
+      positions[3 * i + 2] = accessor.z.call(
+        dataView,
+        stride + offsets.z,
+        !message.big_endian,
+      );
+    }
+
+    if (
+      offsets.rgb !== undefined &&
+      colorChannel === POINTCLOUD_COLOR_CHANNELS.RGB
+    ) {
+      colors[3 * i] = dataView.getUint8(stride + offsets.rgb + 2) / 255.0;
+      colors[3 * i + 1] = dataView.getUint8(stride + offsets.rgb + 1) / 255.0;
+      colors[3 * i + 2] = dataView.getUint8(stride + offsets.rgb) / 255.0;
+    }
+
+    if (
+      offsets.intensity !== undefined &&
+      colorChannel === POINTCLOUD_COLOR_CHANNELS.INTENSITY
+    ) {
+      const intensity = accessor.intensity.call(
+        dataView,
+        stride + offsets.intensity,
+        !message.big_endian,
+      );
+      colors[3 * i] = useRainbow ? 0 : Math.min(intensity / 255, 255);
+      colors[3 * i + 1] = Math.min(intensity / 255, 255);
+      colors[3 * i + 2] = useRainbow ? 0 : Math.min(intensity / 255, 255);
+    }
+
+    if (
+      offsets.normal_x !== undefined &&
+      offsets.normal_y !== undefined &&
+      offsets.normal_z !== undefined
+    ) {
+      normals[3 * i] = accessor.normal_x.call(
+        dataView,
+        stride + offsets.normal_x,
+        !message.big_endian,
+      );
+      normals[3 * i + 1] = accessor.normal_y.call(
+        dataView,
+        stride + offsets.normal_y,
+        !message.big_endian,
+      );
+      normals[3 * i + 2] = accessor.normal_z.call(
+        dataView,
+        stride + offsets.normal_z,
+        !message.big_endian,
+      );
     }
   }
+
   return {
-    positions: Float32Array.from(positions),
-    colors: Float32Array.from(colors),
+    positions,
+    colors,
+    normals,
   };
 };
 
 class PointCloud extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_POINTCLOUD) {
-    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, options);
+    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, {
+      ...DEFAULT_OPTIONS_POINTCLOUD,
+      ...options,
+    });
     const cloudMaterial = new THREE.PointsMaterial({
-      size: 0.1,
+      size: 0.05,
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
-    geometry.addAttribute(
-      'position',
-      new THREE.BufferAttribute(
-        new Float32Array(MAX_POINTCLOUD_POINTS * 3),
-        3,
-      ).setDynamic(true),
-    );
-    geometry.addAttribute(
-      'color',
-      new THREE.BufferAttribute(
-        new Float32Array(MAX_POINTCLOUD_POINTS * 3),
-        3,
-      ).setDynamic(true),
-    );
     geometry.setDrawRange(0, 0);
+    geometry.computeBoundingSphere();
     this.object = new THREE.Points(geometry, cloudMaterial);
     this.object.frustumCulled = false;
     this.updateOptions({
@@ -85,29 +136,31 @@ class PointCloud extends Core {
     });
   }
 
-  updatePointCloudGeometry(positions, colors) {
-    const { geometry } = this.object;
+  updatePointCloudGeometry(positions, colors, normals) {
+    const { geometry, material } = this.object;
+    if (
+      material.size !== this.options.size &&
+      !Number.isNaN(this.options.size)
+    ) {
+      material.size = this.options.size;
+      material.needsUpdate = true;
+    } else if (material.needsUpdate) {
+      material.needsUpdate = false;
+    }
     const l = Math.min(MAX_POINTCLOUD_POINTS, positions.length);
     geometry.setDrawRange(0, l);
-    const geoPositions = geometry.attributes.position.array;
-    const geoColors = geometry.attributes.color.array;
-
-    for (let i = 0, arrayLength = l * 3; i < arrayLength; i++) {
-      geoPositions[i] = positions[i] || 0;
-      geoColors[i] = colors[i] || 0;
-    }
-    for (let i = l * 3; i < MAX_POINTCLOUD_POINTS; i++) {
-      geoPositions[i] = 0;
-    }
-
-    geometry.attributes.position.needsUpdate = true;
-    geometry.attributes.color.needsUpdate = true;
+    setOrUpdateGeometryAttribute(geometry, 'position', positions, l);
+    setOrUpdateGeometryAttribute(geometry, 'color', colors, l);
+    setOrUpdateGeometryAttribute(geometry, 'normal', normals, l);
   }
 
   update(message) {
     super.update(message);
-    const { colors, positions } = editPointCloudPoints(message);
-    this.updatePointCloudGeometry(positions, colors);
+    const { colors, normals, positions } = editPointCloudPoints(
+      message,
+      this.options,
+    );
+    this.updatePointCloudGeometry(positions, colors, normals);
   }
 }
 
