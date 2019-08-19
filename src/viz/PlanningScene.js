@@ -27,12 +27,20 @@ class PlanningScene extends Core {
     const {
       robot_state: {
         joint_state: { name, position },
+        attached_collision_objects: attachedCollisionObjects,
       },
       world: { collision_objects },
     } = message;
     collision_objects.forEach(collisionMessage => {
       this.collisionObjectViz.update(collisionMessage);
     });
+    if (attachedCollisionObjects.length) {
+      attachedCollisionObjects.map(({ link_name: linkName, object }) => {
+        const collisionVizInstance = new CollisionObject();
+        collisionVizInstance.object = this.object.getObjectByName(linkName);
+        collisionVizInstance.update(object);
+      });
+    }
     name.forEach((jointName, index) => {
       const joint = this.object.getObjectByName(jointName);
       if (joint) {
