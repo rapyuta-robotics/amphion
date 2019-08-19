@@ -31,12 +31,7 @@ export const getAccessorForDataType = (dataView, dataType) => {
   }
 };
 
-export const setOrUpdateGeometryAttribute = (
-  geometry,
-  attribute,
-  data,
-  numPoints,
-) => {
+export const setOrUpdateGeometryAttribute = (geometry, attribute, data) => {
   if (geometry.attributes[attribute] === undefined) {
     geometry.addAttribute(
       attribute,
@@ -48,9 +43,5 @@ export const setOrUpdateGeometryAttribute = (
   } else {
     geometry.attributes[attribute].array = data;
   }
-  geometry.attributes[attribute].updateRange = {
-    offset: 0,
-    count: numPoints * 3,
-  };
   geometry.attributes[attribute].needsUpdate = true;
 };

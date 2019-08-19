@@ -149,9 +149,9 @@ class PointCloud extends Core {
     }
     const l = Math.min(MAX_POINTCLOUD_POINTS, positions.length);
     geometry.setDrawRange(0, l);
-    setOrUpdateGeometryAttribute(geometry, 'position', positions, l);
-    setOrUpdateGeometryAttribute(geometry, 'color', colors, l);
-    setOrUpdateGeometryAttribute(geometry, 'normal', normals, l);
+    setOrUpdateGeometryAttribute(geometry, 'position', positions);
+    setOrUpdateGeometryAttribute(geometry, 'color', colors);
+    setOrUpdateGeometryAttribute(geometry, 'normal', normals);
   }
 
   update(message) {
