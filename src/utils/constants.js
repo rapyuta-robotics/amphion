@@ -72,6 +72,7 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_RANGE = 'Range';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
+export const VIZ_TYPE_WRENCH = 'Wrench';
 
 /* * ***************************
  *   Viz specific constants
@@ -169,7 +170,17 @@ export const POSE_OBJECT_TYPES = {
   flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
 
-/** ***************************
+export const WRENCH_OBJECT_TYPES = {
+  arrow: OBJECT_TYPE_ARROW,
+  /*axes: OBJECT_TYPE_AXES,
+  flatArrow: OBJECT_TYPE_FLAT_ARROW,*/
+};
+
+
+
+
+
+/*****************************
  *   Default Options
  * ************************** */
 export const DEFAULT_CYLINDER_HEIGHT = 1;
@@ -320,6 +331,17 @@ export const DEFAULT_OPTIONS_POSE = {
   ...DEFAULT_OPTIONS_ARROW,
   ...DEFAULT_OPTIONS_AXES,
   type: POSE_OBJECT_TYPES.arrow,
+};
+
+export const DEFAULT_OPTIONS_WRENCH = {
+    forceColor: DEFAULT_COLOR_X_AXIS,
+    torqueColor: DEFAULT_COLOR_ARROW,
+    alpha: 1,
+    forceArrowScale: 1,
+    torqueArrowScale: 1,
+    arrowWidth: 1,
+    ...DEFAULT_OPTIONS_ARROW,
+    type: WRENCH_OBJECT_TYPES.arrow,
 };
 
 export const DEFAULT_OPTIONS_POSEARRAY = {
