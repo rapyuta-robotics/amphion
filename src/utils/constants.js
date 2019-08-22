@@ -295,7 +295,7 @@ export const DEFAULT_OPTIONS_PLANNINGSCENE = {};
 
 export const DEFAULT_OPTIONS_POINTCLOUD = {
   compression: 'cbor',
-  colorChannel: 'rgb',
+  colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
   useRainbow: false
 };

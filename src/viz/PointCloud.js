@@ -122,7 +122,7 @@ class PointCloud extends Core {
       ...options,
     });
     const cloudMaterial = new THREE.PointsMaterial({
-      size: 0.05,
+      size: this.options.size,
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
@@ -144,8 +144,6 @@ class PointCloud extends Core {
     ) {
       material.size = this.options.size;
       material.needsUpdate = true;
-    } else if (material.needsUpdate) {
-      material.needsUpdate = false;
     }
     const l = Math.min(MAX_POINTCLOUD_POINTS, positions.length);
     geometry.setDrawRange(0, l);
