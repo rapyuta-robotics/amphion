@@ -1,25 +1,30 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_POSEARRAY } from '../utils/constants';
-import Pose  from './Pose';
+import {
+  DEFAULT_OPTIONS_POSEARRAY,
+  MESSAGE_TYPE_POSEARRAY,
+} from '../utils/constants';
+import Pose from './Pose';
 import * as TransformUtils from '../utils/transform';
 import { setObjectDimension } from '../utils/helpers';
 
 class PoseArray extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_POSEARRAY);
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_POSEARRAY) {
+    super(ros, topicName, MESSAGE_TYPE_POSEARRAY, {
+      ...DEFAULT_OPTIONS_POSEARRAY,
+      ...options,
+    });
     this.object = new THREE.Group();
-    this.options = options;
-  }
-
-  updateOptions(options) {
-    this.options = options;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_POSEARRAY,
+      ...options,
+    });
   }
 
   update(message) {
     super.update(message);
-    this.object.children.forEach((obj, index) => {
+    this.object.children.forEach(obj => {
       obj.parent.remove(obj);
     });
     this.object.children = [];

@@ -9,7 +9,7 @@ export const populateImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -51,7 +51,7 @@ export const populateRawImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -75,7 +75,7 @@ export const populateConstImageDataFromNavMsg = (
   imageData,
   width,
   height,
-  dataSource
+  dataSource,
 ) => {
   for (let row = 0; row < height; row++) {
     for (let col = 0; col < width; col++) {
@@ -132,11 +132,33 @@ export const populateConstImageDataFromNavMsg = (
   }
 };
 
-export const imageDataToCanvas = (imageData) => {
+export const imageDataToCanvas = imageData => {
   const canvas = document.createElement('canvas');
   canvas.width = imageData.width;
   canvas.height = imageData.height;
   const context = canvas.getContext('2d');
   context.putImageData(imageData, 0, 0);
   return canvas;
+};
+
+export const populateImageDataFromImageMsg = (
+  message,
+  offset,
+  rgbaOrder,
+  imageData,
+) => {
+  const { data: rawData, height, step } = message;
+  const typedArray = Uint8Array.from(rawData);
+  // endianness is required for > 8bit encodings
+  const encodedDataView = new DataView(typedArray.buffer);
+
+  let j = 0;
+  for (let i = 0; i < step * height; i += offset) {
+    for (let k = 0; k < rgbaOrder.length; k++) {
+      imageData.data[j++] = encodedDataView.getUint8(i + rgbaOrder[k]);
+    }
+    if (rgbaOrder.length === 3) {
+      imageData.data[j++] = 255;
+    }
+  }
 };

@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_OCCUPANCYGRID } from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_MAP,
+  MAP_COLOR_SCHEMES,
+  MESSAGE_TYPE_OCCUPANCYGRID,
+} from '../utils/constants';
 import {
   imageDataToCanvas,
   populateImageDataFromNavMsg,
@@ -10,20 +14,18 @@ import {
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
 
-export const COLOR_SCHEMES = {
-  MAP: 'map',
-  CONST_MAP: 'constmap',
-  RAW: 'raw',
-};
-
 class Map extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID);
-    this.options = options;
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_MAP) {
+    super(ros, topicName, MESSAGE_TYPE_OCCUPANCYGRID, {
+      ...DEFAULT_OPTIONS_MAP,
+      ...options,
+    });
     this.object = new Plane();
     this.object.material.transparent = true;
-    this.object.material.opacity = 0.7;
-    this.object.material.needsUpdate = true;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_MAP,
+      ...options,
+    });
   }
 
   onMessage(callback) {
@@ -31,12 +33,8 @@ class Map extends Core {
   }
 
   updateOptions(options) {
-    this.options = options;
-
-    const {
-      alpha,
-      drawBehind,
-    } = options;
+    super.updateOptions(options);
+    const { alpha, drawBehind } = this.options;
 
     this.object.material.opacity = alpha;
 
@@ -45,7 +43,7 @@ class Map extends Core {
     } else {
       this.object.material.side = THREE.FrontSide;
     }
-
+    this.object.material.needsUpdate = true;
     if (this.prevMessage) {
       this.setCanvasData(this.prevMessage);
     }
@@ -53,9 +51,7 @@ class Map extends Core {
 
   updateCanvasDimensions(message) {
     const {
-      info: {
-        height, width, resolution, origin
-      }
+      info: { height, width, resolution, origin },
     } = message;
 
     this.object.scale.set(width * resolution, -1 * height * resolution, 1);
@@ -68,24 +64,22 @@ class Map extends Core {
     const { colorScheme } = this.options;
     const {
       data,
-      info: {
-        height, width,
-      }
+      info: { height, width },
     } = message;
 
     const imageData = new ImageData(width, height);
     let bitmapCanvas = null;
 
     switch (colorScheme) {
-      case COLOR_SCHEMES.MAP:
+      case MAP_COLOR_SCHEMES.MAP:
         populateImageDataFromNavMsg(imageData, width, height, data);
         bitmapCanvas = imageDataToCanvas(imageData);
         break;
-      case COLOR_SCHEMES.CONST_MAP:
+      case MAP_COLOR_SCHEMES.CONST_MAP:
         populateConstImageDataFromNavMsg(imageData, width, height, data);
         bitmapCanvas = imageDataToCanvas(imageData);
         break;
-      case COLOR_SCHEMES.RAW:
+      case MAP_COLOR_SCHEMES.RAW:
         populateRawImageDataFromNavMsg(imageData, width, height, data);
         bitmapCanvas = imageDataToCanvas(imageData);
         break;

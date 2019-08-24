@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Viewer | Amphion</title>
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+    #root {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #scene {
+      flex-grow: 1;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+<div id="root">
+  <div id="scene"></div>
+</div>
+<script src="./index.bundle.js"></script>
+</body>
+</html>

@@ -1,43 +1,24 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_LASERSCAN } from '../utils/constants';
-import Points from './Points';
+import {
+  DEFAULT_OPTIONS_LASERSCAN,
+  LASERSCAN_STYLES,
+  MESSAGE_TYPE_LASERSCAN,
+  COLOR_TRANSFORMERS,
+  INTENSITY_CHANNEL_OPTIONS,
+  AXES,
+} from '../utils/constants';
+import Points from '../utils/points';
 import Group from '../primitives/Group';
 import SphereList from '../primitives/SphereList';
 import CubeList from '../primitives/CubeList';
 
-export const STYLE = {
-  SQUARES: 'Squares',
-  POINTS: 'Points',
-  FLAT_SQUARES: 'Flat Squares',
-  SPHERES: 'Spheres',
-  BOXES: 'Boxes',
-};
-
-export const COLOR_TRANSFORMERS = {
-  INTENSITY: 'Intensity',
-  AXIS_COLOR: 'AxisColor',
-  FLAT_COLOR: 'FlatColor',
-};
-
-export const AXIS_OPTIONS = {
-  X: 'x',
-  Y: 'y',
-  Z: 'z',
-};
-
-export const INTENSITY_CHANNEL_OPTIONS = {
-  INTENSITY: 'intensity',
-  ...AXIS_OPTIONS,
-};
-
 class LaserScan extends Core {
-  constructor(ros, topicName, options = {}) {
-    super(ros, topicName, MESSAGE_TYPE_LASERSCAN);
-    this.options = options;
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_LASERSCAN) {
+    super(ros, topicName, MESSAGE_TYPE_LASERSCAN, options);
 
-    this.points = new Points(STYLE.POINTS);
+    this.points = new Points(LASERSCAN_STYLES.POINTS);
     this.sphereList = new SphereList();
     this.cubeList = new CubeList();
 
@@ -46,21 +27,25 @@ class LaserScan extends Core {
     this.object.add(this.sphereList);
     this.object.add(this.cubeList);
     this.prevMessage = null;
+    this.updateOptions({
+      ...DEFAULT_OPTIONS_LASERSCAN,
+      ...options,
+    });
   }
 
   getNormalizedIntensity(data) {
-    const { minIntensity, maxIntensity } = this.options;
+    const { maxIntensity, minIntensity } = this.options;
 
     return (data - minIntensity) / (maxIntensity - minIntensity);
   }
 
   applyIntensityTransform(intensity, position) {
-    const { channelName, minColor, maxColor } = this.options;
-    const { x, y, z} = position;
+    const { channelName, maxColor, minColor } = this.options;
+    const { x, y, z } = position;
 
     let normI;
 
-    switch(channelName) {
+    switch (channelName) {
       case INTENSITY_CHANNEL_OPTIONS.INTENSITY:
         normI = this.getNormalizedIntensity(intensity);
         break;
@@ -80,37 +65,38 @@ class LaserScan extends Core {
     const minColorHex = new THREE.Color(minColor);
     const maxColorHex = new THREE.Color(maxColor);
 
-    const finalColor = (normI * maxColorHex.getHex()) + ((1 - normI) * minColorHex.getHex());
+    const finalColor =
+      normI * maxColorHex.getHex() + (1 - normI) * minColorHex.getHex();
     return new THREE.Color(finalColor);
   }
 
   getNormalizedAxisValue(data) {
-    const { minAxisValue, maxAxisValue } = this.options;
+    const { maxAxisValue, minAxisValue } = this.options;
 
     return (data - minAxisValue) / (maxAxisValue - minAxisValue);
   }
 
-  applyAxisColorTransform(intensity, position){
-    const { axis, minAxisValue, maxAxisValue } = this.options;
+  applyAxisColorTransform(intensity, position) {
+    const { axis, maxAxisValue, minAxisValue } = this.options;
     const { x, y, z } = position;
 
     let normI;
 
-    switch(axis) {
-      case AXIS_OPTIONS.X:
+    switch (axis) {
+      case AXES.X:
         normI = this.getNormalizedAxisValue(x);
         break;
-      case AXIS_OPTIONS.Y:
+      case AXES.Y:
         normI = this.getNormalizedAxisValue(y);
         break;
-      case AXIS_OPTIONS.Z:
+      case AXES.Z:
         normI = this.getNormalizedAxisValue(z);
         break;
       default:
         break;
     }
 
-    const finalColor = (normI * maxAxisValue) + ((1 - normI) * minAxisValue);
+    const finalColor = normI * maxAxisValue + (1 - normI) * minAxisValue;
     return new THREE.Color(finalColor);
   }
 
@@ -129,7 +115,7 @@ class LaserScan extends Core {
     }
   }
 
-  setupPoints({j, position, color}) {
+  setupPoints({ j, position, color }) {
     this.points.colors.array[j] = color.r;
     this.points.positions.array[j++] = position.x;
     this.points.colors.array[j] = color.g;
@@ -141,13 +127,17 @@ class LaserScan extends Core {
   hideAllObjects() {
     this.points.rootObject.visible = false;
     this.sphereList.visible = false;
+    Image;
     this.cubeList.visible = false;
   }
 
-  setStyleDimensions(message){
-    const { style, alpha } = this.options;
-    let { size } = this.options;
-    const { ranges , intensities } = message;
+  setStyleDimensions(message) {
+    if (!message) {
+      return;
+    }
+    const { alpha, style } = this.options;
+    const { size } = this.options;
+    const { intensities, ranges } = message;
     const n = ranges.length;
     const positions = [];
     const colors = [];
@@ -160,7 +150,7 @@ class LaserScan extends Core {
     this.points.setup(style, size, alpha);
 
     let j = 0;
-    for (let i = 0; i < n; i ++) {
+    for (let i = 0; i < n; i++) {
       const range = message.ranges[i];
 
       if (range >= message.range_min && range <= message.range_max) {
@@ -168,14 +158,14 @@ class LaserScan extends Core {
         const position = {
           x: range * Math.cos(angle),
           y: range * Math.sin(angle),
-          z: 0
+          z: 0,
         };
         const color = this.colorTransformer(intensities[i], position);
 
         switch (style) {
-          case STYLE.POINTS:
-          case STYLE.SQUARES:
-          case STYLE.FLAT_SQUARES: {
+          case LASERSCAN_STYLES.POINTS:
+          case LASERSCAN_STYLES.SQUARES:
+          case LASERSCAN_STYLES.FLAT_SQUARES: {
             this.setupPoints({ j, position, color });
             j += 3;
             break;
@@ -188,30 +178,28 @@ class LaserScan extends Core {
       }
     }
 
-    const options = { scale: {x: size, y: size, z: size}};
+    const options = { scale: { x: size, y: size, z: size } };
 
     switch (style) {
-      case STYLE.SPHERES: {
+      case LASERSCAN_STYLES.SPHERES: {
         this.sphereList.visible = true;
         this.sphereList.updatePoints(positions, colors, options);
         break;
       }
-      case STYLE.BOXES: {
+      case LASERSCAN_STYLES.BOXES: {
         this.cubeList.visible = true;
         this.cubeList.updatePoints(positions, colors, options);
         break;
       }
       default:
         this.points.rootObject.visible = true;
-        this.points.update(j/3);
+        this.points.update(j / 3);
         break;
     }
   }
 
   updateOptions(options) {
-    const newOptions = { ...options };
-    this.options = newOptions;
-
+    super.updateOptions(options);
     this.setStyleDimensions(this.prevMessage);
   }
 

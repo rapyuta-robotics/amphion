@@ -1,13 +1,13 @@
 import {
-  DEFAULT_COLOR_X_AXIS,
   DEFAULT_CONE_HEIGHT,
   DEFAULT_CONE_RADIUS,
   DEFAULT_CYLINDER_HEIGHT,
   DEFAULT_CYLINDER_RADIUS,
-} from '../utils/defaults';
+  DEFAULT_COLOR_X_AXIS,
+  OBJECT_TYPE_ARROW,
+} from '../utils/constants';
 import Cylinder from './Cylinder';
 import Cone from './Cone';
-import { OBJECT_TYPE_ARROW } from '../utils/constants';
 import Group from './Group';
 import * as TransformUtils from '../utils/transform';
 
@@ -24,13 +24,13 @@ class Arrow extends Group {
     this.cone.setScale({
       x: DEFAULT_CONE_RADIUS,
       y: DEFAULT_CONE_HEIGHT,
-      z: DEFAULT_CONE_RADIUS
+      z: DEFAULT_CONE_RADIUS,
     });
 
     this.cylinder.setScale({
       x: DEFAULT_CYLINDER_RADIUS,
       y: DEFAULT_CYLINDER_HEIGHT,
-      z: DEFAULT_CYLINDER_RADIUS
+      z: DEFAULT_CYLINDER_RADIUS,
     });
     this.cylinder.translateY(this.cylinder.scale.y / 2);
     this.cone.translateY(this.cylinder.scale.y + this.cone.scale.y / 2);
@@ -63,7 +63,7 @@ class Arrow extends Group {
       const { x, z } = this.cone.scale;
       this.cone.setScale({ x, y: parsedLength, z });
       this.cone.position.set(0, 0, 0);
-      this.cone.translateY(this.cylinder.scale.y + (parsedLength / 2));
+      this.cone.translateY(this.cylinder.scale.y + parsedLength / 2);
     }
   }
 

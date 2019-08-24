@@ -1,19 +1,20 @@
 import * as THREE from 'three';
 
 import Mesh from './Mesh';
-import ObjectCacher from '../utils/ObjectCacher';
-import { MARKERARRAY_TYPES } from '../utils/constants';
+import ObjectCacher from '../utils/objectCacher';
+import { MARKER_OBJECT_TYPES } from '../utils/constants';
+import Sphere from './Sphere';
 
 class SphereList extends Mesh {
   constructor() {
     super();
     this.geometry = new THREE.Geometry();
     this.material = new THREE.MeshBasicMaterial();
-    this.objectCacher = new ObjectCacher(this);
+    this.objectCacher = new ObjectCacher(this, Sphere);
   }
 
   updatePoints(points, colors, options = {}) {
-    options.subtype = MARKERARRAY_TYPES.SPHERE;
+    options.subtype = MARKER_OBJECT_TYPES.SPHERE;
 
     if (points.length < this.children.length) {
       this.objectCacher.reusePool(points, colors, options);
