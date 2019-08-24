@@ -1,21 +1,24 @@
-import * as THREE from 'three';
+import { Color, CylinderGeometry } from 'three';
 
 import Core from '../core';
 import {
-  DEFAULT_OPTIONS_POLYGON,
+  DEFAULT_OPTIONS_RANGE,
+  DEFAULT_RADIAL_SEGMENTS,
   MESSAGE_TYPE_RANGE,
-  DEFAULT_COLOR_ARROW,
 } from '../utils/constants';
 
 import Group from '../primitives/Group';
-import Cone from '../primitives/Cone';
+import Cylinder from '../primitives/Cylinder';
 
 class Range extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_POLYGON) {
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_RANGE) {
     super(ros, topicName, MESSAGE_TYPE_RANGE, options);
     this.object = new Group();
+    this.cylinder = new Cylinder(this.options.color, 0.01, 0.01);
+    this.cylinder.rotateX(Math.PI / 2);
+    this.object.add(this.cylinder);
     this.updateOptions({
-      ...DEFAULT_OPTIONS_POLYGON,
+      ...DEFAULT_OPTIONS_RANGE,
       ...options,
     });
   }
@@ -23,14 +26,22 @@ class Range extends Core {
   updateOptions(options) {
     super.updateOptions(options);
     const { alpha, color } = this.options;
-    this.color = color;
+    this.cylinder.setAlpha(alpha);
+    this.cylinder.setColor(new Color(color));
   }
 
   update(message) {
     super.update(message);
-    this.height = message.range;
-    this.radius = message.range * Math.tan(message.field_of_view / 2);
-    this.object.add(new Cone(this.color, this.radius, this.height));
+    const { field_of_view: fov, max_range: max, min_range: min } = message;
+    this.cylinder.geometry = new CylinderGeometry(
+      min * Math.tan(fov),
+      max * Math.tan(fov),
+      max - min,
+      DEFAULT_RADIAL_SEGMENTS,
+      DEFAULT_RADIAL_SEGMENTS,
+    );
+    this.cylinder.geometryNeedsUpdate = true;
+    this.cylinder.position.setY(0.5 * (min + max));
   }
 }
 
