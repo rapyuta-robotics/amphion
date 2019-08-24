@@ -29,9 +29,9 @@ class PlanningScene extends Core {
         joint_state: { name, position },
         attached_collision_objects: attachedCollisionObjects,
       },
-      world: { collision_objects },
+      world: { collision_objects: worldCollisionObjects },
     } = message;
-    collision_objects.forEach(collisionMessage => {
+    worldCollisionObjects.forEach(collisionMessage => {
       this.collisionObjectViz.update(collisionMessage);
     });
     if (attachedCollisionObjects.length) {
