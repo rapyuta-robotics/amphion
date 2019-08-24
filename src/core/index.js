@@ -21,8 +21,10 @@ class Core {
 
   destroy() {
     this.unsubscribe();
-    this.object.parent.remove(this.object);
-    this.object = null;
+    if (this.object && this.object.parent) {
+      this.object.parent.remove(this.object);
+      this.object = null;
+    }
   }
 
   reset() {}
@@ -61,7 +63,7 @@ class Core {
   }
 
   changeTopic(topicName, type, autoSubscribe = true) {
-    const { queueSize, throttleRate } = this.options;
+    const { compression, queueSize, throttleRate } = this.options;
 
     if (autoSubscribe) {
       this.unsubscribe();
@@ -71,13 +73,14 @@ class Core {
     this.messageType = type || this.messageType;
     this.topicInstances = (Array.isArray(topicName)
       ? topicName
-      : [{ name: topicName, type }]
+      : [{ name: topicName, messageType: type }]
     ).map(
       ({ name, messageType }) =>
         new ROSLIB.Topic({
           ros: this.ros,
           name,
           messageType,
+          compression: compression || 'none',
           throttle_rate: throttleRate || 0,
           queue_size: queueSize || 10,
         }),

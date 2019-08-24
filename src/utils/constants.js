@@ -1,8 +1,11 @@
+/* eslint-disable prettier/prettier */
+import { Group } from 'three';
+
 export const OBJECT_TYPE_ARROW = 'Arrow';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
-export const MAX_POINTCLOUD_POINTS = 100000;
+export const MAX_POINTCLOUD_POINTS = 500000;
 
 export const DEFAULT_BACKGROUND_COLOR = '#000000';
 export const DEFAULT_GRID_SIZE = 30;
@@ -10,45 +13,45 @@ export const DEFAULT_GRID_DIVISIONS = 30;
 export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
-/** ***************************
+/* * ***************************
  *   Message types
  * ************************** */
-export const MESSAGE_TYPE_ROBOT_MODEL = 'robot_description';
-export const MESSAGE_TYPE_ACCELSTAMPED = 'geometry_msgs/AccelStamped';
-export const MESSAGE_TYPE_POINTSTAMPED = 'geometry_msgs/PointStamped';
-export const MESSAGE_TYPE_POLYGONSTAMPED = 'geometry_msgs/PolygonStamped';
-export const MESSAGE_TYPE_POSEARRAY = 'geometry_msgs/PoseArray';
-export const MESSAGE_TYPE_POSECOVARIANCE = 'geometry_msgs/PoseWithCovariance';
-export const MESSAGE_TYPE_POSESTAMPED = 'geometry_msgs/PoseStamped';
-export const MESSAGE_TYPE_TWISTSTAMPED = 'geometry_msgs/TwistStamped';
-export const MESSAGE_TYPE_VECTOR3STAMPED = 'geometry_msgs/Vector3Stamped';
-export const MESSAGE_TYPE_WRENCHSTAMPED = 'geometry_msgs/WrenchStamped';
+export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
+export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
+export const MESSAGE_TYPE_POINTSTAMPED =                     'geometry_msgs/PointStamped';
+export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
+export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
+export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
+export const MESSAGE_TYPE_POSESTAMPED =                      'geometry_msgs/PoseStamped';
+export const MESSAGE_TYPE_TWISTSTAMPED =                     'geometry_msgs/TwistStamped';
+export const MESSAGE_TYPE_VECTOR3STAMPED =                   'geometry_msgs/Vector3Stamped';
+export const MESSAGE_TYPE_WRENCHSTAMPED =                    'geometry_msgs/WrenchStamped';
 
-export const MESSAGE_TYPE_BOUNDINGVOLUME = 'moveit_msgs/BoundingVolume';
-export const MESSAGE_TYPE_DISPLAYROBOTSTATE = 'moveit_msgs/DisplayRobotState';
-export const MESSAGE_TYPE_DISPLAYTRAJECTORY = 'moveit_msgs/DisplayTrajectory';
-export const MESSAGE_TYPE_PLANNINGSCENE = 'moveit_msgs/PlanningScene';
+export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/BoundingVolume';
+export const MESSAGE_TYPE_COLLISION_OBJECT =                 'moveit_msgs/CollisionObject';
+export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
+export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
+export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
 
-export const MESSAGE_TYPE_OCCUPANCYGRID = 'nav_msgs/OccupancyGrid';
-export const MESSAGE_TYPE_ODOMETRY = 'nav_msgs/Odometry';
-export const MESSAGE_TYPE_PATH = 'nav_msgs/Path';
+export const MESSAGE_TYPE_OCCUPANCYGRID =                    'nav_msgs/OccupancyGrid';
+export const MESSAGE_TYPE_ODOMETRY =                         'nav_msgs/Odometry';
+export const MESSAGE_TYPE_PATH =                             'nav_msgs/Path';
 
-export const MESSAGE_TYPE_COMPRESSEDIMAGE = 'sensor_msgs/CompressedImage';
-export const MESSAGE_TYPE_DISPLAYJOINTSTATE = 'sensor_msgs/JointState';
-export const MESSAGE_TYPE_IMAGE = 'sensor_msgs/Image';
-export const MESSAGE_TYPE_LASERSCAN = 'sensor_msgs/LaserScan';
-export const MESSAGE_TYPE_MAGNETICFIELD = 'sensor_msgs/MagneticField';
-export const MESSAGE_TYPE_POINTCLOUD = 'sensor_msgs/PointCloud';
-export const MESSAGE_TYPE_POINTCLOUD2 = 'sensor_msgs/PointCloud2';
-export const MESSAGE_TYPE_RANGE = 'sensor_msgs/Range';
+export const MESSAGE_TYPE_COMPRESSEDIMAGE =                  'sensor_msgs/CompressedImage';
+export const MESSAGE_TYPE_DISPLAYJOINTSTATE =                'sensor_msgs/JointState';
+export const MESSAGE_TYPE_IMAGE =                            'sensor_msgs/Image';
+export const MESSAGE_TYPE_LASERSCAN =                        'sensor_msgs/LaserScan';
+export const MESSAGE_TYPE_MAGNETICFIELD =                    'sensor_msgs/MagneticField';
+export const MESSAGE_TYPE_POINTCLOUD =                       'sensor_msgs/PointCloud';
+export const MESSAGE_TYPE_POINTCLOUD2 =                      'sensor_msgs/PointCloud2';
+export const MESSAGE_TYPE_RANGE =                            'sensor_msgs/Range';
 
-export const MESSAGE_TYPE_TF = 'tf/tfMessage';
-export const MESSAGE_TYPE_TF2 = 'tf2_msgs/TFMessage';
+export const MESSAGE_TYPE_TF =                               'tf/tfMessage';
+export const MESSAGE_TYPE_TF2 =                              'tf2_msgs/TFMessage';
 
-export const MESSAGE_TYPE_MARKER = 'visualization_msgs/Marker';
-export const MESSAGE_TYPE_MARKERARRAY = 'visualization_msgs/MarkerArray';
-export const MESSAGE_TYPE_INTERACTIVEMARKER =
-  'visualization_msgs/InteractiveMarkerInit';
+export const MESSAGE_TYPE_MARKER =                           'visualization_msgs/Marker';
+export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
+export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs/InteractiveMarkerInit';
 
 /** ***************************
  *   Visualizations
@@ -61,6 +64,7 @@ export const VIZ_TYPE_MARKER = 'Marker';
 export const VIZ_TYPE_MARKERARRAY = 'MarkerArray';
 export const VIZ_TYPE_ODOMETRY = 'Odometry';
 export const VIZ_TYPE_PATH = 'Path';
+export const VIZ_TYPE_POINT = 'Point';
 export const VIZ_TYPE_POINTCLOUD = 'PointCloud';
 export const VIZ_TYPE_POLYGON = 'Polygon';
 export const VIZ_TYPE_POSE = 'Pose';
@@ -68,9 +72,35 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
 
-/** ***************************
+/* * ***************************
  *   Viz specific constants
  * ************************** */
+
+export const POINT_FIELD_DATATYPES = {
+  INT8: 1,
+  UINT8: 2,
+  INT16: 3,
+  UINT16: 4,
+  INT32: 5,
+  UINT32: 6,
+  FLOAT32: 7,
+  FLOAT64: 8
+};
+
+export const COLLISION_OBJECT_OPERATIONS = {
+  ADD: 0,
+  REMOVE: 1,
+  APPEND: 2,
+  MOVE: 3,
+};
+
+export const SOLID_PRIMITIVE_TYPES = {
+  BOX: 1,
+  SPHERE: 2,
+  CYLINDER: 3,
+  CONE: 4,
+};
+
 export const MARKER_OBJECT_TYPES = {
   ARROW: 0,
   CUBE: 1,
@@ -109,6 +139,11 @@ export const COLOR_TRANSFORMERS = {
   INTENSITY: 'Intensity',
   AXIS_COLOR: 'AxisColor',
   FLAT_COLOR: 'FlatColor',
+};
+
+export const POINTCLOUD_COLOR_CHANNELS = {
+  RGB: 'rgb',
+  INTENSITY: 'intensity',
 };
 
 export const AXES = {
@@ -157,6 +192,10 @@ export const DEFAULT_OPTIONS_SCENE = {
   gridCenterlineColor: DEFAULT_GRID_COLOR_CENTERLINE,
 };
 
+export const DEFAULT_OPTIONS_TF_VIEWER = {
+  selectedFrame: '',
+};
+
 export const DEFAULT_OPTIONS_ARROW = {
   shaftLength: 1,
   shaftRadius: 0.05,
@@ -173,6 +212,10 @@ export const DEFAULT_OPTIONS_FLATARROW = {
   arrowLength: 0.3,
 };
 
+export const DEFAULT_OPTIONS_DISPLAYTRAJECTORY = {
+  robot: new Group(),
+};
+
 const DEFAULT_OPTIONS_INTENSITY = {
   channelName: INTENSITY_CHANNEL_OPTIONS.INTENSITY,
   useRainbow: false,
@@ -184,6 +227,8 @@ const DEFAULT_OPTIONS_INTENSITY = {
   minIntensity: 388,
 };
 
+export const DEFAULT_OPTIONS_COLLISION_OBJECT = {};
+
 const DEFAULT_OPITONS_AXIS_COLOR = {
   axis: AXES.X,
   autocomputeValueBounds: false,
@@ -194,6 +239,9 @@ const DEFAULT_OPITONS_AXIS_COLOR = {
 
 export const DEFAULT_OPTIONS_IMAGE = {
   queueSize: 1,
+  defaultWidth: 320,
+  defaultHeight: 240,
+  compression: 'cbor',
 };
 
 export const DEFAULT_OPTIONS_LASERSCAN = {
@@ -203,6 +251,7 @@ export const DEFAULT_OPTIONS_LASERSCAN = {
   alpha: 1,
   decayTime: 0,
   queueSize: 10,
+  compression: 'cbor',
   colorTransformer: COLOR_TRANSFORMERS.INTENSITY,
   flatColor: '#ffffff',
   ...DEFAULT_OPTIONS_INTENSITY,
@@ -212,6 +261,7 @@ export const DEFAULT_OPTIONS_LASERSCAN = {
 export const DEFAULT_OPTIONS_MAP = {
   alpha: 1,
   colorScheme: MAP_COLOR_SCHEMES.MAP,
+  compression: 'cbor',
   drawBehind: false,
 };
 
@@ -243,7 +293,14 @@ export const DEFAULT_OPTIONS_PATH = {
   alpha: 1,
 };
 
-export const DEFAULT_OPTIONS_POINTCLOUD = {};
+export const DEFAULT_OPTIONS_PLANNINGSCENE = {};
+
+export const DEFAULT_OPTIONS_POINTCLOUD = {
+  compression: 'cbor',
+  colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
+  size: 0.0125,
+  useRainbow: false
+};
 
 export const DEFAULT_OPTIONS_POINT = {
   color: '#ff0000',
@@ -288,6 +345,7 @@ export const SUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_OCCUPANCYGRID,
   MESSAGE_TYPE_ODOMETRY,
   MESSAGE_TYPE_PATH,
+  MESSAGE_TYPE_PLANNINGSCENE,
   MESSAGE_TYPE_POINTCLOUD2,
   MESSAGE_TYPE_POLYGONSTAMPED,
   MESSAGE_TYPE_POSESTAMPED,
@@ -307,7 +365,6 @@ export const UNSUPPORTED_MESSAGE_TYPES = [
   MESSAGE_TYPE_DISPLAYTRAJECTORY,
   MESSAGE_TYPE_INTERACTIVEMARKER,
   MESSAGE_TYPE_MAGNETICFIELD,
-  MESSAGE_TYPE_PLANNINGSCENE,
   MESSAGE_TYPE_POINTCLOUD,
   MESSAGE_TYPE_POSECOVARIANCE,
   MESSAGE_TYPE_RANGE,

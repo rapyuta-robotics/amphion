@@ -11,6 +11,7 @@ class Point extends Core {
     super(ros, topicName, MESSAGE_TYPE_POINTSTAMPED, options);
     this.object = new Group();
     this.sphere = new Sphere();
+    this.object.add(this.sphere);
     this.updateOptions({
       ...DEFAULT_OPTIONS_POINT,
       ...options,
@@ -19,20 +20,10 @@ class Point extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const {
-      alpha,
-      color,
-      heightSegments,
-      radius,
-      widthSegments,
-    } = this.options;
-    this.sphere.updateOptions(
-      color,
-      alpha,
-      radius,
-      widthSegments,
-      heightSegments,
-    );
+    const { alpha, color, radius } = this.options;
+    this.sphere.setColor(color);
+    this.sphere.setAlpha(alpha);
+    this.sphere.setScale({ x: radius, y: radius, z: radius });
   }
 
   update(message) {
@@ -41,8 +32,6 @@ class Point extends Core {
       point: { x, y, z },
     } = message;
     this.object.position.set(x, y, z);
-
-    this.object.add(this.sphere);
   }
 }
 

@@ -33,6 +33,7 @@
     "no-multi-spaces": "off",
     "no-undef": "warn",
     "no-case-declarations": "off",
-    "array-callback-return": "off"
+    "array-callback-return": "off",
+    "camelcase": "warn"
   }
 }

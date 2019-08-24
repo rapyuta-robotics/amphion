@@ -10,7 +10,10 @@ import Line from '../primitives/Line';
 
 class Polygon extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_POLYGON) {
-    super(ros, topicName, MESSAGE_TYPE_POLYGONSTAMPED, options);
+    super(ros, topicName, MESSAGE_TYPE_POLYGONSTAMPED, {
+      ...DEFAULT_OPTIONS_POLYGON,
+      ...options,
+    });
     this.object = new Group();
     this.line = new Line(null, true);
     this.updateOptions({
