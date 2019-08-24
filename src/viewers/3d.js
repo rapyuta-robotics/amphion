@@ -17,8 +17,8 @@ class Viewer3d {
     this.previousWidth = 0;
     this.previousHeight = 0;
 
-    this.ro = new ResizeObserver((entries) => {
-      if(entries.length > 0) {
+    this.ro = new ResizeObserver(entries => {
+      if (entries.length > 0) {
         this.onWindowResize();
       }
     });
@@ -68,7 +68,7 @@ class Viewer3d {
   updateOptions(options) {
     this.options = {
       ...this.options,
-      ...options
+      ...options,
     };
     this.scene.updateOptions(this.options);
   }
@@ -79,7 +79,7 @@ class Viewer3d {
 
   onWindowResize() {
     const { camera } = this;
-    const { offsetWidth, offsetHeight } = this.container;
+    const { offsetHeight, offsetWidth } = this.container;
     if (
       Math.abs(offsetWidth - this.previousWidth) > 10 ||
       Math.abs(offsetHeight - this.previousHeight) > 10

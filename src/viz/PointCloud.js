@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 
 import Core from '../core';
-import { MESSAGE_TYPE_POINTCLOUD2, MAX_POINTCLOUD_POINTS, DEFAULT_OPTIONS_POINTCLOUD } from '../utils/constants';
+import {
+  MESSAGE_TYPE_POINTCLOUD2,
+  MAX_POINTCLOUD_POINTS,
+  DEFAULT_OPTIONS_POINTCLOUD,
+} from '../utils/constants';
 
 const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   const baseOffset = index * pointStep;
@@ -15,7 +19,8 @@ const readPoint = (offsets, dataView, index, isBigendian, pointStep) => {
   };
 };
 
-const BASE64 =  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+const BASE64 =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 function decode64(x) {
   const a = [];
   let z = 0;
@@ -27,14 +32,14 @@ function decode64(x) {
     if (bits >= 8) {
       bits -= 8;
       a.push(z >> bits);
-      z &= ((2 ** bits) - 1);
+      z &= 2 ** bits - 1;
     }
     z <<= 6;
   }
   return a;
 }
 
-const editPointCloudPoints = function (message) {
+const editPointCloudPoints = function(message) {
   const positions = [];
   const colors = [];
   if (message) {
@@ -69,9 +74,13 @@ const editPointCloudPoints = function (message) {
   };
 };
 
-
 class PointCloud extends Core {
-  constructor(ros, topicName, messageType = MESSAGE_TYPE_POINTCLOUD2, options = DEFAULT_OPTIONS_POINTCLOUD) {
+  constructor(
+    ros,
+    topicName,
+    messageType = MESSAGE_TYPE_POINTCLOUD2,
+    options = DEFAULT_OPTIONS_POINTCLOUD,
+  ) {
     super(ros, topicName, messageType, options);
     const cloudMaterial = new THREE.PointsMaterial({
       size: 0.1,
@@ -122,11 +131,8 @@ class PointCloud extends Core {
 
   update(message) {
     super.update(message);
-    const { positions, colors } = editPointCloudPoints(message);
-    this.updatePointCloudGeometry(
-      positions,
-      colors,
-    );
+    const { colors, positions } = editPointCloudPoints(message);
+    this.updatePointCloudGeometry(positions, colors);
   }
 }
 

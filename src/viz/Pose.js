@@ -23,9 +23,7 @@ class Pose extends Core {
   }
 
   static getNewPrimitive(options) {
-    const {
-      type
-    } = options;
+    const { type } = options;
     let newObject = null;
 
     switch (type) {
@@ -47,12 +45,12 @@ class Pose extends Core {
     super.updateOptions(options);
     const { type } = this.options;
 
-    if(this.primitive && (this.primitive.type !== type)) {
+    if (this.primitive && this.primitive.type !== type) {
       this.object.remove(this.primitive);
       this.primitive = null;
     }
 
-    if(!this.primitive) {
+    if (!this.primitive) {
       this.primitive = Pose.getNewPrimitive(this.options);
       this.object.add(this.primitive);
     }
@@ -62,10 +60,12 @@ class Pose extends Core {
 
   update(message) {
     super.update(message);
-    const { pose: { position, orientation } } = message;
+    const {
+      pose: { position, orientation },
+    } = message;
     this.primitive.setTransform({
       translation: position,
-      rotation: orientation
+      rotation: orientation,
     });
   }
 }

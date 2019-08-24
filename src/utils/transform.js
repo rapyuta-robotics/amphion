@@ -1,20 +1,26 @@
+import { Quaternion } from 'three';
+
 export const setTransform = (
   object,
   {
     translation: { x: posX, y: posY, z: posZ },
-    rotation: {
-      x: orientX, y: orientY, z: orientZ, w: orientW
-    }
-  }
+    rotation: { x: orientX, y: orientY, z: orientZ, w: orientW },
+  },
 ) => {
   object.position.set(posX, posY, posZ);
-  object.quaternion.set(orientX, orientY, orientZ, orientW);
+  object.quaternion.copy(
+    new Quaternion(orientX, orientY, orientZ, orientW).normalize(),
+  );
 };
 
 export const setScale = (object, { x, y, z }) => {
   object.scale.set(x, y, z);
 };
 
-export const setColor = (object, { r, g, b }) => {
-  object.material.color.setRGB(r, g, b);
+export const setColor = (object, color) => {
+  if (typeof color === 'string') {
+    object.material.color = new THREE.Color(color);
+  } else {
+    object.material.color.setRGB(color.r, color.g, color.b);
+  }
 };

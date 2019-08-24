@@ -1,5 +1,8 @@
 import Core from '../core';
-import { DEFAULT_OPTIONS_MARKER, MESSAGE_TYPE_MARKER } from '../utils/constants';
+import {
+  DEFAULT_OPTIONS_MARKER,
+  MESSAGE_TYPE_MARKER,
+} from '../utils/constants';
 import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
 
