@@ -32,9 +32,9 @@ class PlanningScene extends Core {
         attached_collision_objects: attachedCollisionObjects = [],
         is_diff: isRobotStateDiff,
       },
-      world: { collision_objects: collisionObjects },
+      world: { collision_objects: worldCollisionObjects },
     } = message;
-    collisionObjects.forEach(collisionMessage => {
+    worldCollisionObjects.forEach(collisionMessage => {
       this.collisionObjectViz.update(collisionMessage);
     });
     if (attachedCollisionObjects.length) {
