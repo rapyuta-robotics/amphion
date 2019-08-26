@@ -52,7 +52,7 @@ class DisplayTrajectory extends Core {
     points.forEach(point => {
       const {
         positions,
-        time_from_start: { secs, nsecs },
+        time_from_start: { nsecs, secs },
       } = point;
       setTimeout(() => {
         jointNames.forEach((jointName, index) => {
@@ -65,7 +65,7 @@ class DisplayTrajectory extends Core {
     });
     if (points.length > 0) {
       const {
-        time_from_start: { secs: lastSec, nsecs: lastNsec },
+        time_from_start: { nsecs: lastNsec, secs: lastSec },
       } = points[points.length - 1];
       setTimeout(() => {
         robotClone.parent.remove(robotClone);
