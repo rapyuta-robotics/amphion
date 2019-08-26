@@ -69,7 +69,7 @@ export default class MarkerManager {
       color,
       colors,
       points,
-      pose: { position, orientation },
+      pose: { orientation, position },
       scale,
     } = marker;
     const markerObject = this.getMarkerOrCreate(marker);

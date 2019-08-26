@@ -4,7 +4,7 @@ export const setTransform = (
   object,
   {
     translation: { x: posX, y: posY, z: posZ },
-    rotation: { x: orientX, y: orientY, z: orientZ, w: orientW },
+    rotation: { w: orientW, x: orientX, y: orientY, z: orientZ },
   },
 ) => {
   object.position.set(posX, posY, posZ);

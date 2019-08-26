@@ -1,5 +1,6 @@
 import Core from '../core';
 import {
+  COLLISION_OBJECT_OPERATIONS,
   DEFAULT_OPTIONS_PLANNINGSCENE,
   MESSAGE_TYPE_PLANNINGSCENE,
 } from '../utils/constants';
@@ -15,6 +16,7 @@ class PlanningScene extends Core {
 
     this.object = new Group();
     this.collisionObjectViz = new CollisionObject();
+    this.attachedCollisionObjects = new Map();
     this.object.add(this.collisionObjectViz.object);
     this.updateOptions({
       ...MESSAGE_TYPE_PLANNINGSCENE,
@@ -27,7 +29,8 @@ class PlanningScene extends Core {
     const {
       robot_state: {
         joint_state: { name, position },
-        attached_collision_objects: attachedCollisionObjects,
+        attached_collision_objects: attachedCollisionObjects = [],
+        is_diff: isRobotStateDiff,
       },
       world: { collision_objects: worldCollisionObjects },
     } = message;
@@ -39,7 +42,25 @@ class PlanningScene extends Core {
         const collisionVizInstance = new CollisionObject();
         collisionVizInstance.object = this.object.getObjectByName(linkName);
         collisionVizInstance.update(object);
+        this.attachedCollisionObjects.set(object.id, collisionVizInstance);
       });
+    }
+    if (!isRobotStateDiff) {
+      const newCollisionObjectNames = attachedCollisionObjects.map(
+        ({ object: { id } }) => id,
+      );
+      for (const [
+        collObjName,
+        collObj,
+      ] of this.attachedCollisionObjects.entries()) {
+        if (newCollisionObjectNames.indexOf(collObjName) === -1) {
+          collObj.update({
+            id: collObjName,
+            operation: COLLISION_OBJECT_OPERATIONS.REMOVE,
+          });
+          this.attachedCollisionObjects.delete(collObjName);
+        }
+      }
     }
     name.forEach((jointName, index) => {
       const joint = this.object.getObjectByName(jointName);

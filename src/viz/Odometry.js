@@ -152,7 +152,7 @@ class Odometry extends Core {
 
     const {
       pose: {
-        pose: { position, orientation },
+        pose: { orientation, position },
       },
     } = message;
     const transform = {
