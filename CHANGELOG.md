@@ -7,7 +7,7 @@
 
 ### Fixed
 
-## [0.1.11] - 2019-08-22
+## [0.1.12] - 2019-08-27
 ### Changed
 - Updated Three.js and eslint config
 - Updated eslint-utils
