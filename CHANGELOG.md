@@ -7,6 +7,13 @@
 
 ### Fixed
 
+## [0.1.11] - 2019-08-22
+### Changed
+- Updated Three.js and eslint config
+- Updated eslint-utils
+
+### Fixed
+- Handle is_diff in robot scene attached collision objects for planning
 
 ## [0.1.11] - 2019-08-22
 ### Added
