@@ -28,9 +28,9 @@ class PlanningScene extends Core {
     super.update(message);
     const {
       robot_state: {
-        joint_state: { name, position },
         attached_collision_objects: attachedCollisionObjects = [],
         is_diff: isRobotStateDiff,
+        joint_state: { name, position },
       },
       world: { collision_objects: worldCollisionObjects },
     } = message;
