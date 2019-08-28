@@ -51,7 +51,7 @@ class Map extends Core {
 
   updateCanvasDimensions(message) {
     const {
-      info: { height, width, resolution, origin },
+      info: { height, origin, resolution, width },
     } = message;
 
     this.object.scale.set(width * resolution, -1 * height * resolution, 1);

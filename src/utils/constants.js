@@ -18,6 +18,7 @@ export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
  * ************************** */
 export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
 export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
+export const MESSAGE_TYPE_POINTSTAMPED =                     'geometry_msgs/PointStamped';
 export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
 export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
 export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
@@ -63,6 +64,7 @@ export const VIZ_TYPE_MARKER = 'Marker';
 export const VIZ_TYPE_MARKERARRAY = 'MarkerArray';
 export const VIZ_TYPE_ODOMETRY = 'Odometry';
 export const VIZ_TYPE_PATH = 'Path';
+export const VIZ_TYPE_POINT = 'Point';
 export const VIZ_TYPE_POINTCLOUD = 'PointCloud';
 export const VIZ_TYPE_POLYGON = 'Polygon';
 export const VIZ_TYPE_POSE = 'Pose';
@@ -299,6 +301,12 @@ export const DEFAULT_OPTIONS_POINTCLOUD = {
   colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
   useRainbow: false
+};
+
+export const DEFAULT_OPTIONS_POINT = {
+  color: '#ff0000',
+  alpha: 1,
+  radius: 0.2,
 };
 
 export const DEFAULT_OPTIONS_POLYGON = {
