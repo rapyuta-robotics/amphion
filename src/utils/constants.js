@@ -2,6 +2,7 @@
 import { Group } from 'three';
 
 export const OBJECT_TYPE_ARROW = 'Arrow';
+export const OBJECT_TYPE_ARROW_WITH_CIRCLE = 'ArrowWithCircle';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
@@ -172,8 +173,7 @@ export const POSE_OBJECT_TYPES = {
 
 export const WRENCH_OBJECT_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
-  /*axes: OBJECT_TYPE_AXES,
-  flatArrow: OBJECT_TYPE_FLAT_ARROW,*/
+  arrowWithCircle: OBJECT_TYPE_ARROW_WITH_CIRCLE,
 };
 
 
@@ -333,6 +333,21 @@ export const DEFAULT_OPTIONS_POSE = {
   type: POSE_OBJECT_TYPES.arrow,
 };
 
+export const DEFAULT_OPTIONS_TORUS = {
+  circleRadius: 0.3,
+  tube: 0.03,
+  radialSegments: 16,
+  tubularSegments: 100,
+  arc: 1.5*Math.PI,
+}
+
+export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {
+  ...DEFAULT_OPTIONS_ARROW,
+  ...DEFAULT_OPTIONS_TORUS,
+  circleConeLength: 0.1,
+  circleConeRadius: 0.1,
+}
+
 export const DEFAULT_OPTIONS_WRENCH = {
     forceColor: DEFAULT_COLOR_X_AXIS,
     torqueColor: DEFAULT_COLOR_ARROW,
@@ -340,7 +355,7 @@ export const DEFAULT_OPTIONS_WRENCH = {
     forceArrowScale: 1,
     torqueArrowScale: 1,
     arrowWidth: 1,
-    ...DEFAULT_OPTIONS_ARROW,
+    ...DEFAULT_OPTIONS_ARROW_WITH_CIRCLE,
     type: WRENCH_OBJECT_TYPES.arrow,
 };
 

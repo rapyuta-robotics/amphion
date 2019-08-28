@@ -5,8 +5,10 @@ import {
   DEFAULT_OPTIONS_WRENCH,
   MESSAGE_TYPE_WRENCHSTAMPED,
   WRENCH_OBJECT_TYPES,
+  DEFAULT_OPTIONS_ARROW_WITH_CIRCLE
 } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
+import ArrowWithCircle from '../primitives/ArrowWithCircle';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
 import { setObjectDimension } from '../utils/helpers';
@@ -33,6 +35,9 @@ class Wrench extends Core {
       case WRENCH_OBJECT_TYPES.arrow:
         newObject = new Arrow();
         break;
+      case WRENCH_OBJECT_TYPES.arrowWithCircle:
+        newObject = new ArrowWithCircle();
+        break;
     }
     return newObject;
   }
@@ -53,28 +58,34 @@ class Wrench extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { type } = this.options; 
     this.primitive1 = this.updatePrimitive(this.primitive1);
+    this.options.type = WRENCH_OBJECT_TYPES.arrowWithCircle;
     this.primitive2 = this.updatePrimitive(this.primitive2);
 
     var forceOptions = {
-      color: options["forceColor"], 
-      alpha: options["alpha"], 
-      headLength: options["headLength"]*options["forceArrowScale"], 
-      headRadius: options["headRadius"]*options["arrowWidth"], 
-      shaftLength: options["shaftLength"]*options["forceArrowScale"], 
+      color: options["forceColor"],
+      alpha: options["alpha"],
+      headLength: options["headLength"]*options["forceArrowScale"],
+      headRadius: options["headRadius"]*options["arrowWidth"],
+      shaftLength: options["shaftLength"]*options["forceArrowScale"],
       shaftRadius: options["shaftRadius"]*options["arrowWidth"],
-      type: options["type"]
+      type: WRENCH_OBJECT_TYPES.arrow
     };
 
     var torqueOptions = {
-      color: options["torqueColor"], 
-      alpha: options["alpha"], 
-      headLength: options["headLength"]*options["torqueArrowScale"], 
-      headRadius: options["headRadius"]*options["arrowWidth"], 
-      shaftLength: options["shaftLength"]*options["torqueArrowScale"], 
+      color: options["torqueColor"],
+      alpha: options["alpha"],
+      arc: options["arc"],
+      circleConeRadius: options["circleConeRadius"]*options["arrowWidth"],
+      circleConeLength: options["circleConeLength"]*options["arrowWidth"],
+      circleRadius: options["circleRadius"]*options["torqueArrowScale"],
+      headLength: options["headLength"]*options["torqueArrowScale"],
+      headRadius: options["headRadius"]*options["arrowWidth"],
+      shaftLength: options["shaftLength"]*options["torqueArrowScale"],
       shaftRadius: options["shaftRadius"]*options["arrowWidth"],
-      type: options["type"]
+      tube: options["tube"] *options["arrowWidth"],
+      tubularSegments: options["tubularSegments"],
+      type: WRENCH_OBJECT_TYPES.arrowWithCircle
     };
     
     setObjectDimension(this.primitive1, forceOptions);
