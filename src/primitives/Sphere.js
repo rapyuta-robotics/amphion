@@ -4,14 +4,16 @@ import Mesh from './Mesh';
 import { DEFAULT_RADIAL_SEGMENTS } from '../utils/constants';
 
 class Sphere extends Mesh {
-  constructor(color, size = 1) {
+  constructor() {
     super();
+    // Radius handled through scale
     this.geometry = new THREE.SphereGeometry(
-      size,
+      1,
       DEFAULT_RADIAL_SEGMENTS,
       DEFAULT_RADIAL_SEGMENTS,
     );
     this.material = new THREE.MeshStandardMaterial();
+    this.material.transparent = true;
   }
 }
 

@@ -43,8 +43,8 @@ class TfViewer extends Viewer3d {
         header: { frame_id: parentFrameId },
         child_frame_id: childFrameId,
         transform: {
+          rotation: { w: rw, x: rx, y: ry, z: rz },
           translation: { x, y, z },
-          rotation: { x: rx, y: ry, z: rz, w: rw },
         },
       }) => {
         const [childObject, parentObject] = [
