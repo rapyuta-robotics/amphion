@@ -52,6 +52,8 @@ export const MESSAGE_TYPE_TF2 =                              'tf2_msgs/TFMessage
 export const MESSAGE_TYPE_MARKER =                           'visualization_msgs/Marker';
 export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
 export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs/InteractiveMarkerInit';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_UPDATE =         'visualization_msgs/InteractiveMarkerUpdate';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK =       'visualization_msgs/InteractiveMarkerFeedback';
 
 /** ***************************
  *   Visualizations

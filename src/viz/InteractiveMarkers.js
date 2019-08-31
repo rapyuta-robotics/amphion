@@ -25,6 +25,19 @@ class InteractiveMarkers extends Core {
   }
 
   updateOptions(options) {
+    // need a better way to handle interdependent topics
+    const shouldSubscriptionChange =
+      this.options.updateTopicName !== options.topicName && this.init;
+    const guardAgainstOtherOptionsChange =
+      this.topicName === this.options.updateTopicName;
+
+    if (shouldSubscriptionChange && options.updateTopicName !== undefined) {
+      const { messageType, name } = options.updateTopicName;
+      this.changeTopic(name, messageType, true, true);
+    } else if (shouldSubscriptionChange && guardAgainstOtherOptionsChange) {
+      this.unsubscribe();
+    }
+
     super.updateOptions(options);
     this.interactiveMarkerManager.updateOptions(this.options, this);
   }
@@ -33,13 +46,29 @@ class InteractiveMarkers extends Core {
     super.update(message);
     if (message.markers.length > 0) {
       message.markers.forEach(interactiveMarker => {
-        this.interactiveMarkerManager.updateMarker(interactiveMarker);
+        this.interactiveMarkerManager.initMarkers(interactiveMarker);
+      });
+      if (!this.init) {
+        this.init = true;
+        if (this.options.updateTopicName !== undefined) {
+          const { messageType, name } = this.options.updateTopicName;
+          this.changeTopic(name, messageType, true, true);
+        } else {
+          this.unsubscribe();
+        }
+      }
+    }
+
+    // for InteractiveMarkerPose sub-message
+    if (message.poses && message.poses.length > 0) {
+      message.poses.forEach(pose => {
+        this.interactiveMarkerManager.updatePose(pose);
       });
     }
   }
 
   reset() {
-    this.interactiveMarkerManager.reset();
+    this.interactiveMarkerManager.reset(false);
   }
 }
 

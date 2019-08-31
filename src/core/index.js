@@ -7,6 +7,7 @@ class Core {
     this.ros = ros;
     this.headerFrameId = '';
     this.changeTopic(topicName, messageType, false);
+    this.init = false;
     this.onHeaderChange = onHeaderChange || (() => {});
     this.update = this.update.bind(this);
   }
@@ -62,8 +63,9 @@ class Core {
     };
   }
 
-  changeTopic(topicName, type, autoSubscribe = true) {
+  changeTopic(topicName, type, autoSubscribe = true, hasBeenInit = false) {
     const { compression, queueSize, throttleRate } = this.options;
+    this.init = hasBeenInit;
 
     if (autoSubscribe) {
       this.unsubscribe();

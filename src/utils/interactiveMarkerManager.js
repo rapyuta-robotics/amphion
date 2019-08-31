@@ -11,9 +11,8 @@ export default class InteractiveMarkerManager {
     this.onChange = this.onChange.bind(this);
   }
 
-  getMarkerManagerOrCreate(interactiveMarkerName, control) {
-    const { name } = control;
-    const id = `${interactiveMarkerName}-${name}`;
+  getMarkerManagerOrCreate(interactiveMarkerName) {
+    const id = interactiveMarkerName;
     if (!this.markerManagerMap[id] || !this.objectMap[id]) {
       const markersHolder = new Group();
       markersHolder.name = id || '';
@@ -65,16 +64,16 @@ export default class InteractiveMarkerManager {
     this.callback = callback;
   }
 
-  updateMarker(interactiveMarker) {
+  initMarkers(interactiveMarker) {
     const {
       controls,
       name,
       pose: { orientation, position },
       scale,
     } = interactiveMarker;
+    const { manager, object } = this.getMarkerManagerOrCreate(name);
+    object.setTransform({ translation: position, rotation: orientation });
     controls.forEach(control => {
-      const { manager, object } = this.getMarkerManagerOrCreate(name, control);
-      object.setTransform({ translation: position, rotation: orientation });
       if (control.markers.length > 0) {
         control.markers.forEach(marker => {
           manager.updateMarker(marker);
@@ -83,17 +82,31 @@ export default class InteractiveMarkerManager {
     });
   }
 
+  updatePose(poseObject) {
+    const { name, pose } = poseObject;
+    const markerObject = this.objectMap[name];
+    if (pose) {
+      const { orientation, position } = pose;
+      markerObject.setTransform({
+        translation: position,
+        rotation: orientation,
+      });
+    }
+  }
+
   removeObject(id) {
     const obj = this.objectMap[id];
     obj.parent.remove(obj);
     delete this.objectMap[id];
   }
 
-  reset() {
+  reset(destroy) {
     this.onChange();
 
-    Object.keys(this.objectMap).forEach(id => {
-      this.removeObject(id);
-    });
+    if (destroy) {
+      Object.keys(this.objectMap).forEach(id => {
+        this.removeObject(id);
+      });
+    }
   }
 }
