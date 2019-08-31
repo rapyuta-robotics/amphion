@@ -21,6 +21,7 @@ import Scene from './core/scene';
 import Viewer2d from './viewers/2d';
 import Viewer3d from './viewers/3d';
 import TfViewer from './viewers/Tf';
+import InteractiveMarkers from './viz/InteractiveMarkers';
 
 export default {
   CollisionObject,
@@ -46,4 +47,6 @@ export default {
   Viewer2d,
   Viewer3d,
   TfViewer,
+
+  InteractiveMarkers,
 };

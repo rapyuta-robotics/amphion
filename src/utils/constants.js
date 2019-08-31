@@ -57,7 +57,7 @@ export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs
  *   Visualizations
  * ************************** */
 export const VIZ_TYPE_IMAGE = 'Image';
-export const VIZ_TYPE_IMTERACTIVEMARKER = 'InteractiveMarker';
+export const VIZ_TYPE_INTERACTIVEMARKER = 'InteractiveMarker';
 export const VIZ_TYPE_LASERSCAN = 'LaserScan';
 export const VIZ_TYPE_MAP = 'Map';
 export const VIZ_TYPE_MARKER = 'Marker';
@@ -271,6 +271,12 @@ export const DEFAULT_OPTIONS_MARKER = {
 };
 
 export const DEFAULT_OPTIONS_MARKERARRAY = {
+  queueSize: 1,
+  namespaces: [],
+  throttleRate: 0,
+};
+
+export const DEFAULT_OPTIONS_INTERACTIVE_MARKER = {
   queueSize: 1,
   namespaces: [],
   throttleRate: 0,
