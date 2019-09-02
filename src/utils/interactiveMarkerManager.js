@@ -11,7 +11,7 @@ export default class InteractiveMarkerManager {
     this.onChange = this.onChange.bind(this);
   }
 
-  getMarkerManagerOrCreate(interactiveMarkerName) {
+  getMarkerManagerOrCreate(interactiveMarkerName, transformControls) {
     const id = interactiveMarkerName;
     if (!this.markerManagerMap[id] || !this.objectMap[id]) {
       const markersHolder = new Group();
@@ -64,14 +64,17 @@ export default class InteractiveMarkerManager {
     this.callback = callback;
   }
 
-  initMarkers(interactiveMarker) {
+  initMarkers(interactiveMarker, transformControls) {
     const {
       controls,
       name,
       pose: { orientation, position },
       scale,
     } = interactiveMarker;
-    const { manager, object } = this.getMarkerManagerOrCreate(name);
+    const { manager, object } = this.getMarkerManagerOrCreate(
+      name,
+      transformControls,
+    );
     object.setTransform({ translation: position, rotation: orientation });
     controls.forEach(control => {
       if (control.markers.length > 0) {
