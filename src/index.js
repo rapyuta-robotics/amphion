@@ -15,6 +15,7 @@ import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
 import Marker from './viz/Marker';
+import Range from './viz/Range';
 
 import Scene from './core/scene';
 
@@ -40,6 +41,7 @@ export default {
   Path,
   Image,
   Marker,
+  Range,
 
   Scene,
 
