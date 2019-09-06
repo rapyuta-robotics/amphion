@@ -94,6 +94,7 @@ export const VIZ_TYPE_POINTCLOUD = 'PointCloud';
 export const VIZ_TYPE_POLYGON = 'Polygon';
 export const VIZ_TYPE_POSE = 'Pose';
 export const VIZ_TYPE_POSEARRAY = 'PoseArray';
+export const VIZ_TYPE_RANGE = 'Range';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
 
@@ -359,6 +360,11 @@ export const DEFAULT_OPTIONS_POSEARRAY = {
   ...DEFAULT_OPTIONS_AXES,
   ...DEFAULT_OPTIONS_FLATARROW,
   type: POSE_OBJECT_TYPES.arrow,
+};
+
+export const DEFAULT_OPTIONS_RANGE = {
+  color: DEFAULT_COLOR_X_AXIS,
+  alpha: 1,
 };
 
 export const DEFAULT_OPTIONS_ROBOTMODEL = {};
