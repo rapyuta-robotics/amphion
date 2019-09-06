@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import FreeformControls, { RAYCASTER_EVENTS } from 'three-freeform-controls';
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_INTERACTIVE_MARKER,
@@ -6,7 +7,10 @@ import {
 } from '../utils/constants';
 import Group from '../primitives/Group';
 import InteractiveMarkerManager from '../utils/interactiveMarkerManager';
-import { TransformControls } from '../utils/transformControls';
+import {
+  makeInteractiveMarkerFeedbackMessage,
+  makeInteractiveMarkerFeedbackTopic,
+} from '../utils/ros';
 
 class InteractiveMarkers extends Core {
   constructor(
@@ -31,62 +35,96 @@ class InteractiveMarkers extends Core {
       ...options,
     });
 
-    this.initTransformControls();
-    this.initRayCaster();
+    this.initFreeformControls();
+    this.interactiveMarkers = [];
+    this.objectDraggedWorldPosition = new THREE.Vector3();
+    this.objectDraggedWorldQuaternion = new THREE.Quaternion();
+    this.objectDraggedWorldScale = new THREE.Vector3();
+    this.clientId = `amphion-${Math.round(Math.random() * 10 ** 8)}`;
+    this.messageSequence = 0;
+    this.feedbackTopic = null;
   }
 
-  initRayCaster() {
-    const { camera, renderer } = this.utils;
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
-    this.dragging = false;
+  hide() {
+    super.hide();
+    this.interactiveMarkers.map(im => {
+      this.interactiveMarkerManager.hide(im, this.freeformControls);
+    });
+  }
 
-    this.transformControls.addEventListener('dragging-changed', ev => {
-      this.dragging = ev.value;
+  show() {
+    super.show();
+    this.interactiveMarkers.map(im => {
+      this.interactiveMarkerManager.initMarkers(im, this.freeformControls);
+    });
+  }
+
+  destroy() {
+    super.destroy();
+    this.freeformControls.destroy();
+    this.freeformControls = null;
+    this.interactiveMarkers = [];
+  }
+
+  initFreeformControls() {
+    const { camera, controls, renderer, scene } = this.utils;
+    this.freeformControls = new FreeformControls(camera, renderer.domElement, {
+      x: 0.8,
+      y: 0.8,
+      z: 0.8,
+    });
+    scene.add(this.freeformControls);
+
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_START, () => {
+      controls.enabled = false;
     });
 
-    renderer.domElement.addEventListener(
-      'mousedown',
-      event => {
-        const rect = renderer.domElement.getBoundingClientRect();
-        const { clientHeight, clientWidth } = renderer.domElement;
-        this.mouse.x = ((event.clientX - rect.left) / clientWidth) * 2 - 1;
-        this.mouse.y = -((event.clientY - rect.top) / clientHeight) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, camera);
-
-        const intersects = this.raycaster.intersectObjects(
-          this.object.children,
-          true,
+    this.freeformControls.listen(
+      RAYCASTER_EVENTS.DRAG,
+      (object, handleName) => {
+        object.matrixWorld.decompose(
+          this.objectDraggedWorldPosition,
+          this.objectDraggedWorldQuaternion,
+          this.objectDraggedWorldScale,
         );
 
-        if (!this.dragging && intersects.length > 0 && intersects[0].object) {
-          this.transformControls.attach(intersects[0].object);
-        } else if (!this.dragging) {
-          this.transformControls.detach();
+        const { frameId, markerName } = object.userData.control;
+        const controlName = this.freeformControls.getUserData(object)[
+          handleName
+        ];
+
+        const message = makeInteractiveMarkerFeedbackMessage({
+          seq: this.messageSequence,
+          client_id: this.clientId,
+          frame_id: frameId,
+          marker_name: markerName,
+          control_name: controlName,
+          position: this.objectDraggedWorldPosition,
+          quaternion: this.objectDraggedWorldQuaternion,
+        });
+
+        if (this.feedbackTopic !== null) {
+          this.feedbackTopic.publish(message);
         }
+
+        this.messageSequence++;
       },
-      false,
     );
-  }
 
-  initTransformControls() {
-    const { camera, controls, renderer, scene } = this.utils;
-    this.transformControls = new TransformControls(camera, renderer.domElement);
-    scene.add(this.transformControls);
-
-    const onMouseUp = () => {
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_STOP, () => {
       controls.enabled = true;
-      this.transformControls.removeEventListener('mouseUp', onMouseUp);
-    };
-
-    this.transformControls.addEventListener('mouseDown', () => {
-      controls.enabled = false;
-
-      this.transformControls.addEventListener('mouseUp', onMouseUp);
     });
   }
 
   updateOptions(options) {
+    if (options.feedbackTopicName !== undefined) {
+      this.feedbackTopic = makeInteractiveMarkerFeedbackTopic(
+        this.ros,
+        options.feedbackTopicName.name,
+      );
+    } else {
+      this.feedbackTopic = null;
+    }
     // need a better way to handle interdependent topics
     const shouldSubscriptionChange =
       this.options.updateTopicName !== options.topicName && this.init;
@@ -108,11 +146,13 @@ class InteractiveMarkers extends Core {
     super.update(message);
     if (message.markers.length > 0) {
       message.markers.forEach(interactiveMarker => {
+        this.interactiveMarkers.push(interactiveMarker);
         this.interactiveMarkerManager.initMarkers(
           interactiveMarker,
-          this.utils.transformControls,
+          this.freeformControls,
         );
       });
+      // need a better way to handle interdependent topics
       if (!this.init) {
         this.init = true;
         if (this.options.updateTopicName !== undefined) {
@@ -124,11 +164,18 @@ class InteractiveMarkers extends Core {
       }
     }
 
-    // for InteractiveMarkerPose sub-message
+    // for InteractiveMarkerUpdate sub-message (InteractiveMarkerPose)
     if (message.poses && message.poses.length > 0) {
       message.poses.forEach(pose => {
         this.interactiveMarkerManager.updatePose(pose);
       });
+    }
+
+    // for InteractiveMarkerUpdate sub-message
+    if (message.erases && message.poses.leading > 0) {
+      // TODO: implement when test backend available
+      // remove from interactiveMarkerManager and
+      // the this.interactiveMarkers cache
     }
   }
 

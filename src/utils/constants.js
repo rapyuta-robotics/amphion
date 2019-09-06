@@ -13,47 +13,70 @@ export const DEFAULT_GRID_DIVISIONS = 30;
 export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
+export const INTERACTIVE_MARKER_ORIENTATION_MODES = {
+  'INHERIT': 0,
+  'FIXED': 1,
+  'VIEW_FACING': 2,
+};
+
+export const UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES = [
+  INTERACTIVE_MARKER_ORIENTATION_MODES.VIEW_FACING,
+];
+
+export const INTERACTIVE_MARKER_INTERACTION_MODES = {
+  'NONE': 0,
+  'MENU': 1,
+  'BUTTON': 2,
+  'MOVE_AXIS': 3,
+  'MOVE_PLANE': 4,
+  'ROTATE_AXIS': 5,
+  'MOVE_ROTATE': 6,
+  'MOVE_3D': 7,
+  'ROTATE_3D': 8,
+  'MOVE_ROTATE_3D': 9,
+};
+
 /* * ***************************
  *   Message types
  * ************************** */
-export const MESSAGE_TYPE_ROBOT_MODEL =                      'robot_description';
-export const MESSAGE_TYPE_ACCELSTAMPED =                     'geometry_msgs/AccelStamped';
-export const MESSAGE_TYPE_POINTSTAMPED =                     'geometry_msgs/PointStamped';
-export const MESSAGE_TYPE_POLYGONSTAMPED =                   'geometry_msgs/PolygonStamped';
-export const MESSAGE_TYPE_POSEARRAY =                        'geometry_msgs/PoseArray';
-export const MESSAGE_TYPE_POSECOVARIANCE =                   'geometry_msgs/PoseWithCovariance';
-export const MESSAGE_TYPE_POSESTAMPED =                      'geometry_msgs/PoseStamped';
-export const MESSAGE_TYPE_TWISTSTAMPED =                     'geometry_msgs/TwistStamped';
-export const MESSAGE_TYPE_VECTOR3STAMPED =                   'geometry_msgs/Vector3Stamped';
-export const MESSAGE_TYPE_WRENCHSTAMPED =                    'geometry_msgs/WrenchStamped';
+export const MESSAGE_TYPE_ROBOT_MODEL = 'robot_description';
+export const MESSAGE_TYPE_ACCELSTAMPED = 'geometry_msgs/AccelStamped';
+export const MESSAGE_TYPE_POINTSTAMPED = 'geometry_msgs/PointStamped';
+export const MESSAGE_TYPE_POLYGONSTAMPED = 'geometry_msgs/PolygonStamped';
+export const MESSAGE_TYPE_POSEARRAY = 'geometry_msgs/PoseArray';
+export const MESSAGE_TYPE_POSECOVARIANCE = 'geometry_msgs/PoseWithCovariance';
+export const MESSAGE_TYPE_POSESTAMPED = 'geometry_msgs/PoseStamped';
+export const MESSAGE_TYPE_TWISTSTAMPED = 'geometry_msgs/TwistStamped';
+export const MESSAGE_TYPE_VECTOR3STAMPED = 'geometry_msgs/Vector3Stamped';
+export const MESSAGE_TYPE_WRENCHSTAMPED = 'geometry_msgs/WrenchStamped';
 
-export const MESSAGE_TYPE_BOUNDINGVOLUME =                   'moveit_msgs/BoundingVolume';
-export const MESSAGE_TYPE_COLLISION_OBJECT =                 'moveit_msgs/CollisionObject';
-export const MESSAGE_TYPE_DISPLAYROBOTSTATE =                'moveit_msgs/DisplayRobotState';
-export const MESSAGE_TYPE_DISPLAYTRAJECTORY =                'moveit_msgs/DisplayTrajectory';
-export const MESSAGE_TYPE_PLANNINGSCENE =                    'moveit_msgs/PlanningScene';
+export const MESSAGE_TYPE_BOUNDINGVOLUME = 'moveit_msgs/BoundingVolume';
+export const MESSAGE_TYPE_COLLISION_OBJECT = 'moveit_msgs/CollisionObject';
+export const MESSAGE_TYPE_DISPLAYROBOTSTATE = 'moveit_msgs/DisplayRobotState';
+export const MESSAGE_TYPE_DISPLAYTRAJECTORY = 'moveit_msgs/DisplayTrajectory';
+export const MESSAGE_TYPE_PLANNINGSCENE = 'moveit_msgs/PlanningScene';
 
-export const MESSAGE_TYPE_OCCUPANCYGRID =                    'nav_msgs/OccupancyGrid';
-export const MESSAGE_TYPE_ODOMETRY =                         'nav_msgs/Odometry';
-export const MESSAGE_TYPE_PATH =                             'nav_msgs/Path';
+export const MESSAGE_TYPE_OCCUPANCYGRID = 'nav_msgs/OccupancyGrid';
+export const MESSAGE_TYPE_ODOMETRY = 'nav_msgs/Odometry';
+export const MESSAGE_TYPE_PATH = 'nav_msgs/Path';
 
-export const MESSAGE_TYPE_COMPRESSEDIMAGE =                  'sensor_msgs/CompressedImage';
-export const MESSAGE_TYPE_DISPLAYJOINTSTATE =                'sensor_msgs/JointState';
-export const MESSAGE_TYPE_IMAGE =                            'sensor_msgs/Image';
-export const MESSAGE_TYPE_LASERSCAN =                        'sensor_msgs/LaserScan';
-export const MESSAGE_TYPE_MAGNETICFIELD =                    'sensor_msgs/MagneticField';
-export const MESSAGE_TYPE_POINTCLOUD =                       'sensor_msgs/PointCloud';
-export const MESSAGE_TYPE_POINTCLOUD2 =                      'sensor_msgs/PointCloud2';
-export const MESSAGE_TYPE_RANGE =                            'sensor_msgs/Range';
+export const MESSAGE_TYPE_COMPRESSEDIMAGE = 'sensor_msgs/CompressedImage';
+export const MESSAGE_TYPE_DISPLAYJOINTSTATE = 'sensor_msgs/JointState';
+export const MESSAGE_TYPE_IMAGE = 'sensor_msgs/Image';
+export const MESSAGE_TYPE_LASERSCAN = 'sensor_msgs/LaserScan';
+export const MESSAGE_TYPE_MAGNETICFIELD = 'sensor_msgs/MagneticField';
+export const MESSAGE_TYPE_POINTCLOUD = 'sensor_msgs/PointCloud';
+export const MESSAGE_TYPE_POINTCLOUD2 = 'sensor_msgs/PointCloud2';
+export const MESSAGE_TYPE_RANGE = 'sensor_msgs/Range';
 
-export const MESSAGE_TYPE_TF =                               'tf/tfMessage';
-export const MESSAGE_TYPE_TF2 =                              'tf2_msgs/TFMessage';
+export const MESSAGE_TYPE_TF = 'tf/tfMessage';
+export const MESSAGE_TYPE_TF2 = 'tf2_msgs/TFMessage';
 
-export const MESSAGE_TYPE_MARKER =                           'visualization_msgs/Marker';
-export const MESSAGE_TYPE_MARKERARRAY =                      'visualization_msgs/MarkerArray';
-export const MESSAGE_TYPE_INTERACTIVEMARKER =                'visualization_msgs/InteractiveMarkerInit';
-export const MESSAGE_TYPE_INTERACTIVEMARKER_UPDATE =         'visualization_msgs/InteractiveMarkerUpdate';
-export const MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK =       'visualization_msgs/InteractiveMarkerFeedback';
+export const MESSAGE_TYPE_MARKER = 'visualization_msgs/Marker';
+export const MESSAGE_TYPE_MARKERARRAY = 'visualization_msgs/MarkerArray';
+export const MESSAGE_TYPE_INTERACTIVEMARKER = 'visualization_msgs/InteractiveMarkerInit';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_UPDATE = 'visualization_msgs/InteractiveMarkerUpdate';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK = 'visualization_msgs/InteractiveMarkerFeedback';
 
 /** ***************************
  *   Visualizations
@@ -86,7 +109,7 @@ export const POINT_FIELD_DATATYPES = {
   INT32: 5,
   UINT32: 6,
   FLOAT32: 7,
-  FLOAT64: 8
+  FLOAT64: 8,
 };
 
 export const COLLISION_OBJECT_OPERATIONS = {
@@ -307,7 +330,7 @@ export const DEFAULT_OPTIONS_POINTCLOUD = {
   compression: 'cbor',
   colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
-  useRainbow: false
+  useRainbow: false,
 };
 
 export const DEFAULT_OPTIONS_POINT = {
