@@ -338,7 +338,7 @@ export const DEFAULT_OPTIONS_TORUS = {
   tube: 0.03,
   radialSegments: 16,
   tubularSegments: 100,
-  arc: 1.5*Math.PI,
+  arc: 1.7*Math.PI,
 }
 
 export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {

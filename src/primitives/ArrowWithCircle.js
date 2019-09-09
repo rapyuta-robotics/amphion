@@ -35,12 +35,13 @@ class ArrowWithCircle extends Arrow {
     	torusOptions.arc
     	)
 
-	this.torus = new THREE.Mesh(torusGeometry, this.material );
-	this.add(this.torus);
+    this.torus = new THREE.Mesh(torusGeometry, this.material );
+    this.add(this.torus);
 
-	this.circleCone.rotateX(-Math.PI/2);
-	this.circleCone.translateZ(this.torus.geometry.parameters.radius);
-	this.circleCone.translateX(this.cylinder.scale.y / 2);
+    this.circleCone.rotateX(this.torus.geometry.parameters.arc);
+    this.circleCone.translateZ(-Math.cos(-this.torus.geometry.parameters.arc)*this.torus.geometry.parameters.radius);
+    this.circleCone.translateY(-Math.sin(-this.torus.geometry.parameters.arc)*this.torus.geometry.parameters.radius);
+    this.circleCone.translateX(this.cylinder.scale.y / 2);
 
     this.torus.translateX(this.cylinder.scale.y / 2);
     this.torus.rotateY(Math.PI/2);
@@ -81,9 +82,12 @@ class ArrowWithCircle extends Arrow {
       	}
 
       	this.circleCone.position.set(0,0,0);
+        this.circleCone.rotation.set(0,0,0);
       	this.circleCone.translateX(this.cylinder.scale.y / 2);
-      	this.circleCone.translateZ(-this.torus.geometry.parameters.radius);
-    }
+      	this.circleCone.translateZ(-Math.cos(-this.torus.geometry.parameters.arc)*this.torus.geometry.parameters.radius);
+        this.circleCone.translateY(-Math.sin(-this.torus.geometry.parameters.arc)*this.torus.geometry.parameters.radius);
+        this.circleCone.rotateX(this.torus.geometry.parameters.arc);
+      }
 
     setColor({cone, cylinder, torus, circleCone}) {
     	if (cone) {
