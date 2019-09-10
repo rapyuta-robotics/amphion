@@ -75,7 +75,7 @@ export const setObjectDimension = (object, options) => {
             object.setShaftDimensions({ radius: shaftRadius, length: shaftLength });
             object.setTorusDimensions({radius: circleRadius, tube: tube});
             object.setCircleConeDimensions({radius: circleConeRadius, length: circleConeLength});
-            object.setAlpha(alpha);
+            object.setAlpha({cone: alpha, cylinder: alpha, torus: alpha, circleCone: alpha});
             object.setColor({ cone: new THREE.Color(color), cylinder: new THREE.Color(color), torus: new THREE.Color(color), circleCone: new THREE.Color(color)});
             break;
   }

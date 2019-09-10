@@ -5,11 +5,10 @@ import {
   DEFAULT_CYLINDER_RADIUS,
   DEFAULT_COLOR_X_AXIS,
   OBJECT_TYPE_ARROW,
-  DEFAULT_OPTIONS_ARROW,
-  DEFAULT_OPTIONS_ARROW_WITH_CIRCLE,
   DEFAULT_OPTIONS_TORUS
 } from '../utils/constants';
 import * as THREE from 'three';
+import {Math as MathThree}  from 'three';
 import Arrow from './Arrow';
 import Cylinder from './Cylinder';
 import Cone from './Cone';
@@ -20,12 +19,13 @@ class ArrowWithCircle extends Arrow {
   constructor() {
    	super();
 
-   	var torusOptions = DEFAULT_OPTIONS_TORUS;
-
-    this.material = new THREE.MeshStandardMaterial({color: this.cone.material.color});
-
     this.circleCone = new Cone(DEFAULT_COLOR_X_AXIS);
     this.add(this.circleCone);
+
+    var torusOptions = DEFAULT_OPTIONS_TORUS;
+
+    this.material = new THREE.MeshStandardMaterial({color: this.cone.material.color});
+    this.material.transparent = true;
 
     var torusGeometry = new THREE.TorusGeometry(
     	torusOptions.circleRadius, 
@@ -54,10 +54,10 @@ class ArrowWithCircle extends Arrow {
     	var torusOptions = DEFAULT_OPTIONS_TORUS;
 
     	this.torus.geometry = new THREE.TorusGeometry(
-    		radius, 
-    		tube, 
-    		torusOptions.radialSegments, 
-    		torusOptions.tubularSegments, 
+    		radius,
+    		tube,
+    		torusOptions.radialSegments,
+    		torusOptions.tubularSegments,
     		torusOptions.arc
     	)
 
@@ -109,7 +109,7 @@ class ArrowWithCircle extends Arrow {
 
     setAlpha({cone, cylinder, torus, circleCone}) {
     	if (cone) {
-    		this.cone.setALpha(cone);
+    		this.cone.setAlpha(cone);
     	}
     	
     	if (cylinder) {
@@ -117,7 +117,7 @@ class ArrowWithCircle extends Arrow {
     	}
 
     	if(torus) {
-    		TransformUtils.setAlpha(this.torus, this.cone.material.color);
+    		this.torus.material.opacity = MathThree.clamp(torus, 0, 1);
     	}
 
     	if(circleCone) {
