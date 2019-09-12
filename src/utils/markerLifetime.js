@@ -6,6 +6,9 @@ export default class MarkerLifetime {
 
   track(id, timeoutSecs) {
     clearInterval(this.timeouts[id]);
+    if (timeoutSecs === 0) {
+      return;
+    }
     this.timeouts[id] = setTimeout(() => {
       this.onTimeout(id);
     }, timeoutSecs * 1000);
