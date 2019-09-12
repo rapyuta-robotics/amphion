@@ -340,6 +340,12 @@ export const DEFAULT_OPTIONS_ROBOTMODEL = {};
 
 export const DEFAULT_OPTIONS_TF = {};
 
+export const DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING  = {
+  size: 0.5,
+  height: 0.05,
+  syncOrientationWithCamera: true,
+};
+
 /** ***************************
  *   Zethus exports
  * ************************** */

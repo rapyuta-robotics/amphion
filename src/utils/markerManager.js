@@ -1,18 +1,31 @@
 import ROSLIB from 'roslib';
 import getNewPrimitive from './markerTypes';
+import {
+  DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING,
+  MARKER_OBJECT_TYPES,
+} from './constants';
 
 export default class MarkerManager {
-  constructor(rootObject, onChangeCb) {
+  constructor(rootObject, onChangeCb, camera) {
     this.objectMap = {};
     this.object = rootObject;
     this.namespaces = {};
     this.onChangeCb = onChangeCb;
+    this.camera = camera;
   }
 
   getMarkerOrCreate(marker) {
     const id = MarkerManager.getId(marker);
     if (!this.objectMap[id]) {
-      const object = getNewPrimitive(marker);
+      const options =
+        marker.type === MARKER_OBJECT_TYPES.TEXT_VIEW_FACING
+          ? {
+              ...DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING,
+              text: marker.text,
+              camera: this.camera,
+            }
+          : {};
+      const object = getNewPrimitive(marker, options);
       this.objectMap[id] = object;
       this.object.add(object);
     }
@@ -86,6 +99,9 @@ export default class MarkerManager {
     }
     if (markerObject.setColor && colors.length <= 0) {
       markerObject.setColor(color);
+    }
+    if (markerObject.setAlpha && colors.length <= 0) {
+      markerObject.setAlpha(color.a);
     }
 
     const { ns } = marker;

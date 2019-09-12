@@ -7,7 +7,7 @@ import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
 
 class Marker extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKER) {
+  constructor(ros, topicName, camera, options = DEFAULT_OPTIONS_MARKER) {
     super(ros, topicName, MESSAGE_TYPE_MARKER, {
       ...DEFAULT_OPTIONS_MARKER,
       ...options,
@@ -17,7 +17,7 @@ class Marker extends Core {
     this.onChange = this.onChange.bind(this);
 
     const { queueSize } = options;
-    this.markerManager = new MarkerManager(this.object, this.onChange);
+    this.markerManager = new MarkerManager(this.object, this.onChange, camera);
     this.queueSize = queueSize;
     this.updateOptions({
       ...DEFAULT_OPTIONS_MARKER,

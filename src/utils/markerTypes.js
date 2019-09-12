@@ -16,8 +16,9 @@ import Points from '../primitives/Points';
 import TriangleList from '../primitives/TriangleList';
 import CubeList from '../primitives/CubeList';
 import Arrow from '../primitives/Arrow';
+import Text from '../primitives/Text';
 
-const getNewPrimitive = marker => {
+const getNewPrimitive = (marker, options) => {
   switch (marker.type) {
     case MARKER_OBJECT_TYPES.CUBE:
       return new Cube();
@@ -40,6 +41,8 @@ const getNewPrimitive = marker => {
       return new TriangleList();
     case MARKER_OBJECT_TYPES.CUBE_LIST:
       return new CubeList();
+    case MARKER_OBJECT_TYPES.TEXT_VIEW_FACING:
+      return new Text(options.text, options);
     case MARKER_OBJECT_TYPES.ARROW:
     default: {
       const arrow = new Arrow();
