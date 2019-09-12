@@ -6,12 +6,11 @@ import {
 } from './constants';
 
 export default class MarkerManager {
-  constructor(rootObject, onChangeCb, camera) {
+  constructor(rootObject, onChangeCb) {
     this.objectMap = {};
     this.object = rootObject;
     this.namespaces = {};
     this.onChangeCb = onChangeCb;
-    this.camera = camera;
   }
 
   getMarkerOrCreate(marker) {
@@ -22,7 +21,6 @@ export default class MarkerManager {
           ? {
               ...DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING,
               text: marker.text,
-              camera: this.camera,
             }
           : {};
       const object = getNewPrimitive(marker, options);
@@ -99,9 +97,6 @@ export default class MarkerManager {
     }
     if (markerObject.setColor && colors.length <= 0) {
       markerObject.setColor(color);
-    }
-    if (markerObject.setAlpha && colors.length <= 0) {
-      markerObject.setAlpha(color.a);
     }
 
     const { ns } = marker;

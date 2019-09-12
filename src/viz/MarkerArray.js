@@ -7,7 +7,7 @@ import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
 
 class MarkerArray extends Core {
-  constructor(ros, topicName, camera, options = DEFAULT_OPTIONS_MARKERARRAY) {
+  constructor(ros, topicName, options = DEFAULT_OPTIONS_MARKERARRAY) {
     super(ros, topicName, MESSAGE_TYPE_MARKERARRAY, {
       ...DEFAULT_OPTIONS_MARKERARRAY,
       ...options,
@@ -17,7 +17,7 @@ class MarkerArray extends Core {
     this.onChange = this.onChange.bind(this);
 
     const { queueSize } = options;
-    this.markerManager = new MarkerManager(this.object, this.onChange, camera);
+    this.markerManager = new MarkerManager(this.object, this.onChange);
     this.queueSize = queueSize;
     this.updateOptions({
       ...DEFAULT_OPTIONS_MARKERARRAY,
