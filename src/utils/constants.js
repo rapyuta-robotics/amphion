@@ -180,7 +180,7 @@ export const WRENCH_OBJECT_TYPES = {
 
 
 
-/*****************************
+/** ***************************
  *   Default Options
  * ************************** */
 export const DEFAULT_CYLINDER_HEIGHT = 1;
@@ -339,14 +339,14 @@ export const DEFAULT_OPTIONS_TORUS = {
   radialSegments: 16,
   tubularSegments: 100,
   arc: 1.7*Math.PI,
-}
+};
 
 export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {
   ...DEFAULT_OPTIONS_ARROW,
   ...DEFAULT_OPTIONS_TORUS,
   circleConeLength: 0.1,
   circleConeRadius: 0.1,
-}
+};
 
 export const DEFAULT_OPTIONS_WRENCH = {
     forceColor: DEFAULT_COLOR_X_AXIS,
