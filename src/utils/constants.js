@@ -2,6 +2,7 @@
 import { Group } from 'three';
 
 export const OBJECT_TYPE_ARROW = 'Arrow';
+export const OBJECT_TYPE_ARROW_WITH_CIRCLE = 'ArrowWithCircle';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
@@ -72,6 +73,7 @@ export const VIZ_TYPE_POSEARRAY = 'PoseArray';
 export const VIZ_TYPE_RANGE = 'Range';
 export const VIZ_TYPE_ROBOTMODEL = 'RobotModel';
 export const VIZ_TYPE_TF = 'Tf';
+export const VIZ_TYPE_WRENCH = 'Wrench';
 
 /* * ***************************
  *   Viz specific constants
@@ -168,6 +170,15 @@ export const POSE_OBJECT_TYPES = {
   axes: OBJECT_TYPE_AXES,
   flatArrow: OBJECT_TYPE_FLAT_ARROW,
 };
+
+export const WRENCH_OBJECT_TYPES = {
+  arrow: OBJECT_TYPE_ARROW,
+  arrowWithCircle: OBJECT_TYPE_ARROW_WITH_CIRCLE,
+};
+
+
+
+
 
 /** ***************************
  *   Default Options
@@ -320,6 +331,32 @@ export const DEFAULT_OPTIONS_POSE = {
   ...DEFAULT_OPTIONS_ARROW,
   ...DEFAULT_OPTIONS_AXES,
   type: POSE_OBJECT_TYPES.arrow,
+};
+
+export const DEFAULT_OPTIONS_TORUS = {
+  circleRadius: 0.3,
+  tube: 0.03,
+  radialSegments: 16,
+  tubularSegments: 100,
+  arc: 1.7*Math.PI,
+};
+
+export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {
+  ...DEFAULT_OPTIONS_ARROW,
+  ...DEFAULT_OPTIONS_TORUS,
+  circleConeLength: 0.1,
+  circleConeRadius: 0.1,
+};
+
+export const DEFAULT_OPTIONS_WRENCH = {
+    forceColor: DEFAULT_COLOR_X_AXIS,
+    torqueColor: DEFAULT_COLOR_ARROW,
+    alpha: 1,
+    forceArrowScale: 1,
+    torqueArrowScale: 1,
+    arrowWidth: 1,
+    ...DEFAULT_OPTIONS_ARROW_WITH_CIRCLE,
+    type: WRENCH_OBJECT_TYPES.arrow,
 };
 
 export const DEFAULT_OPTIONS_POSEARRAY = {
