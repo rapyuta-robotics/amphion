@@ -34,7 +34,7 @@ class Arrow extends Group {
     });
     this.cylinder.translateY(this.cylinder.scale.y / 2);
     this.cone.translateY(this.cylinder.scale.y + this.cone.scale.y / 2);
-
+    
     this.type = OBJECT_TYPE_ARROW;
     this.add(this.cone);
     this.add(this.cylinder);
