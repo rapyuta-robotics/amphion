@@ -2,6 +2,7 @@ import CollisionObject from './viz/CollisionObject';
 import DisplayTrajectory from './viz/DisplayTrajectory';
 import PlanningScene from './viz/PlanningScene';
 import Pose from './viz/Pose';
+import Wrench from './viz/Wrench';
 import Polygon from './viz/Polygon';
 import Tf from './viz/Tf';
 import RobotModel from './viz/RobotModel';
@@ -15,6 +16,7 @@ import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
 import Marker from './viz/Marker';
+import Range from './viz/Range';
 
 import Scene from './core/scene';
 
@@ -31,6 +33,7 @@ export default {
   PointCloud,
   Polygon,
   Pose,
+  Wrench,
   PoseArray,
   Tf,
   RobotModel,
@@ -41,6 +44,7 @@ export default {
   Path,
   Image,
   Marker,
+  Range,
 
   Scene,
 

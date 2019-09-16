@@ -17,7 +17,7 @@ Developer documentation is available on the [Github Wiki page]((https://github.c
 PRs, bug reports, and feature requests are welcome! Please observe [CONTRIBUTING.md](https://github.com/rapyuta-robotics/zethus/blob/devel/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](https://github.com/rapyuta-robotics/zethus/blob/devel/CODE_OF_CONDUCT.md) when making a contribution.
 
 ### Maintenance Status
-Active: Rapyuta Robotics is actively working on this project, and we expect to continue for work for the foreseeable future.
+Active: Rapyuta Robotics is actively working on this project, and we expect to continue work for the foreseeable future.
 
 [npm]: https://badge.fury.io/js/amphion.svg
 [npm-url]: https://www.npmjs.com/package/amphion

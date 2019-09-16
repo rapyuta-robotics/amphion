@@ -103,14 +103,16 @@ const MapControls2D = function(object, domElement) {
   this.rotate = function(rotationDelta) {
     vector.copy(object.position).sub(center);
 
-    spherical.setFromVector3(vector);
+    // spherical.setFromVector3( vector );
+    spherical.setFromCartesianCoords(-1 * vector.x, vector.z, vector.y);
 
     spherical.theta += rotationDelta.x * scope.rotationSpeed;
     // spherical.phi += rotationDelta.y * scope.rotationSpeed;
 
     spherical.makeSafe();
 
-    vector.setFromSpherical(spherical);
+    const tempRelPosition = vector.setFromSpherical(spherical);
+    vector.set(-1 * tempRelPosition.x, tempRelPosition.z, tempRelPosition.y);
 
     object.position.copy(center).add(vector);
 

@@ -5,10 +5,11 @@ import {
   DEFAULT_CONE_RADIUS,
   DEFAULT_CONE_HEIGHT,
   DEFAULT_RADIAL_SEGMENTS,
+  DEFAULT_COLOR_X_AXIS,
 } from '../utils/constants';
 
 class Cone extends Mesh {
-  constructor(color) {
+  constructor(color = DEFAULT_COLOR_X_AXIS) {
     super();
     this.geometry = new THREE.ConeGeometry(
       DEFAULT_CONE_RADIUS,
