@@ -162,10 +162,3 @@ export const populateImageDataFromImageMsg = (
     }
   }
 };
-
-export const areFloatsAlmostEqual = (float1, float2) => {
-  return (
-    Math.round(parseFloat(float1) * 1000) / 1000 ===
-    Math.round(parseFloat(float2) * 1000) / 1000
-  );
-};

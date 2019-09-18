@@ -1,17 +1,21 @@
-import * as THREE from 'three';
 import ROSLIB from 'roslib';
-import { HANDLE_NAMES } from 'three-freeform-controls';
+import {
+  ANCHOR_MODE,
+  DEFAULT_HANDLE_GROUP_NAME,
+} from 'three-freeform-controls';
+import randomColor from 'randomcolor';
 import Group from '../primitives/Group';
 import MarkerManager from './markerManager';
-import { areFloatsAlmostEqual } from './processing';
 import {
   INTERACTIVE_MARKER_INTERACTION_MODES,
+  INTERACTIVE_MARKER_ORIENTATION_MODES,
   UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES,
 } from './constants';
 
 export default class InteractiveMarkerManager {
   constructor(rootObject) {
     this.markerManagerMap = {};
+    this.contolsManagerMap = {};
     this.objectMap = {};
     this.object = rootObject;
     this.namespaces = {};
@@ -71,38 +75,52 @@ export default class InteractiveMarkerManager {
     this.callback = callback;
   }
 
-  initMarkers(interactiveMarker, freeformControls) {
+  initMarkers(interactiveMarker, freeformControls, visible) {
     const {
       controls,
       name,
       pose: { orientation, position },
     } = interactiveMarker;
-    const { manager, object } = this.getMarkerManagerOrCreate(
-      name,
-      freeformControls,
-    );
-    freeformControls.attach(object);
-    freeformControls.showAll(object, false);
+    const { manager, object } = this.getMarkerManagerOrCreate(name);
 
     object.setTransform({ translation: position, rotation: orientation });
-    controls.forEach(control => {
-      if (!object.userData.control) {
-        object.userData.control = {};
+    controls.forEach((control, index) => {
+      // cannot rely on the control.name being present or unique
+      const key = name;
+      if (this.contolsManagerMap[key] === undefined) {
+        this.contolsManagerMap[key] = [];
       }
+      if (this.contolsManagerMap[key].length !== controls.length) {
+        const attachMode =
+          control.orientation_mode ===
+          INTERACTIVE_MARKER_ORIENTATION_MODES.FIXED
+            ? ANCHOR_MODE.FIXED
+            : ANCHOR_MODE.INHERIT;
+        const controlsManager = freeformControls.anchor(object, {
+          separationT: {
+            x: 0.4,
+            y: 0.4,
+            z: 0.4,
+          },
+          orientation: control.orientation,
+          mode: attachMode,
+        });
+        controlsManager.visible = visible;
 
-      InteractiveMarkerManager.enableControls(
-        object,
-        control.interaction_mode,
-        control.orientation_mode,
-        control.orientation,
-        control.name,
-        freeformControls,
-      );
+        InteractiveMarkerManager.enableControls(
+          object,
+          control.interaction_mode,
+          control.orientation_mode,
+          control.orientation,
+          control.name,
+          controlsManager,
+          randomColor({
+            seed: `${key}-${control.name}-${2 * index}`, // 2 * for more variable color
+          }),
+        );
 
-      object.userData.control = {
-        frameId: interactiveMarker.header.frame_id,
-        markerName: interactiveMarker.name,
-      };
+        this.contolsManagerMap[key].push(controlsManager);
+      }
 
       if (control.markers.length > 0) {
         control.markers.forEach(marker => {
@@ -110,13 +128,20 @@ export default class InteractiveMarkerManager {
         });
       }
     });
+
+    object.userData.control = {
+      frameId: interactiveMarker.header.frame_id,
+      markerName: interactiveMarker.name,
+    };
   }
 
-  hide(interactiveMarker, freeformControls) {
-    const { name } = interactiveMarker;
-    const { object } = this.getMarkerManagerOrCreate(name, freeformControls);
-
-    freeformControls.showAll(object, false);
+  setVisible(visible) {
+    const controlMangerGroups = Object.values(this.contolsManagerMap);
+    controlMangerGroups.map(managers => {
+      managers.map(manager => {
+        manager.visible = visible;
+      });
+    });
   }
 
   updatePose(poseObject) {
@@ -137,22 +162,28 @@ export default class InteractiveMarkerManager {
     orientationMode,
     orientation,
     controlName,
-    freeformControls,
+    controlsManager,
+    color,
   ) {
-    // could possibly be made generic
+    controlsManager.showAll(false);
+
+    // currently only ROTATE_AXIS is supported for VIEW_FACING mode
+    // this is the most useful one
     if (
       UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES.indexOf(
         orientationMode,
-      ) !== -1
+      ) !== -1 &&
+      interactionMode === INTERACTIVE_MARKER_INTERACTION_MODES.ROTATE_AXIS
     ) {
+      controlsManager.userData = {
+        ...controlsManager.userData,
+        [DEFAULT_HANDLE_GROUP_NAME.ER]: controlName,
+      };
+      controlsManager.showByNames([DEFAULT_HANDLE_GROUP_NAME.ER], true);
       return;
     }
-    const eulerOrientation = new THREE.Euler();
-    const { w: ow, x: ox, y: oy, z: oz } = orientation;
-    eulerOrientation.setFromQuaternion(new THREE.Quaternion(ox, oy, oz, ow));
-    const { x, y, z } = eulerOrientation;
 
-    const currentUserData = freeformControls.getUserData(object);
+    let handles = [];
 
     switch (interactionMode) {
       case INTERACTIVE_MARKER_INTERACTION_MODES.NONE:
@@ -161,135 +192,90 @@ export default class InteractiveMarkerManager {
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_AXIS: {
-        if (areFloatsAlmostEqual(x, Math.PI / 2)) {
-          freeformControls.showXT(object, true);
+        handles = [
+          DEFAULT_HANDLE_GROUP_NAME.XPT,
+          DEFAULT_HANDLE_GROUP_NAME.XNT,
+        ];
 
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.XT]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(y, Math.PI / 2)) {
-          freeformControls.showZT(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.ZT]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(z, Math.PI / 2)) {
-          freeformControls.showYT(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.YT]: controlName,
-          });
+        if (color !== undefined) {
+          controlsManager.translationXP.setColor(color);
+          controlsManager.translationXN.setColor(color);
         }
+
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_PLANE: {
-        if (areFloatsAlmostEqual(x, Math.PI / 2)) {
-          freeformControls.showPickPlaneYZT(object, true);
+        handles = [DEFAULT_HANDLE_GROUP_NAME.PICK_PLANE_YZ];
 
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.PICK_PLANE_YZ]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(y, Math.PI / 2)) {
-          freeformControls.showPickPlaneXYT(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.PICK_PLANE_XY]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(z, Math.PI / 2)) {
-          freeformControls.showPickPlaneZXT(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.PICK_PLANE_ZX]: controlName,
-          });
+        if (color !== undefined) {
+          controlsManager.pickPlaneYZ.setColor(color);
         }
+
         break;
       }
-      case INTERACTIVE_MARKER_INTERACTION_MODES.ROTATE_AXIS:
-      case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_ROTATE: {
-        // MOVE_PLANE part of INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_ROTATE
-        // is disabled because
-        // it is somewhat buggy (detecting raycast) to use with other controls
-        // needs fix from three-freeform-controls side
+      case INTERACTIVE_MARKER_INTERACTION_MODES.ROTATE_AXIS: {
+        handles = [DEFAULT_HANDLE_GROUP_NAME.XR];
 
-        if (areFloatsAlmostEqual(x, Math.PI / 2)) {
-          freeformControls.showXR(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.XR]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(y, Math.PI / 2)) {
-          freeformControls.showZR(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.ZR]: controlName,
-          });
-        } else if (areFloatsAlmostEqual(z, Math.PI / 2)) {
-          freeformControls.showYR(object, true);
-
-          freeformControls.setUserData(object, {
-            ...currentUserData,
-            [HANDLE_NAMES.YR]: controlName,
-          });
+        if (color !== undefined) {
+          controlsManager.rotationX.setColor(color);
         }
+
+        break;
+      }
+      case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_ROTATE: {
+        handles = [
+          DEFAULT_HANDLE_GROUP_NAME.XR,
+          DEFAULT_HANDLE_GROUP_NAME.PICK_PLANE_YZ,
+        ];
+
+        if (color !== undefined) {
+          controlsManager.pickPlaneYZ.setColor(color);
+          controlsManager.rotationX.setColor(color);
+        }
+
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_3D: {
-        freeformControls.showPickT(object, true);
-        freeformControls.showXT(object, true);
-        freeformControls.showYT(object, true);
-        freeformControls.showZT(object, true);
-
-        freeformControls.setUserData(object, {
-          ...currentUserData,
-          [HANDLE_NAMES.PICK]: controlName,
-          [HANDLE_NAMES.XT]: controlName,
-          [HANDLE_NAMES.YT]: controlName,
-          [HANDLE_NAMES.ZT]: controlName,
-        });
+        handles = [
+          DEFAULT_HANDLE_GROUP_NAME.XPT,
+          DEFAULT_HANDLE_GROUP_NAME.XNT,
+          DEFAULT_HANDLE_GROUP_NAME.YPT,
+          DEFAULT_HANDLE_GROUP_NAME.YNT,
+          DEFAULT_HANDLE_GROUP_NAME.ZPT,
+          DEFAULT_HANDLE_GROUP_NAME.ZNT,
+          DEFAULT_HANDLE_GROUP_NAME.PICK,
+        ];
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.ROTATE_3D: {
-        freeformControls.showXR(object, true);
-        freeformControls.showYR(object, true);
-        freeformControls.showZR(object, true);
-
-        freeformControls.setUserData(object, {
-          ...currentUserData,
-          [HANDLE_NAMES.XR]: controlName,
-          [HANDLE_NAMES.YR]: controlName,
-          [HANDLE_NAMES.ZR]: controlName,
-        });
+        handles = [
+          DEFAULT_HANDLE_GROUP_NAME.XR,
+          DEFAULT_HANDLE_GROUP_NAME.YR,
+          DEFAULT_HANDLE_GROUP_NAME.ZR,
+        ];
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_ROTATE_3D: {
-        freeformControls.showPickT(object, true);
-        freeformControls.showXT(object, true);
-        freeformControls.showYT(object, true);
-        freeformControls.showZT(object, true);
-        freeformControls.showXR(object, true);
-        freeformControls.showYR(object, true);
-        freeformControls.showZR(object, true);
-
-        freeformControls.setUserData(object, {
-          ...currentUserData,
-          [HANDLE_NAMES.PICK]: controlName,
-          [HANDLE_NAMES.XT]: controlName,
-          [HANDLE_NAMES.YT]: controlName,
-          [HANDLE_NAMES.ZT]: controlName,
-          [HANDLE_NAMES.XR]: controlName,
-          [HANDLE_NAMES.YR]: controlName,
-          [HANDLE_NAMES.ZR]: controlName,
-        });
+        handles = [
+          DEFAULT_HANDLE_GROUP_NAME.XPT,
+          DEFAULT_HANDLE_GROUP_NAME.XNT,
+          DEFAULT_HANDLE_GROUP_NAME.YPT,
+          DEFAULT_HANDLE_GROUP_NAME.YNT,
+          DEFAULT_HANDLE_GROUP_NAME.ZPT,
+          DEFAULT_HANDLE_GROUP_NAME.ZNT,
+          DEFAULT_HANDLE_GROUP_NAME.XR,
+          DEFAULT_HANDLE_GROUP_NAME.YR,
+          DEFAULT_HANDLE_GROUP_NAME.ZR,
+          DEFAULT_HANDLE_GROUP_NAME.PICK,
+        ];
+        break;
       }
     }
+
+    handles.map(handle => {
+      controlsManager.userData[handle] = controlName;
+    });
+    controlsManager.showByNames(handles, true);
   }
 
   removeObject(id) {

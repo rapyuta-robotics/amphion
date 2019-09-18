@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import debounce from 'lodash.debounce';
 import FreeformControls, { RAYCASTER_EVENTS } from 'three-freeform-controls';
 import Core from '../core';
 import {
@@ -35,7 +36,6 @@ class InteractiveMarkers extends Core {
       ...options,
     });
 
-    this.initFreeformControls();
     this.interactiveMarkers = [];
     this.objectDraggedWorldPosition = new THREE.Vector3();
     this.objectDraggedWorldQuaternion = new THREE.Quaternion();
@@ -43,20 +43,19 @@ class InteractiveMarkers extends Core {
     this.clientId = `amphion-${Math.round(Math.random() * 10 ** 8)}`;
     this.messageSequence = 0;
     this.feedbackTopic = null;
+
+    this.debouncedPublish = debounce(this.publish.bind(this), 30);
+    this.initFreeformControls();
   }
 
   hide() {
     super.hide();
-    this.interactiveMarkers.map(im => {
-      this.interactiveMarkerManager.hide(im, this.freeformControls);
-    });
+    this.interactiveMarkerManager.setVisible(false);
   }
 
   show() {
     super.show();
-    this.interactiveMarkers.map(im => {
-      this.interactiveMarkerManager.initMarkers(im, this.freeformControls);
-    });
+    this.interactiveMarkerManager.setVisible(true);
   }
 
   destroy() {
@@ -68,52 +67,45 @@ class InteractiveMarkers extends Core {
 
   initFreeformControls() {
     const { camera, controls, renderer, scene } = this.utils;
-    this.freeformControls = new FreeformControls(camera, renderer.domElement, {
-      x: 0.8,
-      y: 0.8,
-      z: 0.8,
-    });
+    this.freeformControls = new FreeformControls(camera, renderer.domElement);
     scene.add(this.freeformControls);
 
     this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_START, () => {
       controls.enabled = false;
     });
 
-    this.freeformControls.listen(
-      RAYCASTER_EVENTS.DRAG,
-      (object, handleName) => {
-        object.matrixWorld.decompose(
-          this.objectDraggedWorldPosition,
-          this.objectDraggedWorldQuaternion,
-          this.objectDraggedWorldScale,
-        );
-
-        const { frameId, markerName } = object.userData.control;
-        const controlName = this.freeformControls.getUserData(object)[
-          handleName
-        ];
-
-        const message = makeInteractiveMarkerFeedbackMessage({
-          seq: this.messageSequence,
-          client_id: this.clientId,
-          frame_id: frameId,
-          marker_name: markerName,
-          control_name: controlName,
-          position: this.objectDraggedWorldPosition,
-          quaternion: this.objectDraggedWorldQuaternion,
-        });
-
-        if (this.feedbackTopic !== null) {
-          this.feedbackTopic.publish(message);
-        }
-
-        this.messageSequence++;
-      },
-    );
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG, this.debouncedPublish);
 
     this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_STOP, () => {
       controls.enabled = true;
     });
+  }
+
+  publish(object, handleName) {
+    object.matrixWorld.decompose(
+      this.objectDraggedWorldPosition,
+      this.objectDraggedWorldQuaternion,
+      this.objectDraggedWorldScale,
+    );
+
+    const { frameId, markerName } = object.userData.control;
+    const controlName = '';
+
+    const message = makeInteractiveMarkerFeedbackMessage({
+      seq: this.messageSequence,
+      client_id: this.clientId,
+      frame_id: frameId,
+      marker_name: markerName,
+      control_name: controlName,
+      position: this.objectDraggedWorldPosition,
+      quaternion: this.objectDraggedWorldQuaternion,
+    });
+
+    if (this.feedbackTopic !== null) {
+      this.feedbackTopic.publish(message);
+    }
+
+    this.messageSequence++;
   }
 
   updateOptions(options) {
@@ -150,6 +142,7 @@ class InteractiveMarkers extends Core {
         this.interactiveMarkerManager.initMarkers(
           interactiveMarker,
           this.freeformControls,
+          this.options.visible,
         );
       });
       // need a better way to handle interdependent topics
