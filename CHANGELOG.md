@@ -7,6 +7,14 @@
 
 ### Fixed
 
+## [0.1.13] - 2019-09-18
+### Added
+- Wrench
+- Range
+
+### Fixed
+- 2D viewer camera rotate
+
 ## [0.1.12] - 2019-08-27
 ### Changed
 - Updated Three.js and eslint config
