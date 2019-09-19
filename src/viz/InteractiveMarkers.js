@@ -81,7 +81,7 @@ class InteractiveMarkers extends Core {
     });
   }
 
-  publish(object, handleName) {
+  publish(object) {
     object.matrixWorld.decompose(
       this.objectDraggedWorldPosition,
       this.objectDraggedWorldQuaternion,
