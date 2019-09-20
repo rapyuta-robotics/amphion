@@ -18,9 +18,9 @@
     #root {
       display: flex;
       flex-direction: column;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+      /*width: 100%;*/
+      /*height: 100%;*/
+      /*overflow: hidden;*/
     }
     #scene {
       flex-grow: 1;
@@ -30,7 +30,8 @@
 </head>
 <body>
 <div id="root">
-  <div id="scene"></div>
+  <div id="scene" style="height: 600px; flex-grow: 0;"></div>
+  <canvas id="imgCanvas"></canvas>
 </div>
 <script src="./index.bundle.js"></script>
 </body>

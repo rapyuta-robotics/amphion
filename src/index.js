@@ -20,6 +20,8 @@ import Range from './viz/Range';
 
 import Scene from './core/scene';
 
+import DepthCloudObject from './viz/DepthCloud';
+
 import Viewer2d from './viewers/2d';
 import Viewer3d from './viewers/3d';
 import TfViewer from './viewers/Tf';
@@ -50,4 +52,5 @@ export default {
   Viewer2d,
   Viewer3d,
   TfViewer,
+  DepthCloudObject,
 };
