@@ -256,17 +256,22 @@ export default class InteractiveMarkerManager {
         break;
       }
       case INTERACTIVE_MARKER_INTERACTION_MODES.MOVE_ROTATE_3D: {
+        // these handles are currently commented out
+        // because these overlap with the extra 6-DOF controls
+        // that are available in the example and also in kompose
+        // proper fix requires increasing the scale of the below
+        // handles so that they don't overlap
         handles = [
-          DEFAULT_HANDLE_GROUP_NAME.XPT,
-          DEFAULT_HANDLE_GROUP_NAME.XNT,
-          DEFAULT_HANDLE_GROUP_NAME.YPT,
-          DEFAULT_HANDLE_GROUP_NAME.YNT,
-          DEFAULT_HANDLE_GROUP_NAME.ZPT,
-          DEFAULT_HANDLE_GROUP_NAME.ZNT,
-          DEFAULT_HANDLE_GROUP_NAME.XR,
-          DEFAULT_HANDLE_GROUP_NAME.YR,
-          DEFAULT_HANDLE_GROUP_NAME.ZR,
-          DEFAULT_HANDLE_GROUP_NAME.PICK,
+          // DEFAULT_HANDLE_GROUP_NAME.XPT,
+          // DEFAULT_HANDLE_GROUP_NAME.XNT,
+          // DEFAULT_HANDLE_GROUP_NAME.YPT,
+          // DEFAULT_HANDLE_GROUP_NAME.YNT,
+          // DEFAULT_HANDLE_GROUP_NAME.ZPT,
+          // DEFAULT_HANDLE_GROUP_NAME.ZNT,
+          // DEFAULT_HANDLE_GROUP_NAME.XR,
+          // DEFAULT_HANDLE_GROUP_NAME.YR,
+          // DEFAULT_HANDLE_GROUP_NAME.ZR,
+          // DEFAULT_HANDLE_GROUP_NAME.PICK,
         ];
         break;
       }
