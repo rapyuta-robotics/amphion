@@ -86,6 +86,7 @@ export default class MarkerManager {
       pose: { orientation, position },
       scale,
     } = marker;
+
     const markerObject = this.getMarkerOrCreate(marker);
     const markerId = MarkerManager.getId(marker);
 
