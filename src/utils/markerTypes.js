@@ -18,7 +18,7 @@ import CubeList from '../primitives/CubeList';
 import Arrow from '../primitives/Arrow';
 import ViewFacingText from '../primitives/ViewFacingText';
 
-const getNewPrimitive = (marker, options) => {
+const getNewPrimitive = marker => {
   switch (marker.type) {
     case MARKER_OBJECT_TYPES.CUBE:
       return new Cube();
@@ -42,7 +42,7 @@ const getNewPrimitive = (marker, options) => {
     case MARKER_OBJECT_TYPES.CUBE_LIST:
       return new CubeList();
     case MARKER_OBJECT_TYPES.TEXT_VIEW_FACING:
-      return new ViewFacingText(options.text);
+      return new ViewFacingText(marker.text);
     case MARKER_OBJECT_TYPES.ARROW:
     default: {
       const arrow = new Arrow();

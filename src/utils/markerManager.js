@@ -13,13 +13,7 @@ export default class MarkerManager {
   getMarkerOrCreate(marker) {
     const id = MarkerManager.getId(marker);
     if (!this.objectMap[id]) {
-      const options =
-        marker.type === MARKER_OBJECT_TYPES.TEXT_VIEW_FACING
-          ? {
-              text: marker.text,
-            }
-          : {};
-      const object = getNewPrimitive(marker, options);
+      const object = getNewPrimitive(marker);
       this.objectMap[id] = object;
       this.object.add(object);
     }
