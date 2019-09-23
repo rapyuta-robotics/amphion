@@ -377,11 +377,6 @@ export const DEFAULT_OPTIONS_ROBOTMODEL = {};
 
 export const DEFAULT_OPTIONS_TF = {};
 
-export const DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING  = {
-  size: 3,
-  color: 'black'
-};
-
 /** ***************************
  *   Zethus exports
  * ************************** */

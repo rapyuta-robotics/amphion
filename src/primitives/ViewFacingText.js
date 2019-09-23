@@ -3,19 +3,16 @@ import { Color } from 'three';
 import Mesh from './Mesh';
 
 class ViewFacingText extends Mesh {
-  constructor(text, options) {
+  constructor(text) {
     super();
-    this.text = new SpriteText(text, options.size, options.color);
+    this.color = new Color(1, 1, 1);
+    this.text = new SpriteText(text, 1, `#${this.color.getHexString()}`);
     this.add(this.text);
-    this.color = options.color;
   }
 
   setColor(color) {
     const { b, g, r } = color;
-    if (
-      typeof this.color === 'string' ||
-      !(this.color.r === r && this.color.g === g && this.color.b === b)
-    ) {
+    if (!(this.color.r === r && this.color.g === g && this.color.b === b)) {
       this.color = new Color(r, g, b);
       this.text.color = `#${this.color.getHexString()}`;
     }

@@ -1,9 +1,6 @@
 import ROSLIB from 'roslib';
 import getNewPrimitive from './markerTypes';
-import {
-  DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING,
-  MARKER_OBJECT_TYPES,
-} from './constants';
+import { MARKER_OBJECT_TYPES } from './constants';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -19,7 +16,6 @@ export default class MarkerManager {
       const options =
         marker.type === MARKER_OBJECT_TYPES.TEXT_VIEW_FACING
           ? {
-              ...DEFAULT_OPTIONS_MARKER_TEXT_VIEW_FACING,
               text: marker.text,
             }
           : {};
@@ -83,6 +79,7 @@ export default class MarkerManager {
       pose: { orientation, position },
       scale,
     } = marker;
+
     const markerObject = this.getMarkerOrCreate(marker);
 
     if (markerObject.updatePoints) {
