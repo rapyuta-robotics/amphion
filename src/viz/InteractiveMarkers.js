@@ -44,7 +44,10 @@ class InteractiveMarkers extends Core {
     this.messageSequence = 0;
     this.feedbackTopic = null;
 
-    this.debouncedPublish = debounce(this.publish.bind(this), 30);
+    this.debouncedPublish = debounce(
+      this.publish.bind(this),
+      this.options.throttleRate,
+    );
     this.initFreeformControls();
   }
 
@@ -66,6 +69,7 @@ class InteractiveMarkers extends Core {
   }
 
   initFreeformControls() {
+    const { throttleRate } = this.options;
     const { camera, controls, renderer, scene } = this.utils;
     this.freeformControls = new FreeformControls(camera, renderer.domElement);
     scene.add(this.freeformControls);
@@ -74,9 +78,20 @@ class InteractiveMarkers extends Core {
       controls.enabled = false;
     });
 
-    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG, this.debouncedPublish);
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG, args => {
+      if (throttleRate && throttleRate !== 0) {
+        this.debouncedPublish(args);
+      } else {
+        this.publish(args);
+      }
+    });
 
-    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_STOP, () => {
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_STOP, args => {
+      if (throttleRate && throttleRate !== 0) {
+        this.debouncedPublish(args);
+      } else {
+        this.publish(args);
+      }
       controls.enabled = true;
     });
   }

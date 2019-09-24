@@ -271,7 +271,7 @@ export default class InteractiveMarkerManager {
           // DEFAULT_HANDLE_GROUP_NAME.XR,
           // DEFAULT_HANDLE_GROUP_NAME.YR,
           // DEFAULT_HANDLE_GROUP_NAME.ZR,
-          // DEFAULT_HANDLE_GROUP_NAME.PICK,
+          DEFAULT_HANDLE_GROUP_NAME.PICK,
         ];
         break;
       }
