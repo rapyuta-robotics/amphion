@@ -90,7 +90,9 @@ export default class InteractiveMarkerManager {
     object.visible = visible;
 
     object.frameId = frame_id;
-    this.viewer.attachObjectOutsideTree(object);
+    if (this.viewer.attachObjectOutsideTree) {
+      this.viewer.attachObjectOutsideTree(object);
+    }
 
     object.setTransform({ translation: position, rotation: orientation });
     object.userData.control = {
