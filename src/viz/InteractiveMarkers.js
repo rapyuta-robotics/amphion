@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import debounce from 'lodash.debounce';
 import FreeformControls, { RAYCASTER_EVENTS } from 'three-freeform-controls';
 import Core from '../core';
@@ -40,7 +39,7 @@ class InteractiveMarkers extends Core {
       ...options,
     });
 
-    this.interactiveMarkers = new Set();
+    this.interactiveMarkersNames = new Set();
     this.clientId = `amphion-${Math.round(Math.random() * 10 ** 8)}`;
     this.messageSequence = 0;
     this.feedbackTopic = null;
@@ -67,7 +66,7 @@ class InteractiveMarkers extends Core {
     this.freeformControls.destroy();
     this.freeformControls = null;
     this.interactiveMarkerManager.reset(true);
-    this.interactiveMarkers = new Set();
+    this.interactiveMarkersNames = new Set();
   }
 
   initFreeformControls() {
@@ -80,31 +79,37 @@ class InteractiveMarkers extends Core {
       controls.enabled = false;
     });
 
-    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG, args => {
-      if (throttleRate && throttleRate !== 0) {
-        this.debouncedPublish(args);
-      } else {
-        this.publish(args);
-      }
-    });
+    this.freeformControls.listen(
+      RAYCASTER_EVENTS.DRAG,
+      (object, handleName) => {
+        if (throttleRate && throttleRate !== 0) {
+          this.debouncedPublish(object, handleName);
+        } else {
+          this.publish(object, handleName);
+        }
+      },
+    );
 
-    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_STOP, args => {
-      if (throttleRate && throttleRate !== 0) {
-        this.debouncedPublish(args);
-      } else {
-        this.publish(args);
-      }
-      controls.enabled = true;
-    });
+    this.freeformControls.listen(
+      RAYCASTER_EVENTS.DRAG_STOP,
+      (object, handleName) => {
+        if (throttleRate && throttleRate !== 0) {
+          this.debouncedPublish(object, handleName);
+        } else {
+          this.publish(object, handleName);
+        }
+        controls.enabled = true;
+      },
+    );
   }
 
-  publish(object) {
+  publish(object, handleName) {
     if (!object) {
       return;
     }
 
     const { frameId, markerName } = object.userData.control;
-    const controlName = '';
+    const controlName = object.userData.handlesControlsMap[handleName];
 
     const message = makeInteractiveMarkerFeedbackMessage({
       seq: this.messageSequence,
@@ -153,12 +158,14 @@ class InteractiveMarkers extends Core {
     super.update(message);
     if (message.markers.length > 0) {
       message.markers.forEach(interactiveMarker => {
-        this.interactiveMarkers.add(interactiveMarker);
-        this.interactiveMarkerManager.initMarkers(
-          interactiveMarker,
-          this.freeformControls,
-          this.options.visible,
-        );
+        if (!this.interactiveMarkersNames.has(interactiveMarker.name)) {
+          this.interactiveMarkerManager.initMarkers(
+            interactiveMarker,
+            this.freeformControls,
+            this.options.visible,
+          );
+        }
+        this.interactiveMarkersNames.add(interactiveMarker.name);
       });
       // need a better way to handle interdependent topics
       if (!this.init) {
@@ -183,7 +190,7 @@ class InteractiveMarkers extends Core {
     if (message.erases && message.poses.leading > 0) {
       // TODO: implement when test backend available
       // remove from interactiveMarkerManager and
-      // the this.interactiveMarkers cache
+      // the this.interactiveMarkersNames cache
     }
   }
 

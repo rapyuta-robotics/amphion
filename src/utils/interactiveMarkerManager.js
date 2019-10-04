@@ -93,6 +93,12 @@ export default class InteractiveMarkerManager {
     this.viewer.attachObjectOutsideTree(object);
 
     object.setTransform({ translation: position, rotation: orientation });
+    object.userData.control = {
+      frameId: interactiveMarker.header.frame_id,
+      markerName: interactiveMarker.name,
+    };
+    object.userData.handlesControlsMap = {};
+
     controls.forEach((control, index) => {
       // cannot rely on the control.name being present or unique
       const key = name;
@@ -137,11 +143,6 @@ export default class InteractiveMarkerManager {
         });
       }
     });
-
-    object.userData.control = {
-      frameId: interactiveMarker.header.frame_id,
-      markerName: interactiveMarker.name,
-    };
   }
 
   setVisible(visible) {
@@ -186,8 +187,8 @@ export default class InteractiveMarkerManager {
       ) !== -1 &&
       interactionMode === INTERACTIVE_MARKER_INTERACTION_MODES.ROTATE_AXIS
     ) {
-      controlsManager.userData = {
-        ...controlsManager.userData,
+      object.userData.handlesControlsMap = {
+        ...object.userData.handlesControlsMap,
         [DEFAULT_HANDLE_GROUP_NAME.ER]: controlName,
       };
       controlsManager.showByNames([DEFAULT_HANDLE_GROUP_NAME.ER], true);
@@ -289,7 +290,7 @@ export default class InteractiveMarkerManager {
     }
 
     handles.map(handle => {
-      controlsManager.userData[handle] = controlName;
+      object.userData.handlesControlsMap[handle] = controlName;
     });
     controlsManager.showByNames(handles, true);
   }
