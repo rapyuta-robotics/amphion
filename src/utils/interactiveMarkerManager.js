@@ -13,11 +13,13 @@ import {
 } from './constants';
 
 export default class InteractiveMarkerManager {
-  constructor(rootObject) {
+  constructor(rootObject, viewer, options) {
     this.markerManagerMap = {};
     this.contolsManagerMap = {};
     this.objectMap = {};
     this.object = rootObject;
+    this.viewer = viewer;
+    this.visible = options.visible;
     this.namespaces = {};
     this.onChange = this.onChange.bind(this);
   }
@@ -78,10 +80,17 @@ export default class InteractiveMarkerManager {
   initMarkers(interactiveMarker, freeformControls, visible) {
     const {
       controls,
+      header: { frame_id },
       name,
       pose: { orientation, position },
     } = interactiveMarker;
     const { manager, object } = this.getMarkerManagerOrCreate(name);
+
+    manager.visible = visible;
+    object.visible = visible;
+
+    object.frameId = frame_id;
+    this.viewer.attachObjectOutsideTree(object);
 
     object.setTransform({ translation: position, rotation: orientation });
     controls.forEach((control, index) => {
@@ -136,10 +145,12 @@ export default class InteractiveMarkerManager {
   }
 
   setVisible(visible) {
+    this.visible = visible;
     const controlMangerGroups = Object.values(this.contolsManagerMap);
     controlMangerGroups.map(managers => {
       managers.map(manager => {
         manager.visible = visible;
+        manager.object.visible = visible;
       });
     });
   }

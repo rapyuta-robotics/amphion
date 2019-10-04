@@ -17,7 +17,7 @@ class InteractiveMarkers extends Core {
   constructor(
     ros,
     topicName,
-    utils,
+    viewer,
     options = DEFAULT_OPTIONS_INTERACTIVE_MARKER,
   ) {
     super(ros, topicName, MESSAGE_TYPE_INTERACTIVEMARKER, {
@@ -26,17 +26,21 @@ class InteractiveMarkers extends Core {
     });
 
     this.object = new Group();
-    this.utils = utils;
+    this.viewer = viewer;
 
     const { queueSize } = options;
-    this.interactiveMarkerManager = new InteractiveMarkerManager(this.object);
+    this.interactiveMarkerManager = new InteractiveMarkerManager(
+      this.object,
+      viewer,
+      options,
+    );
     this.queueSize = queueSize;
     this.updateOptions({
       ...DEFAULT_OPTIONS_INTERACTIVE_MARKER,
       ...options,
     });
 
-    this.interactiveMarkers = [];
+    this.interactiveMarkers = new Set();
     this.objectDraggedWorldPosition = new THREE.Vector3();
     this.objectDraggedWorldQuaternion = new THREE.Quaternion();
     this.objectDraggedWorldScale = new THREE.Vector3();
@@ -65,12 +69,13 @@ class InteractiveMarkers extends Core {
     super.destroy();
     this.freeformControls.destroy();
     this.freeformControls = null;
-    this.interactiveMarkers = [];
+    this.interactiveMarkerManager.reset(true);
+    this.interactiveMarkers = new Set();
   }
 
   initFreeformControls() {
     const { throttleRate } = this.options;
-    const { camera, controls, renderer, scene } = this.utils;
+    const { camera, controls, renderer, scene } = this.viewer;
     this.freeformControls = new FreeformControls(camera, renderer.domElement);
     scene.add(this.freeformControls);
 
@@ -97,6 +102,9 @@ class InteractiveMarkers extends Core {
   }
 
   publish(object) {
+    if (!object) {
+      return;
+    }
     object.matrixWorld.decompose(
       this.objectDraggedWorldPosition,
       this.objectDraggedWorldQuaternion,
@@ -153,7 +161,7 @@ class InteractiveMarkers extends Core {
     super.update(message);
     if (message.markers.length > 0) {
       message.markers.forEach(interactiveMarker => {
-        this.interactiveMarkers.push(interactiveMarker);
+        this.interactiveMarkers.add(interactiveMarker);
         this.interactiveMarkerManager.initMarkers(
           interactiveMarker,
           this.freeformControls,
