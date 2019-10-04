@@ -41,9 +41,6 @@ class InteractiveMarkers extends Core {
     });
 
     this.interactiveMarkers = new Set();
-    this.objectDraggedWorldPosition = new THREE.Vector3();
-    this.objectDraggedWorldQuaternion = new THREE.Quaternion();
-    this.objectDraggedWorldScale = new THREE.Vector3();
     this.clientId = `amphion-${Math.round(Math.random() * 10 ** 8)}`;
     this.messageSequence = 0;
     this.feedbackTopic = null;
