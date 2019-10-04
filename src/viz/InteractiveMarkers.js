@@ -105,11 +105,6 @@ class InteractiveMarkers extends Core {
     if (!object) {
       return;
     }
-    object.matrixWorld.decompose(
-      this.objectDraggedWorldPosition,
-      this.objectDraggedWorldQuaternion,
-      this.objectDraggedWorldScale,
-    );
 
     const { frameId, markerName } = object.userData.control;
     const controlName = '';
@@ -120,8 +115,8 @@ class InteractiveMarkers extends Core {
       frame_id: frameId,
       marker_name: markerName,
       control_name: controlName,
-      position: this.objectDraggedWorldPosition,
-      quaternion: this.objectDraggedWorldQuaternion,
+      position: object.position,
+      quaternion: object.quaternion,
     });
 
     if (this.feedbackTopic !== null) {
