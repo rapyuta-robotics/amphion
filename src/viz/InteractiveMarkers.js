@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce';
-import FreeformControls, { RAYCASTER_EVENTS } from 'three-freeform-controls';
+import { ControlsManager, RAYCASTER_EVENTS } from 'three-freeform-controls';
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_INTERACTIVE_MARKER,
@@ -40,6 +40,7 @@ class InteractiveMarkers extends Core {
     });
 
     this.interactiveMarkersNames = new Set();
+    this.interactiveMarkersFrameIds = new Set();
     this.clientId = `amphion-${Math.round(Math.random() * 10 ** 8)}`;
     this.messageSequence = 0;
     this.feedbackTopic = null;
@@ -49,6 +50,8 @@ class InteractiveMarkers extends Core {
       this.options.throttleRate,
     );
     this.initFreeformControls();
+
+    this.publishManual = this.publishManual.bind(this);
   }
 
   hide() {
@@ -72,7 +75,7 @@ class InteractiveMarkers extends Core {
   initFreeformControls() {
     const { throttleRate } = this.options;
     const { camera, controls, renderer, scene } = this.viewer;
-    this.freeformControls = new FreeformControls(camera, renderer.domElement);
+    this.freeformControls = new ControlsManager(camera, renderer.domElement);
     scene.add(this.freeformControls);
 
     this.freeformControls.listen(RAYCASTER_EVENTS.DRAG_START, () => {
@@ -128,6 +131,24 @@ class InteractiveMarkers extends Core {
     this.messageSequence++;
   }
 
+  publishManual(pose) {
+    const message = makeInteractiveMarkerFeedbackMessage({
+      seq: this.messageSequence,
+      client_id: this.clientId,
+      ...pose,
+      frame_id: Array.from(this.interactiveMarkersFrameIds)[0],
+      marker_name: Array.from(this.interactiveMarkersNames)[0],
+    });
+
+    console.log(message);
+
+    if (this.feedbackTopic !== null) {
+      this.feedbackTopic.publish(message);
+    }
+
+    this.messageSequence++;
+  }
+
   updateOptions(options) {
     if (options.feedbackTopicName !== undefined) {
       this.feedbackTopic = makeInteractiveMarkerFeedbackTopic(
@@ -156,7 +177,7 @@ class InteractiveMarkers extends Core {
 
   update(message) {
     super.update(message);
-    if (message.markers.length > 0) {
+    if (message.markers && message.markers.length > 0) {
       message.markers.forEach(interactiveMarker => {
         if (!this.interactiveMarkersNames.has(interactiveMarker.name)) {
           this.interactiveMarkerManager.initMarkers(
@@ -166,6 +187,15 @@ class InteractiveMarkers extends Core {
           );
         }
         this.interactiveMarkersNames.add(interactiveMarker.name);
+        if (interactiveMarker.header) {
+          this.interactiveMarkersFrameIds.add(
+            interactiveMarker.header.frame_id,
+          );
+        }
+
+        message.markers.forEach(poseObject => {
+          this.interactiveMarkerManager.updatePose(poseObject);
+        });
       });
       // need a better way to handle interdependent topics
       if (!this.init) {

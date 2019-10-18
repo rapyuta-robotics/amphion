@@ -121,6 +121,9 @@ export default class InteractiveMarkerManager {
           },
           orientation: control.orientation,
           mode: attachMode,
+          hideOtherHandlesOnSelect: false,
+          hideOtherControlsInstancesOnSelect: false,
+          showHelperPlane: true,
         });
         controlsManager.visible = visible;
 
