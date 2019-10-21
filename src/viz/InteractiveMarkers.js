@@ -24,6 +24,7 @@ class InteractiveMarkers extends Core {
       ...options,
     });
 
+    this.init = false;
     this.object = new Group();
     this.viewer = viewer;
 
@@ -140,8 +141,6 @@ class InteractiveMarkers extends Core {
       marker_name: Array.from(this.interactiveMarkersNames)[0],
     });
 
-    console.log(message);
-
     if (this.feedbackTopic !== null) {
       this.feedbackTopic.publish(message);
     }
@@ -166,7 +165,7 @@ class InteractiveMarkers extends Core {
 
     if (shouldSubscriptionChange && options.updateTopicName !== undefined) {
       const { messageType, name } = options.updateTopicName;
-      this.changeTopic(name, messageType, true, true);
+      this.changeTopic(name, messageType, true);
     } else if (shouldSubscriptionChange && guardAgainstOtherOptionsChange) {
       this.unsubscribe();
     }
@@ -202,7 +201,8 @@ class InteractiveMarkers extends Core {
         this.init = true;
         if (this.options.updateTopicName !== undefined) {
           const { messageType, name } = this.options.updateTopicName;
-          this.changeTopic(name, messageType, true, true);
+          this.init = true;
+          this.changeTopic(name, messageType, true);
         } else {
           this.unsubscribe();
         }

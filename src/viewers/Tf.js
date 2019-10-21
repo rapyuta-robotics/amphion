@@ -52,7 +52,7 @@ class TfViewer extends Viewer3d {
           this.getObjectOrCreate(parentFrameId),
         ];
 
-        parentObject.attach(childObject);
+        parentObject.add(childObject);
         childObject.position.set(x, y, z);
         childObject.quaternion.set(rx, ry, rz, rw);
 
@@ -117,7 +117,7 @@ class TfViewer extends Viewer3d {
 
     vizObject.onHeaderChange = newFrameId => {
       const frameObject = this.getObjectOrCreate(newFrameId);
-      frameObject.attach(vizObject.object);
+      frameObject.add(vizObject.object);
     };
   }
 
@@ -136,7 +136,7 @@ class TfViewer extends Viewer3d {
         const existingObject = this.scene.getObjectByName(o.name);
         if (existingObject) {
           o.children.forEach(child => {
-            existingObject.attach(child);
+            existingObject.add(child);
           });
         }
       }

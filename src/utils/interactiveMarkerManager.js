@@ -83,6 +83,7 @@ export default class InteractiveMarkerManager {
       header: { frame_id },
       name,
       pose: { orientation, position },
+      scale,
     } = interactiveMarker;
     const { manager, object } = this.getMarkerManagerOrCreate(name);
 
@@ -125,6 +126,7 @@ export default class InteractiveMarkerManager {
           hideOtherControlsInstancesOnSelect: false,
           showHelperPlane: true,
         });
+        controlsManager.scale.set(scale, scale, scale);
         controlsManager.visible = visible;
 
         InteractiveMarkerManager.enableControls(
@@ -164,7 +166,7 @@ export default class InteractiveMarkerManager {
   updatePose(poseObject) {
     const { name, pose } = poseObject;
     const markerObject = this.objectMap[name];
-    if (pose) {
+    if (markerObject && pose) {
       const { orientation, position } = pose;
       markerObject.setTransform({
         translation: position,
