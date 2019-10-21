@@ -1,0 +1,4 @@
+diff a/src/utils/interactiveMarkerManager.js b/src/utils/interactiveMarkerManager.js	(rejected hunks)
+@@ -86 +86 @@ export default class InteractiveMarkerManager {
+-      scale
++      scale,

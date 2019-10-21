@@ -19,6 +19,9 @@ export default class InteractiveMarkerManager {
     this.objectMap = {};
     this.object = rootObject;
     this.viewer = viewer;
+    this.hideOtherHandlesOnSelect = options.hideOtherHandlesOnSelect;
+    this.hideOtherControlsInstancesOnSelect =
+      options.hideOtherControlsInstancesOnSelect;
     this.visible = options.visible;
     this.namespaces = {};
     this.onChange = this.onChange.bind(this);
@@ -122,8 +125,9 @@ export default class InteractiveMarkerManager {
           },
           orientation: control.orientation,
           mode: attachMode,
-          hideOtherHandlesOnSelect: false,
-          hideOtherControlsInstancesOnSelect: false,
+          hideOtherHandlesOnSelect: this.hideOtherHandlesOnSelect,
+          hideOtherControlsInstancesOnSelect: this
+            .hideOtherControlsInstancesOnSelect,
           showHelperPlane: true,
         });
         controlsManager.scale.set(scale, scale, scale);

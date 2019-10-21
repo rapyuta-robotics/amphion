@@ -317,6 +317,8 @@ export const DEFAULT_OPTIONS_INTERACTIVE_MARKER = {
   queueSize: 1,
   namespaces: [],
   throttleRate: 0,
+  hideOtherHandlesOnSelect: true,
+  hideOtherControlsInstancesOnSelect: true,
 };
 
 export const DEFAULT_OPTIONS_ODOMETRY = {
