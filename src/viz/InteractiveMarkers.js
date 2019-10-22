@@ -188,13 +188,19 @@ class InteractiveMarkers extends Core {
 
   updateOptions(options) {
     if (options.feedbackTopicName !== undefined) {
-      this.feedbackTopic = InteractiveMarkers.makeInteractiveMarkerFeedbackTopic(
-        this.ros,
-        options.feedbackTopicName.name,
-      );
+      if (
+        !this.feedbackTopic ||
+        this.feedbackTopic.name !== options.feedbackTopicName.name
+      ) {
+        this.feedbackTopic = InteractiveMarkers.makeInteractiveMarkerFeedbackTopic(
+          this.ros,
+          options.feedbackTopicName.name,
+        );
+      }
     } else {
       this.feedbackTopic = null;
     }
+
     // need a better way to handle interdependent topics
     const shouldSubscriptionChange =
       this.options.updateTopicName !== options.topicName && this.init;
