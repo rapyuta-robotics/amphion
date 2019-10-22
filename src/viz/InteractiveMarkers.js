@@ -26,17 +26,16 @@ class InteractiveMarkers extends Core {
     this.object = new Group();
     this.viewer = viewer;
 
-    const { queueSize } = options;
-    this.interactiveMarkerManager = new InteractiveMarkerManager(
-      this.object,
-      viewer,
-      options,
-    );
-    this.queueSize = queueSize;
     this.updateOptions({
       ...DEFAULT_OPTIONS_INTERACTIVE_MARKER,
       ...options,
     });
+
+    this.interactiveMarkerManager = new InteractiveMarkerManager(
+      this.object,
+      viewer,
+      this.options,
+    );
 
     this.interactiveMarkersNames = new Set();
     this.interactiveMarkersFrameIds = new Set();
@@ -44,12 +43,12 @@ class InteractiveMarkers extends Core {
     this.messageSequence = 0;
     this.feedbackTopic = null;
 
+    const { publishThrottleRate } = this.options;
     this.debouncedPublish = debounce(
       this.publish.bind(this),
-      this.options.throttleRate,
+      publishThrottleRate && publishThrottleRate > 0 ? publishThrottleRate : 0,
     );
     this.initFreeformControls();
-
     this.publishManual = this.publishManual.bind(this);
   }
 
@@ -72,7 +71,6 @@ class InteractiveMarkers extends Core {
   }
 
   initFreeformControls() {
-    const { throttleRate } = this.options;
     const { camera, controls, renderer, scene } = this.viewer;
     this.freeformControls = new ControlsManager(camera, renderer.domElement);
     scene.add(this.freeformControls);
@@ -81,25 +79,14 @@ class InteractiveMarkers extends Core {
       controls.enabled = false;
     });
 
-    this.freeformControls.listen(
-      RAYCASTER_EVENTS.DRAG,
-      (object, handleName) => {
-        if (throttleRate && throttleRate !== 0) {
-          this.debouncedPublish(object, handleName);
-        } else {
-          this.publish(object, handleName);
-        }
-      },
+    this.freeformControls.listen(RAYCASTER_EVENTS.DRAG, (object, handleName) =>
+      this.debouncedPublish(object, handleName),
     );
 
     this.freeformControls.listen(
       RAYCASTER_EVENTS.DRAG_STOP,
       (object, handleName) => {
-        if (throttleRate && throttleRate !== 0) {
-          this.debouncedPublish(object, handleName);
-        } else {
-          this.publish(object, handleName);
-        }
+        this.debouncedPublish(object, handleName);
         controls.enabled = true;
       },
     );
@@ -220,9 +207,7 @@ class InteractiveMarkers extends Core {
     } else if (shouldSubscriptionChange && guardAgainstOtherOptionsChange) {
       this.unsubscribe();
     }
-
     super.updateOptions(options);
-    this.interactiveMarkerManager.updateOptions(this.options, this);
   }
 
   update(message) {

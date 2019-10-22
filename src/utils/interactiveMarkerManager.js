@@ -46,30 +46,6 @@ export default class InteractiveMarkerManager {
     };
   }
 
-  setQueueSize(queueSize, context) {
-    context.unsubscribe();
-
-    context.queueSize = queueSize;
-
-    context.topic = new ROSLIB.Topic({
-      ros: context.ros,
-      name: context.topicName,
-      messageType: context.messageType,
-      queue_size: queueSize,
-    });
-
-    context.subscribe();
-  }
-
-  updateOptions(options, context) {
-    const { queueSize } = options;
-    const { queueSize: currentQueueSize } = context;
-
-    if (currentQueueSize !== queueSize) {
-      this.setQueueSize(queueSize, context);
-    }
-  }
-
   onChange() {
     if (this.callback) {
       this.callback();

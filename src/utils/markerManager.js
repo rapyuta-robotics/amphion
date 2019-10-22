@@ -39,31 +39,9 @@ export default class MarkerManager {
     return tokens[0];
   }
 
-  setQueueSize(queueSize, context) {
-    context.unsubscribe();
-
-    context.queueSize = queueSize;
-
-    context.topic = new ROSLIB.Topic({
-      ros: context.ros,
-      name: context.topicName,
-      messageType: context.messageType,
-      queue_size: queueSize,
-    });
-
-    context.subscribe();
-  }
-
-  updateOptions(options, context) {
-    const { namespaces, queueSize } = options;
-    const { queueSize: currentQueueSize } = context;
-
-    if (currentQueueSize !== queueSize) {
-      this.setQueueSize(queueSize, context);
-    }
-
+  updateOptions(options) {
+    const { namespaces } = options;
     this.namespaces = namespaces;
-
     for (const key in this.objectMap) {
       // eslint-disable-next-line no-prototype-builtins
       if (this.objectMap.hasOwnProperty(key)) {

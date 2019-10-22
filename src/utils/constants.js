@@ -317,6 +317,7 @@ export const DEFAULT_OPTIONS_INTERACTIVE_MARKER = {
   queueSize: 1,
   namespaces: [],
   throttleRate: 0,
+  publishThrottleRate: 0,
   hideOtherHandlesOnSelect: true,
   hideOtherControlsInstancesOnSelect: true,
 };
