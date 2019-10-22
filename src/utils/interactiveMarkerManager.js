@@ -1,4 +1,3 @@
-import ROSLIB from 'roslib';
 import {
   ANCHOR_MODE,
   DEFAULT_HANDLE_GROUP_NAME,

@@ -1,4 +1,3 @@
-import ROSLIB from 'roslib';
 import getNewPrimitive from './markerTypes';
 import MarkerLifetime from './markerLifetime';
 
