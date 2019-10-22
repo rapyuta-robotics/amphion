@@ -1,16 +1,14 @@
 import debounce from 'lodash.debounce';
 import { ControlsManager, RAYCASTER_EVENTS } from 'three-freeform-controls';
+import ROSLIB from 'roslib';
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_INTERACTIVE_MARKER,
   MESSAGE_TYPE_INTERACTIVEMARKER,
+  MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK,
 } from '../utils/constants';
 import Group from '../primitives/Group';
 import InteractiveMarkerManager from '../utils/interactiveMarkerManager';
-import {
-  makeInteractiveMarkerFeedbackMessage,
-  makeInteractiveMarkerFeedbackTopic,
-} from '../utils/ros';
 
 class InteractiveMarkers extends Core {
   constructor(
@@ -107,6 +105,59 @@ class InteractiveMarkers extends Core {
     );
   }
 
+  static makeInteractiveMarkerFeedbackMessage({
+    seq,
+    frame_id: frameId,
+    client_id: clientId,
+    marker_name: markerName,
+    control_name: controlName,
+    position,
+    quaternion,
+  }) {
+    return new ROSLIB.Message({
+      header: {
+        seq,
+        frame_id: frameId,
+        stamp: {
+          secs: 0,
+          nsecs: 0,
+        },
+      },
+      client_id: clientId,
+      marker_name: markerName,
+      control_name: controlName,
+      pose: {
+        position: {
+          x: position.x,
+          y: position.y,
+          z: position.z,
+        },
+        orientation: {
+          x: quaternion.x,
+          y: quaternion.y,
+          z: quaternion.z,
+          w: quaternion.w,
+        },
+      },
+      event_type: 1,
+      menu_entry_id: 0,
+      mouse_point: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      mouse_point_valid: false,
+    });
+  }
+
+  static makeInteractiveMarkerFeedbackTopic(ros, name) {
+    return new ROSLIB.Topic({
+      ros,
+      name,
+      messageType: MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK,
+    });
+  }
+
   publish(object, handleName) {
     if (!object) {
       return;
@@ -115,7 +166,7 @@ class InteractiveMarkers extends Core {
     const { frameId, markerName } = object.userData.control;
     const controlName = object.userData.handlesControlsMap[handleName];
 
-    const message = makeInteractiveMarkerFeedbackMessage({
+    const message = InteractiveMarkers.makeInteractiveMarkerFeedbackMessage({
       seq: this.messageSequence,
       client_id: this.clientId,
       frame_id: frameId,
@@ -133,7 +184,7 @@ class InteractiveMarkers extends Core {
   }
 
   publishManual(pose) {
-    const message = makeInteractiveMarkerFeedbackMessage({
+    const message = InteractiveMarkers.makeInteractiveMarkerFeedbackMessage({
       seq: this.messageSequence,
       client_id: this.clientId,
       ...pose,
@@ -150,7 +201,7 @@ class InteractiveMarkers extends Core {
 
   updateOptions(options) {
     if (options.feedbackTopicName !== undefined) {
-      this.feedbackTopic = makeInteractiveMarkerFeedbackTopic(
+      this.feedbackTopic = InteractiveMarkers.makeInteractiveMarkerFeedbackTopic(
         this.ros,
         options.feedbackTopicName.name,
       );
