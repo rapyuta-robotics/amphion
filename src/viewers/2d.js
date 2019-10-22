@@ -75,7 +75,9 @@ class Viewer2d {
     this.scene.updateOptions(this.options);
   }
 
-  destroy() {}
+  destroy() {
+    this.ro.unobserve(this.container);
+  }
 
   onWindowResize() {
     const { camera } = this;
