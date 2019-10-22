@@ -21,9 +21,12 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^2.2.1",
+    "lodash.debounce": "^4.0.8",
+    "randomcolor": "^0.5.4",
     "roslib": "^1.0.1",
     "stats-js": "^1.0.1",
     "three": "^0.107.0",
+    "three-freeform-controls": "0.0.18",
     "three-spritetext": "^1.1.1",
     "urdf-loader": "^0.7.1"
   },
