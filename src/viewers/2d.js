@@ -81,8 +81,8 @@ class Viewer2d {
     const { camera } = this;
     const { offsetHeight, offsetWidth } = this.container;
     if (
-      Math.abs(offsetWidth - this.previousWidth) > 5 ||
-      Math.abs(offsetHeight - this.previousHeight) > 5
+      Math.abs(offsetWidth - this.previousWidth) > 10 ||
+      Math.abs(offsetHeight - this.previousHeight) > 10
     ) {
       const [cameraWidth, cameraHeight] = [
         offsetWidth / 100,
