@@ -237,7 +237,7 @@ const DEPTHCLOUD_STREAMTYPES = {
 };
 
 const DEFAULT_OPTIONS_DEPTHCLOUD = {
-  streamType: DEPTHCLOUD_STREAMTYPES.VP8,
+  streamType: DEPTHCLOUD_STREAMTYPES.MJPEG,
   f: 526,
   maxDepthPerTile: 1.0,
   pointSize: 3,
@@ -250,42 +250,47 @@ const DEFAULT_OPTIONS_DEPTHCLOUD = {
 class DepthCloud extends Object3D {
   constructor(url, options = DEFAULT_OPTIONS_DEPTHCLOUD) {
     super();
-
-    this.updateOptions({
+    this.options = {
       ...DEFAULT_OPTIONS_DEPTHCLOUD,
       ...options,
-    });
-    this.isMjpeg =
-      this.options.streamType.toLowerCase() === DEPTHCLOUD_STREAMTYPES.MJPEG;
-    this.video = document.createElement(this.isMjpeg ? 'img' : 'video');
-    this.video.crossOrigin = 'Anonymous';
-    // this.video.setAttribute('muted', 'muted');
-    this.video.addEventListener(
-      this.isMjpeg ? 'load' : 'loadedmetadata',
-      this.onMetaLoaded.bind(this),
-      false,
-    );
-
+    };
     this.url = url;
-    if (!this.isMjpeg) {
-      this.video.loop = true;
-    }
-    this.video.src = url;
-    this.video.setAttribute('crossorigin', 'Anonymous');
+
+    this.animate = this.animate.bind(this);
+    this.onMetaLoaded = this.onMetaLoaded.bind(this);
+
+    this.initVideo();
   }
 
   onMetaLoaded() {
-    console.log('On meta loaded');
     this.metaLoaded = true;
     this.initStreamer();
   }
 
-  updateOptions(options) {
-    // super.updateOptions(options);
-    this.options = {
-      ...this.options,
-      ...options,
-    };
+  isMjpeg() {
+    const { streamType } = this.options;
+    return streamType.toLowerCase() === 'mjpeg';
+  }
+
+  initVideo() {
+    const { height, width } = this.options;
+
+    this.video = document.createElement(this.isMjpeg() ? 'img' : 'video');
+    this.video.width = width;
+    this.video.height = height;
+    this.video.addEventListener(
+      this.isMjpeg() ? 'load' : 'loadedmetadata',
+      this.onMetaLoaded,
+      false,
+    );
+
+    if (!this.isMjpeg()) {
+      this.video.loop = true;
+    }
+
+    this.video.src = this.url;
+    this.video.crossOrigin = 'Anonymous';
+    this.video.setAttribute('crossorigin', 'Anonymous');
   }
 
   initStreamer() {
@@ -303,17 +308,19 @@ class DepthCloud extends Object3D {
       this.texture = new Texture(this.video);
       this.geometry = new Geometry();
 
-      for (let i = 0, l = this.width * this.height; i < l; i++) {
+      const halfWidth = width / 2;
+      const halfHeight = height / 2;
+      for (let i = 0, l = halfWidth * halfHeight; i < l; i += 1) {
         this.geometry.vertices.push(
-          new Vector3(i % this.width, Math.floor(i / this.width), 0),
+          new Vector3(i % halfWidth, i / halfWidth, 0),
         );
       }
 
       this.material = new ShaderMaterial({
         uniforms: {
           map: { type: 't', value: this.texture },
-          width: { type: 'f', value: width },
-          height: { type: 'f', value: height },
+          width: { type: 'f', value: halfWidth },
+          height: { type: 'f', value: halfHeight },
           focallength: { type: 'f', value: f },
           pointSize: { type: 'f', value: pointSize },
           zOffset: { type: 'f', value: 0 },
@@ -327,40 +334,39 @@ class DepthCloud extends Object3D {
       });
 
       this.mesh = new Points(this.geometry, this.material);
-      this.mesh.position.x = 0;
-      this.mesh.position.y = 0;
+      this.mesh.frustumCulled = false;
+      this.mesh.position.set(0, 0, 0);
+
       this.add(this.mesh);
 
-      setInterval(() => {
-        if (
-          this.isMjpeg ||
-          this.video.readyState === this.video.HAVE_ENOUGH_DATA
-        ) {
-          // console.log(this.texture);
-          this.texture.needsUpdate = true;
-        }
+      requestAnimationFrame(this.animate);
+    }
+  }
 
-        const canvas = document.getElementById('imgCanvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = this.video.width;
-        canvas.height = this.video.height;
-        ctx.drawImage(this.video, 0, 0);
-        // console.log(canvas.toDataURL());
-      }, 1000);
+  animate() {
+    if (
+      this.isMjpeg() ||
+      this.video.readyState === this.video.HAVE_ENOUGH_DATA
+    ) {
+      this.texture.needsUpdate = true;
+    }
+    if (this.video.src) {
+      requestAnimationFrame(this.animate);
     }
   }
 
   startStream() {
-    if (!this.isMjpeg) {
+    if (!this.isMjpeg()) {
       this.video.play();
     }
   }
 
   stopStream() {
-    if (!this.isMjpeg) {
+    if (!this.isMjpeg()) {
       this.video.pause();
     }
+    this.video.src = '';
+    clearInterval(this.interval);
   }
 }
 

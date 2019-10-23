@@ -121,6 +121,11 @@ class TfViewer extends Viewer3d {
     };
   }
 
+  attachObjectOutsideTree(object) {
+    const frameObject = this.getObjectOrCreate(object.frameId);
+    frameObject.attach(object);
+  }
+
   addRobot(robotModel) {
     robotModel.load(object => {
       RobotModel.onComplete(object);

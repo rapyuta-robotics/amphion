@@ -1,8 +1,11 @@
 import * as THREE from 'three';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { MapControls2D } from '../utils/2dControls';
 
 import Scene from '../core/scene';
 import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
+
+const ResizeObserver = window.ResizeObserver || ResizeObserverPolyfill;
 
 class Viewer2d {
   constructor(scene, options = {}) {
@@ -13,6 +16,12 @@ class Viewer2d {
     this.scene = scene || new Scene();
     this.previousWidth = 0;
     this.previousHeight = 0;
+
+    this.ro = new ResizeObserver(entries => {
+      if (entries.length > 0) {
+        this.onWindowResize();
+      }
+    });
 
     this.initCamera();
     this.animate = this.animate.bind(this);
@@ -43,7 +52,7 @@ class Viewer2d {
     this.initRenderer(domNode);
     this.controls = new MapControls2D(this.camera, this.container);
     this.controls.enableDamping = true;
-    window.addEventListener('resize', this.onWindowResize);
+    this.ro.observe(this.container);
     requestAnimationFrame(this.animate);
     this.onWindowResize();
   }
@@ -67,7 +76,7 @@ class Viewer2d {
   }
 
   destroy() {
-    window.removeEventListener('resize', this.onWindowResize);
+    this.ro.unobserve(this.container);
   }
 
   onWindowResize() {

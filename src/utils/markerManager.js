@@ -1,5 +1,5 @@
-import ROSLIB from 'roslib';
 import getNewPrimitive from './markerTypes';
+import MarkerLifetime from './markerLifetime';
 
 export default class MarkerManager {
   constructor(rootObject, onChangeCb) {
@@ -7,6 +7,18 @@ export default class MarkerManager {
     this.object = rootObject;
     this.namespaces = {};
     this.onChangeCb = onChangeCb;
+    this.markerLifetime = new MarkerLifetime(
+      this.onMarkerLifetimeOver.bind(this),
+    );
+  }
+
+  onMarkerLifetimeOver(id) {
+    const marker = this.objectMap[id];
+    if (!marker) {
+      return;
+    }
+
+    this.removeObject(id);
   }
 
   getMarkerOrCreate(marker) {
@@ -26,31 +38,9 @@ export default class MarkerManager {
     return tokens[0];
   }
 
-  setQueueSize(queueSize, context) {
-    context.unsubscribe();
-
-    context.queueSize = queueSize;
-
-    context.topic = new ROSLIB.Topic({
-      ros: context.ros,
-      name: context.topicName,
-      messageType: context.messageType,
-      queue_size: queueSize,
-    });
-
-    context.subscribe();
-  }
-
-  updateOptions(options, context) {
-    const { namespaces, queueSize } = options;
-    const { queueSize: currentQueueSize } = context;
-
-    if (currentQueueSize !== queueSize) {
-      this.setQueueSize(queueSize, context);
-    }
-
+  updateOptions(options) {
+    const { namespaces } = options;
     this.namespaces = namespaces;
-
     for (const key in this.objectMap) {
       // eslint-disable-next-line no-prototype-builtins
       if (this.objectMap.hasOwnProperty(key)) {
@@ -68,11 +58,16 @@ export default class MarkerManager {
     const {
       color,
       colors,
+      lifetime,
       points,
       pose: { orientation, position },
       scale,
     } = marker;
+
     const markerObject = this.getMarkerOrCreate(marker);
+    const markerId = MarkerManager.getId(marker);
+
+    this.markerLifetime.track(markerId, lifetime.secs);
 
     if (markerObject.updatePoints) {
       markerObject.updatePoints(points, colors, marker);
@@ -103,6 +98,7 @@ export default class MarkerManager {
 
   reset() {
     this.namespaces = {};
+    this.markerLifetime.destroy();
     this.onChange();
 
     Object.keys(this.objectMap).forEach(id => {

@@ -7,6 +7,27 @@
 
 ### Fixed
 
+## [0.1.14] - 2019-10-22
+### Added
+- Interactive Markers
+- Text view-facing markers
+
+### Changed
+- Upgrade Three.js and eslint
+- Change from window.onresize to using resize observer for viewers
+- Markers now support lifetime
+
+### Fixed
+- Husky now works only on staged files (lint-staged)
+
+## [0.1.13] - 2019-09-18
+### Added
+- Wrench
+- Range
+
+### Fixed
+- 2D viewer camera rotate
+
 ## [0.1.12] - 2019-08-27
 ### Changed
 - Updated Three.js and eslint config
