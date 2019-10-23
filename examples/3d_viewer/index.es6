@@ -27,4 +27,3 @@ const robotModel = new Amphion.RobotModel(ros, 'robot_description', {
 });
 robotModel.load();
 viewer.addVisualization(robotModel);
-
