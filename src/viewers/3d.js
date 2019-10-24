@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
+import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { EditorControls } from '../utils/editorControls';
 
 import Scene from '../core/scene';
 import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
 
-const ResizeObserver = window.ResizeObserver || Polyfill;
+const ResizeObserver = window.ResizeObserver || ResizeObserverPolyfill;
 
 class Viewer3d {
   constructor(scene, options = {}) {
@@ -75,7 +75,7 @@ class Viewer3d {
   }
 
   destroy() {
-    // this.container.removeEventListener('resize', this.onWindowResize);
+    this.ro.unobserve(this.container);
   }
 
   onWindowResize() {
