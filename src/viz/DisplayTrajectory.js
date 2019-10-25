@@ -13,7 +13,7 @@ class DisplayTrajectory extends Core {
 
     this.object = new Group();
     this.updateOptions({
-      ...MESSAGE_TYPE_DISPLAYTRAJECTORY,
+      ...DEFAULT_OPTIONS_DISPLAYTRAJECTORY,
       ...options,
     });
     const { robot } = this.options;
@@ -27,10 +27,16 @@ class DisplayTrajectory extends Core {
       });
     });
     this.robotCopy = robotCopy;
+    this.lastMessage = null;
+    this.loopbackId = null;
   }
 
-  update(message) {
+  update(message, loopback) {
+    clearTimeout(this.loopbackId);
     super.update(message);
+    if (!loopback) {
+      this.lastMessage = message;
+    }
     const {
       trajectory: [
         {
@@ -69,6 +75,11 @@ class DisplayTrajectory extends Core {
       } = points[points.length - 1];
       setTimeout(() => {
         robotClone.parent.remove(robotClone);
+        if (this.options.loop) {
+          this.loopbackId = setTimeout(() => {
+            this.update(this.lastMessage, true);
+          }, 1000);
+        }
       }, 1000 * lastSec + lastNsec / 1000000);
     }
   }
