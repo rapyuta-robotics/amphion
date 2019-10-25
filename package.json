@@ -1,6 +1,6 @@
 {
   "name": "amphion",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "roslibjs based web visualization library",
   "main": "./build/amphion.js",
   "repository": {
@@ -28,7 +28,7 @@
     "three": "^0.109.0",
     "three-freeform-controls": "0.0.18",
     "three-spritetext": "^1.1.1",
-    "urdf-loader": "^0.7.1"
+    "urdf-js": "0.0.5"
   },
   "scripts": {
     "build": "rollup -c",
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
     "eslint": "^6.2.2",
@@ -60,6 +61,8 @@
     "prettier": "^1.18.2",
     "prettier-sort-destructure": "0.0.4",
     "rollup": "^1.16.7",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-local-resolve": "^1.0.7",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
