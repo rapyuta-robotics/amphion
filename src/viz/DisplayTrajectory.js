@@ -29,14 +29,23 @@ class DisplayTrajectory extends Core {
     this.robotCopy = robotCopy;
     this.lastMessage = null;
     this.loopbackId = null;
+    this.poseRemovalId = null;
+    this.pointsUpdateIds = [];
   }
 
   update(message, loopback) {
     clearTimeout(this.loopbackId);
-    super.update(message);
+    clearTimeout(this.poseRemovalId);
+    this.pointsUpdateIds.map(x => clearTimeout(x));
+    this.pointsUpdateIds = [];
+    if (this.robotClone && this.robotClone.parent) {
+      this.robotClone.parent.remove(this.robotClone);
+    }
     if (!loopback) {
       this.lastMessage = message;
     }
+
+    super.update(message);
     const {
       trajectory: [
         {
@@ -47,10 +56,10 @@ class DisplayTrajectory extends Core {
         joint_state: { name: initialNames, position: initialPositions },
       },
     } = message;
-    const robotClone = this.robotCopy.clone(true);
-    this.object.add(robotClone);
+    this.robotClone = this.robotCopy.clone(true);
+    this.object.add(this.robotClone);
     initialNames.forEach((name, index) => {
-      const joint = robotClone.getObjectByName(name);
+      const joint = this.robotClone.getObjectByName(name);
       if (joint) {
         joint.setAngle(initialPositions[index]);
       }
@@ -60,21 +69,23 @@ class DisplayTrajectory extends Core {
         positions,
         time_from_start: { nsecs, secs },
       } = point;
-      setTimeout(() => {
-        jointNames.forEach((jointName, index) => {
-          const joint = robotClone.getObjectByName(jointName);
-          if (joint) {
-            joint.setAngle(positions[index]);
-          }
-        });
-      }, 1000 * secs + nsecs / 1000000);
+      this.pointsUpdateIds.push(
+        setTimeout(() => {
+          jointNames.forEach((jointName, index) => {
+            const joint = this.robotClone.getObjectByName(jointName);
+            if (joint) {
+              joint.setAngle(positions[index]);
+            }
+          });
+        }, 1000 * secs + nsecs / 1000000),
+      );
     });
     if (points.length > 0) {
       const {
         time_from_start: { nsecs: lastNsec, secs: lastSec },
       } = points[points.length - 1];
-      setTimeout(() => {
-        robotClone.parent.remove(robotClone);
+      this.poseRemovalId = setTimeout(() => {
+        this.robotClone.parent.remove(this.robotClone);
         if (this.options.loop) {
           this.loopbackId = setTimeout(() => {
             this.update(this.lastMessage, true);
