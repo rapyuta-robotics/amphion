@@ -32,16 +32,30 @@ class DisplayTrajectory extends Core {
     this.pointsUpdateIds = [];
   }
 
-  update(message, loopback) {
-    const { loop } = this.options;
+  updateOptions(options) {
+    super.updateOptions(options);
+    if (options.loop && this.lastMessage) {
+      this.update(this.lastMessage, true);
+    } else {
+      this.resetLoopback();
+    }
+  }
 
+  resetLoopback() {
     clearTimeout(this.loopbackId);
     clearTimeout(this.poseRemovalId);
-    this.pointsUpdateIds.map(x => clearTimeout(x));
+    if (this.pointsUpdateIds) {
+      this.pointsUpdateIds.map(x => clearTimeout(x));
+    }
     this.pointsUpdateIds = [];
     if (this.robotClone && this.robotClone.parent) {
       this.robotClone.parent.remove(this.robotClone);
     }
+  }
+
+  update(message, loopback) {
+    const { loop } = this.options;
+    this.resetLoopback();
     if (!loopback) {
       this.lastMessage = message;
     }
