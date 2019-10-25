@@ -33,6 +33,8 @@ class DisplayTrajectory extends Core {
   }
 
   update(message, loopback) {
+    const { loop } = this.options;
+
     clearTimeout(this.loopbackId);
     clearTimeout(this.poseRemovalId);
     this.pointsUpdateIds.map(x => clearTimeout(x));
@@ -84,7 +86,7 @@ class DisplayTrajectory extends Core {
       } = points[points.length - 1];
       this.poseRemovalId = setTimeout(() => {
         this.robotClone.parent.remove(this.robotClone);
-        if (this.options.loop) {
+        if (loop) {
           this.loopbackId = setTimeout(() => {
             this.update(this.lastMessage, true);
           }, 1000);
