@@ -251,6 +251,7 @@ export const DEFAULT_OPTIONS_FLATARROW = {
 
 export const DEFAULT_OPTIONS_DISPLAYTRAJECTORY = {
   robot: new Group(),
+  loop: true,
 };
 
 const DEFAULT_OPTIONS_INTENSITY = {
