@@ -17,16 +17,15 @@ class DisplayTrajectory extends Core {
       ...options,
     });
     const { robot } = this.options;
-    const robotCopy = robot.clone();
-    Object.keys(robotCopy.links).forEach(linkName => {
-      const link = robotCopy.links[linkName];
+    this.robotClone = robot.clone(true);
+    Object.keys(this.robotClone.links).forEach(linkName => {
+      const link = this.robotClone.links[linkName];
       link.traverse(child => {
         if (child.material) {
           child.material = new MeshPhongMaterial({ color: '#ff0000' });
         }
       });
     });
-    this.robotCopy = robotCopy;
     this.lastMessage = null;
     this.loopbackId = null;
     this.poseRemovalId = null;
@@ -56,7 +55,6 @@ class DisplayTrajectory extends Core {
         joint_state: { name: initialNames, position: initialPositions },
       },
     } = message;
-    this.robotClone = this.robotCopy.clone(true);
     this.object.add(this.robotClone);
     initialNames.forEach((name, index) => {
       const joint = this.robotClone.getObjectByName(name);
