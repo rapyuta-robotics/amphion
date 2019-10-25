@@ -17,7 +17,7 @@ class CollisionObject extends Core {
 
     this.object = new Group();
     this.updateOptions({
-      ...MESSAGE_TYPE_COLLISION_OBJECT,
+      ...DEFAULT_OPTIONS_COLLISION_OBJECT,
       ...options,
     });
   }

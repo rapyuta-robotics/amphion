@@ -1,6 +1,6 @@
 {
   "name": "amphion",
-  "version": "0.1.16",
+  "version": "0.1.19",
   "description": "roslibjs based web visualization library",
   "main": "./build/amphion.js",
   "repository": {
@@ -28,7 +28,7 @@
     "three": "^0.109.0",
     "three-freeform-controls": "0.0.18",
     "three-spritetext": "^1.1.1",
-    "urdf-js": "0.0.5"
+    "urdf-js": "^0.0.6"
   },
   "scripts": {
     "build": "rollup -c",
