@@ -1,6 +1,6 @@
 {
   "name": "amphion",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "roslibjs based web visualization library",
   "main": "./build/amphion.js",
   "repository": {
