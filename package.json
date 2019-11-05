@@ -1,6 +1,6 @@
 {
   "name": "amphion",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "roslibjs based web visualization library",
   "main": "./build/amphion.js",
   "repository": {
@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^2.2.1",
+    "hsl-to-rgb-for-reals": "^1.1.1",
     "lodash.debounce": "^4.0.8",
+    "pcl-decoder": "^0.1.7",
     "randomcolor": "^0.5.4",
     "roslib": "^1.0.1",
     "stats-js": "^1.0.1",
@@ -43,7 +45,7 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
-    "eslint": "^6.2.2",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.0.0",

@@ -346,7 +346,7 @@ export const DEFAULT_OPTIONS_POINTCLOUD = {
   compression: 'cbor',
   colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
-  useRainbow: false,
+  useRainbow: true,
 };
 
 export const DEFAULT_OPTIONS_POINT = {
