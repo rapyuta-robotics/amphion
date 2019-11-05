@@ -1,6 +1,6 @@
 import ROSLIB from 'roslib';
 import * as THREE from 'three';
-import URDFLoader from 'urdf-loader';
+import URDFLoader from 'urdf-js';
 import Group from '../primitives/Group';
 import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
 

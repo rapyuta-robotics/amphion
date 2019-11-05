@@ -27,6 +27,8 @@ import Viewer3d from './viewers/3d';
 import TfViewer from './viewers/Tf';
 import InteractiveMarkers from './viz/InteractiveMarkers';
 
+import * as CONSTANTS from './utils/constants';
+
 export default {
   CollisionObject,
   DepthCloud,
@@ -56,4 +58,6 @@ export default {
   TfViewer,
 
   InteractiveMarkers,
+
+  CONSTANTS,
 };
