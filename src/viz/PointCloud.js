@@ -55,6 +55,8 @@ class PointCloud extends Core {
 
   updatePointCloudGeometry(positions, colors, normals) {
     const { geometry, material } = this.object;
+    // TODO: investigate the next line
+    geometry.dispose();
     if (
       material.size !== this.options.size &&
       !Number.isNaN(this.options.size)
