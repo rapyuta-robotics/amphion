@@ -187,7 +187,13 @@ export class PCLDecoder {
         positionMemPointer,
         3 * n,
       );
-      const colors = new Float32Array(memory.buffer, colorMemPointer, 3 * n);
+      const invalidChannel =
+        (colorChannel === POINTCLOUD_COLOR_CHANNELS.INTENSITY &&
+          !offsets.intensity) ||
+        (colorChannel === POINTCLOUD_COLOR_CHANNELS.RGB && !offsets.rgb);
+      const colors = invalidChannel
+        ? new Float32Array(3 * n)
+        : new Float32Array(memory.buffer, colorMemPointer, 3 * n);
       return { positions, colors, normals };
     };
   }
