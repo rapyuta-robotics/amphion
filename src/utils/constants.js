@@ -169,6 +169,11 @@ export const COLOR_TRANSFORMERS = {
   FLAT_COLOR: 'FlatColor',
 };
 
+const DEPTHCLOUD_STREAMTYPES = {
+  VP8: 'vp8',
+  MJPEG: 'mjpeg',
+};
+
 export const POINTCLOUD_COLOR_CHANNELS = {
   RGB: 'rgb',
   INTENSITY: 'intensity',
@@ -273,6 +278,17 @@ const DEFAULT_OPITONS_AXIS_COLOR = {
   useFixedFrame: false,
   minAxisValue: 0,
   maxAxisValue: 0,
+};
+
+export const DEFAULT_OPTIONS_DEPTHCLOUD = {
+  streamType: DEPTHCLOUD_STREAMTYPES.MJPEG,
+  f: 526,
+  maxDepthPerTile: 1.0,
+  pointSize: 3,
+  width: 1024,
+  height: 1024,
+  whiteness: 0,
+  varianceThreshold: 0.000016667,
 };
 
 export const DEFAULT_OPTIONS_IMAGE = {
