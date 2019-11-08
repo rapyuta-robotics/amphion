@@ -1,10 +1,5 @@
 import * as THREE from 'three';
-import convertColor from 'hsl-to-rgb-for-reals';
-import {
-  MAX_POINTCLOUD_POINTS,
-  POINT_FIELD_DATATYPES,
-  POINTCLOUD_COLOR_CHANNELS,
-} from './constants';
+import { POINT_FIELD_DATATYPES, POINTCLOUD_COLOR_CHANNELS } from './constants';
 
 export const getAccessorForDataType = (dataView, dataType) => {
   switch (dataType) {
@@ -58,6 +53,8 @@ export class PCLDecoder {
     const offsets = {};
     const accessor = {};
 
+    const rgbCache = new THREE.Color();
+
     message.fields.forEach(f => {
       offsets[f.name] = f.offset;
       accessor[f.name] = getAccessorForDataType(dataView, message.datatype);
@@ -106,10 +103,13 @@ export class PCLDecoder {
           !message.is_bigendian,
         );
 
-        const normalizedIntensity = Math.min(intensity, 360);
+        const normalizedIntensity = Math.min(intensity, 360) / 360;
 
         if (useRainbow) {
-          const rgb = convertColor(normalizedIntensity, 1.0, 0.5);
+          const rgb = rgbCache
+            .setHSL(normalizedIntensity, 1.0, 0.5)
+            .toArray()
+            .map(x => x * 255);
           colors[3 * i] = rgb[0] / 255;
           colors[3 * i + 1] = rgb[1] / 255;
           colors[3 * i + 2] = rgb[2] / 255;

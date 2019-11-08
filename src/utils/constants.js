@@ -347,6 +347,7 @@ export const DEFAULT_OPTIONS_POINTCLOUD = {
   colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
   useRainbow: true,
+  queueSize: 1,
 };
 
 export const DEFAULT_OPTIONS_POINT = {
