@@ -6,7 +6,7 @@ export const OBJECT_TYPE_ARROW_WITH_CIRCLE = 'ArrowWithCircle';
 export const OBJECT_TYPE_AXES = 'Axes';
 export const OBJECT_TYPE_FLAT_ARROW = 'FlatArrow';
 
-export const MAX_POINTCLOUD_POINTS = 500000;
+export const MAX_POINTCLOUD_POINTS = 5000000;
 
 export const DEFAULT_BACKGROUND_COLOR = '#000000';
 export const DEFAULT_GRID_SIZE = 30;
@@ -346,7 +346,8 @@ export const DEFAULT_OPTIONS_POINTCLOUD = {
   compression: 'cbor',
   colorChannel: POINTCLOUD_COLOR_CHANNELS.RGB,
   size: 0.0125,
-  useRainbow: false,
+  useRainbow: true,
+  queueSize: 1,
 };
 
 export const DEFAULT_OPTIONS_POINT = {
