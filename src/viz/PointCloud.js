@@ -6,7 +6,7 @@ import {
   MAX_POINTCLOUD_POINTS,
   MESSAGE_TYPE_POINTCLOUD2,
 } from '../utils/constants';
-import { PCLDecoder, setOrUpdateGeometryAttribute } from '../utils/pcl';
+import { PCLDecoder, updateGeometryAttribute } from '../utils/pcl';
 
 const editPointCloudPoints = function(message, options) {
   if (!message) {
@@ -43,6 +43,27 @@ class PointCloud extends Core {
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
+    geometry.addAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        new Float32Array(MAX_POINTCLOUD_POINTS * 3),
+        3,
+      ).setDynamic(true),
+    );
+    geometry.addAttribute(
+      'color',
+      new THREE.BufferAttribute(
+        new Float32Array(MAX_POINTCLOUD_POINTS * 3),
+        3,
+      ).setDynamic(true),
+    );
+    geometry.addAttribute(
+      'normal',
+      new THREE.BufferAttribute(
+        new Float32Array(MAX_POINTCLOUD_POINTS * 3),
+        3,
+      ).setDynamic(true),
+    );
     geometry.setDrawRange(0, 0);
     geometry.computeBoundingSphere();
     this.object = new THREE.Points(geometry, cloudMaterial);
@@ -55,8 +76,6 @@ class PointCloud extends Core {
 
   updatePointCloudGeometry(positions, colors, normals) {
     const { geometry, material } = this.object;
-    // TODO: investigate the next line
-    geometry.dispose();
     if (
       material.size !== this.options.size &&
       !Number.isNaN(this.options.size)
@@ -64,11 +83,11 @@ class PointCloud extends Core {
       material.size = this.options.size;
       material.needsUpdate = true;
     }
-    const l = Math.min(MAX_POINTCLOUD_POINTS, positions.length);
+    const l = Math.min(MAX_POINTCLOUD_POINTS, Math.floor(positions.length / 3));
     geometry.setDrawRange(0, l);
-    setOrUpdateGeometryAttribute(geometry, 'position', positions);
-    setOrUpdateGeometryAttribute(geometry, 'color', colors);
-    setOrUpdateGeometryAttribute(geometry, 'normal', normals);
+    updateGeometryAttribute(geometry, 'position', positions, l);
+    updateGeometryAttribute(geometry, 'color', colors, l);
+    updateGeometryAttribute(geometry, 'normal', normals, l);
   }
 
   update(message) {

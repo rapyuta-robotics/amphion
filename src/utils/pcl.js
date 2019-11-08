@@ -36,18 +36,13 @@ export const getAccessorForDataType = (dataView, dataType) => {
   }
 };
 
-export const setOrUpdateGeometryAttribute = (geometry, attribute, data) => {
-  if (geometry.attributes[attribute] === undefined) {
-    geometry.addAttribute(
-      attribute,
-      new THREE.BufferAttribute(
-        new Float32Array(data, 0, MAX_POINTCLOUD_POINTS * 3),
-        3,
-      ).setDynamic(true),
-    );
-  } else {
-    geometry.attributes[attribute].array = data;
-  }
+export const updateGeometryAttribute = (geometry, attribute, data, l) => {
+  geometry.attributes[attribute].updateRange = {
+    offset: 0,
+    count: l * 3,
+  };
+  geometry.attributes[attribute].count = l;
+  geometry.attributes[attribute].array = data;
   geometry.attributes[attribute].needsUpdate = true;
 };
 
