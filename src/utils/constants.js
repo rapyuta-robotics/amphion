@@ -298,6 +298,11 @@ export const DEFAULT_OPTIONS_IMAGE = {
   compression: 'cbor',
 };
 
+export const DEFAULT_OPTIONS_IMAGE_STREAM = {
+  defaultWidth: 320,
+  defaultHeight: 240,
+};
+
 export const DEFAULT_OPTIONS_LASERSCAN = {
   selectable: false,
   style: LASERSCAN_STYLES.FLAT_SQUARES,
