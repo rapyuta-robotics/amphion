@@ -20,6 +20,8 @@ import Range from './viz/Range';
 
 import Scene from './core/scene';
 
+import DepthCloud from './viz/DepthCloud';
+
 import Viewer2d from './viewers/2d';
 import Viewer3d from './viewers/3d';
 import TfViewer from './viewers/Tf';
@@ -29,6 +31,7 @@ import * as CONSTANTS from './utils/constants';
 
 export default {
   CollisionObject,
+  DepthCloud,
   DisplayTrajectory,
   PlanningScene,
   Point,

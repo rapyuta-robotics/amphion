@@ -3,7 +3,7 @@ import {
   PerspectiveCamera,
   Vector3
 } from 'three';
-import { EditorControls } from 'three/examples/jsm/controls/EditorControls';
+import { EditorControls } from '../../src/utils/editorControls';
 import ROSLIB from 'roslib';
 import Amphion from '../../build/amphion.module';
 import CONFIG from "../config";
