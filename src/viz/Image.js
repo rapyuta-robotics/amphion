@@ -113,9 +113,9 @@ class Image extends Core {
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { defaultHeight, defaultWidth } = this.options;
-    this.object.width = defaultWidth;
-    this.object.height = defaultHeight;
+    const { height, width } = this.options;
+    this.object.width = width;
+    this.object.height = height;
   }
 
   update(message) {

@@ -15,6 +15,7 @@ import Odometry from './viz/Odometry';
 import PoseArray from './viz/PoseArray';
 import Path from './viz/Path';
 import Image from './viz/Image';
+import ImageStream from './viz/ImageStream';
 import Marker from './viz/Marker';
 import Range from './viz/Range';
 
@@ -48,6 +49,7 @@ export default {
   Odometry,
   Path,
   Image,
+  ImageStream,
   Marker,
   Range,
 

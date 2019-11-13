@@ -293,9 +293,14 @@ export const DEFAULT_OPTIONS_DEPTHCLOUD = {
 
 export const DEFAULT_OPTIONS_IMAGE = {
   queueSize: 1,
-  defaultWidth: 320,
-  defaultHeight: 240,
+  width: 320,
+  height: 240,
   compression: 'cbor',
+};
+
+export const DEFAULT_OPTIONS_IMAGE_STREAM = {
+  width: 320,
+  height: 240,
 };
 
 export const DEFAULT_OPTIONS_LASERSCAN = {
