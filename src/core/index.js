@@ -6,7 +6,7 @@ class Core {
     this.options = options;
     this.ros = ros;
     this.headerFrameId = '';
-    if (topicName) {
+    if (ros && topicName) {
       this.changeTopic(topicName, messageType, false);
     }
     this.onHeaderChange = onHeaderChange || (() => {});

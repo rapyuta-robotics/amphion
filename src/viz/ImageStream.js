@@ -1,29 +1,27 @@
 import Core from '../core';
-import {
-  DEFAULT_OPTIONS_IMAGE,
-  DEFAULT_OPTIONS_IMAGE_STREAM,
-} from '../utils/constants';
+import { DEFAULT_OPTIONS_IMAGE_STREAM } from '../utils/constants';
 
 class ImageStream extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_IMAGE_STREAM) {
-    super(ros, null, null, {
+  constructor(url, options = DEFAULT_OPTIONS_IMAGE_STREAM) {
+    super(null, null, null, {
       ...DEFAULT_OPTIONS_IMAGE_STREAM,
       ...options,
     });
+    this.url = url;
     this.object = document.createElement('img');
-    this.object.src = this.options.url;
+    this.object.src = this.url;
     this.object.setAttribute('draggable', false);
     this.updateOptions({
-      ...DEFAULT_OPTIONS_IMAGE,
+      ...DEFAULT_OPTIONS_IMAGE_STREAM,
       ...options,
     });
   }
 
   updateOptions(options) {
     super.updateOptions(options);
-    const { defaultHeight, defaultWidth } = this.options;
-    this.object.width = defaultWidth;
-    this.object.height = defaultHeight;
+    const { height, width } = this.options;
+    this.object.width = width;
+    this.object.height = height;
   }
 
   hide() {
