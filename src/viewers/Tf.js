@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import ROSLIB from 'roslib/build/roslib.min';
+import ROSLIB from 'roslib';
 
 import Viewer3d from './3d';
 import RobotModel from '../viz/RobotModel';

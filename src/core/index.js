@@ -1,4 +1,4 @@
-import ROSLIB from 'roslib/build/roslib.min';
+import ROSLIB from 'roslib';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {

@@ -1,4 +1,4 @@
-import ROSLIB from 'roslib/build/roslib.min';
+import ROSLIB from 'roslib';
 import * as THREE from 'three';
 import URDFLoader from 'urdf-js';
 import Group from '../primitives/Group';

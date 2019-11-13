@@ -1,6 +1,6 @@
 import debounce from 'lodash.debounce';
 import { ControlsManager, RAYCASTER_EVENTS } from 'three-freeform-controls';
-import ROSLIB from 'roslib/build/roslib.min';
+import ROSLIB from 'roslib';
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_INTERACTIVE_MARKER,
