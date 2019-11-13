@@ -26,22 +26,23 @@
     "randomcolor": "^0.5.4",
     "roslib": "^1.0.1",
     "stats-js": "^1.0.1",
-    "three": "^0.109.0",
     "three-freeform-controls": "0.0.18",
     "three-spritetext": "^1.1.1",
     "urdf-js": "^0.0.6"
   },
+  "peerDependencies": {
+    "three": "^0.109.0"
+  },
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c rollup.config.prod.js",
     "examples": "webpack-dev-server --config webpack.config.js",
     "lint": "eslint src/**/*.js --fix",
     "prettier": "prettier src/**/* --write",
-    "dev": "rollup -c --watch",
-    "start": "npm-run-all --parallel dev examples"
+    "dev": "rollup -c rollup.config.dev.js --watch",
+    "start": "npm run dev -s"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
-    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.5.4",
     "babel-loader": "^8.0.6",
     "eslint": "^6.6.0",
@@ -56,15 +57,17 @@
     "html-webpack-plugin": "^3.2.0",
     "husky": "^3.0.2",
     "lint-staged": "^9.2.5",
-    "npm-run-all": "^4.1.5",
-    "object.assign": "^4.1.0",
-    "object.entries": "^1.1.0",
     "prettier": "^1.18.2",
     "prettier-sort-destructure": "0.0.4",
     "rollup": "^1.16.7",
     "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-babel-minify": "^9.1.1",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-local-resolve": "^1.0.7",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-typescript2": "^0.25.2",
+    "three": "^0.110.0",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.2",
     "webpack": "^4.35.3",
     "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.7.2"
