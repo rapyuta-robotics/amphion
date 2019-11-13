@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * @author qiao / https://github.com/qiao
  * @author mrdoob / http://mrdoob.com
@@ -5,13 +7,10 @@
  * @author WestLangley / http://github.com/WestLangley
  */
 
-/** *
- Edited from THREE.EditorControls
- Change in this.zoom to adjust camera zoom rather than position
- Change in this.pan to consider camera zoom rather than position
- Change in this.rotate to disable spherical.phi
- Change to this.panSpeed and this.zoomSpeed
- ** */
+/**
+ * Edited from THREE.EditorControls
+ * Changes to this.rotate function to take spherical wrt z as vertical axis
+ * */
 
 import {
   Box3,
@@ -23,15 +22,15 @@ import {
   Vector3,
 } from 'three';
 
-const MapControls2D = function(object, domElement) {
+const EditorControls = function(object, domElement) {
   domElement = domElement !== undefined ? domElement : document;
 
   // API
 
   this.enabled = true;
   this.center = new Vector3();
-  this.panSpeed = 0.01;
-  this.zoomSpeed = 0.05;
+  this.panSpeed = 0.002;
+  this.zoomSpeed = 0.1;
   this.rotationSpeed = 0.005;
 
   // internals
@@ -79,35 +78,40 @@ const MapControls2D = function(object, domElement) {
     scope.dispatchEvent(changeEvent);
   };
 
-  this.pan = function(positionDelta) {
-    // var distance = object.position.distanceTo( center );
+  this.pan = function(delta) {
+    const distance = object.position.distanceTo(center);
 
-    const { zoom } = object;
+    delta.multiplyScalar(distance * scope.panSpeed);
+    delta.applyMatrix3(normalMatrix.getNormalMatrix(object.matrix));
 
-    positionDelta.multiplyScalar(scope.panSpeed / zoom);
-    positionDelta.applyMatrix3(normalMatrix.getNormalMatrix(object.matrix));
-
-    object.position.add(positionDelta);
-    center.add(positionDelta);
+    object.position.add(delta);
+    center.add(delta);
 
     scope.dispatchEvent(changeEvent);
   };
 
-  this.zoom = function(zoomDelta) {
-    object.zoom -= (zoomDelta.z || 0) * object.zoom * 0.1;
-    object.updateProjectionMatrix();
+  this.zoom = function(delta) {
+    const distance = object.position.distanceTo(center);
+
+    delta.multiplyScalar(distance * scope.zoomSpeed);
+
+    if (delta.length() > distance) return;
+
+    delta.applyMatrix3(normalMatrix.getNormalMatrix(object.matrix));
+
+    object.position.add(delta);
 
     scope.dispatchEvent(changeEvent);
   };
 
-  this.rotate = function(rotationDelta) {
+  this.rotate = function(delta) {
     vector.copy(object.position).sub(center);
 
     // spherical.setFromVector3( vector );
     spherical.setFromCartesianCoords(-1 * vector.x, vector.z, vector.y);
 
-    spherical.theta += rotationDelta.x * scope.rotationSpeed;
-    // spherical.phi += rotationDelta.y * scope.rotationSpeed;
+    spherical.theta += delta.x * scope.rotationSpeed;
+    spherical.phi += delta.y * scope.rotationSpeed;
 
     spherical.makeSafe();
 
@@ -122,41 +126,6 @@ const MapControls2D = function(object, domElement) {
   };
 
   // mouse
-
-  function onMouseMove(event) {
-    if (scope.enabled === false) return;
-
-    pointer.set(event.clientX, event.clientY);
-
-    const movementX = pointer.x - pointerOld.x;
-    const movementY = pointer.y - pointerOld.y;
-
-    if (state === STATE.ROTATE) {
-      scope.rotate(delta.set(-movementX, -movementY, 0));
-    } else if (state === STATE.ZOOM) {
-      scope.zoom(delta.set(0, 0, movementY));
-    } else if (state === STATE.PAN) {
-      scope.pan(delta.set(-movementX, movementY, 0));
-    }
-
-    pointerOld.set(event.clientX, event.clientY);
-  }
-
-  function onMouseUp() {
-    domElement.removeEventListener('mousemove', onMouseMove, false);
-    domElement.removeEventListener('mouseup', onMouseUp, false);
-    domElement.removeEventListener('mouseout', onMouseUp, false);
-    domElement.removeEventListener('dblclick', onMouseUp, false);
-
-    state = STATE.NONE;
-  }
-
-  function onMouseWheel(event) {
-    event.preventDefault();
-
-    // Normalize deltaY due to https://bugzilla.mozilla.org/show_bug.cgi?id=1392460
-    scope.zoom(delta.set(0, 0, event.deltaY > 0 ? 1 : -1));
-  }
 
   function onMouseDown(event) {
     if (scope.enabled === false) return;
@@ -177,9 +146,58 @@ const MapControls2D = function(object, domElement) {
     domElement.addEventListener('dblclick', onMouseUp, false);
   }
 
+  function onMouseMove(event) {
+    if (scope.enabled === false) return;
+
+    pointer.set(event.clientX, event.clientY);
+
+    const movementX = pointer.x - pointerOld.x;
+    const movementY = pointer.y - pointerOld.y;
+
+    if (state === STATE.ROTATE) {
+      scope.rotate(delta.set(-movementX, -movementY, 0));
+    } else if (state === STATE.ZOOM) {
+      scope.zoom(delta.set(0, 0, movementY));
+    } else if (state === STATE.PAN) {
+      scope.pan(delta.set(-movementX, movementY, 0));
+    }
+
+    pointerOld.set(event.clientX, event.clientY);
+  }
+
+  function onMouseUp(event) {
+    domElement.removeEventListener('mousemove', onMouseMove, false);
+    domElement.removeEventListener('mouseup', onMouseUp, false);
+    domElement.removeEventListener('mouseout', onMouseUp, false);
+    domElement.removeEventListener('dblclick', onMouseUp, false);
+
+    state = STATE.NONE;
+  }
+
+  function onMouseWheel(event) {
+    event.preventDefault();
+
+    // Normalize deltaY due to https://bugzilla.mozilla.org/show_bug.cgi?id=1392460
+    scope.zoom(delta.set(0, 0, event.deltaY > 0 ? 1 : -1));
+  }
+
   function contextmenu(event) {
     event.preventDefault();
   }
+
+  this.dispose = function() {
+    domElement.removeEventListener('contextmenu', contextmenu, false);
+    domElement.removeEventListener('mousedown', onMouseDown, false);
+    domElement.removeEventListener('wheel', onMouseWheel, false);
+
+    domElement.removeEventListener('mousemove', onMouseMove, false);
+    domElement.removeEventListener('mouseup', onMouseUp, false);
+    domElement.removeEventListener('mouseout', onMouseUp, false);
+    domElement.removeEventListener('dblclick', onMouseUp, false);
+
+    domElement.removeEventListener('touchstart', touchStart, false);
+    domElement.removeEventListener('touchmove', touchMove, false);
+  };
 
   domElement.addEventListener('contextmenu', contextmenu, false);
   domElement.addEventListener('mousedown', onMouseDown, false);
@@ -226,12 +244,13 @@ const MapControls2D = function(object, domElement) {
     event.preventDefault();
     event.stopPropagation();
 
-    function getClosest(touch, allTouches) {
-      let closest = allTouches[0];
+    function getClosest(touch, touches) {
+      let closest = touches[0];
 
-      for (const i in allTouches) {
-        if (closest.distanceTo(touch) > allTouches[i].distanceTo(touch))
-          closest = allTouches[i];
+      for (const i in touches) {
+        if (closest.distanceTo(touch) > touches[i].distanceTo(touch)) {
+          closest = touches[i];
+        }
       }
 
       return closest;
@@ -259,14 +278,14 @@ const MapControls2D = function(object, domElement) {
         touches[1]
           .set(event.touches[1].pageX, event.touches[1].pageY, 0)
           .divideScalar(window.devicePixelRatio);
-        const distance = touches[0].distanceTo(touches[1]);
+        let distance = touches[0].distanceTo(touches[1]);
         scope.zoom(delta.set(0, 0, prevDistance - distance));
         prevDistance = distance;
 
-        const offset0 = touches[0]
+        let offset0 = touches[0]
           .clone()
           .sub(getClosest(touches[0], prevTouches));
-        const offset1 = touches[1]
+        let offset1 = touches[1]
           .clone()
           .sub(getClosest(touches[1], prevTouches));
         offset0.x = -offset0.x;
@@ -283,23 +302,9 @@ const MapControls2D = function(object, domElement) {
 
   domElement.addEventListener('touchstart', touchStart, false);
   domElement.addEventListener('touchmove', touchMove, false);
-
-  this.dispose = function() {
-    domElement.removeEventListener('contextmenu', contextmenu, false);
-    domElement.removeEventListener('mousedown', onMouseDown, false);
-    domElement.removeEventListener('wheel', onMouseWheel, false);
-
-    domElement.removeEventListener('mousemove', onMouseMove, false);
-    domElement.removeEventListener('mouseup', onMouseUp, false);
-    domElement.removeEventListener('mouseout', onMouseUp, false);
-    domElement.removeEventListener('dblclick', onMouseUp, false);
-
-    domElement.removeEventListener('touchstart', touchStart, false);
-    domElement.removeEventListener('touchmove', touchMove, false);
-  };
 };
 
-MapControls2D.prototype = Object.create(EventDispatcher.prototype);
-MapControls2D.prototype.constructor = MapControls2D;
+EditorControls.prototype = Object.create(EventDispatcher.prototype);
+EditorControls.prototype.constructor = EditorControls;
 
-export { MapControls2D };
+export { EditorControls };

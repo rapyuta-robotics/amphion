@@ -37,8 +37,8 @@ class Points {
     }
 
     this.geomtry = new THREE.BufferGeometry();
-    this.geomtry.addAttribute('position', this.positions.setDynamic(true));
-    this.geomtry.addAttribute('color', this.colors.setDynamic(true));
+    this.geomtry.setAttribute('position', this.positions.setDynamic(true));
+    this.geomtry.setAttribute('color', this.colors.setDynamic(true));
 
     this.material = new THREE.PointsMaterial({
       color: 0x888888,

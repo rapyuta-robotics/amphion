@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_POINTCLOUD,
@@ -43,21 +42,21 @@ class PointCloud extends Core {
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
-    geometry.addAttribute(
+    geometry.setAttribute(
       'position',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
-    geometry.addAttribute(
+    geometry.setAttribute(
       'color',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
-    geometry.addAttribute(
+    geometry.setAttribute(
       'normal',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),

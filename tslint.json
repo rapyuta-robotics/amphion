@@ -1,0 +1,9 @@
+{
+  "extends": ["tslint-config-standard", "tslint-config-prettier"],
+  "jsRules": true,
+  "rules": {
+    "no-empty": false,
+    "jsdoc-format": false,
+    "one-variable-per-declaration": [true, "ignore-for-loop"]
+  }
+}
