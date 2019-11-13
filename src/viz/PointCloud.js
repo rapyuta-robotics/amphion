@@ -42,21 +42,21 @@ class PointCloud extends Core {
       vertexColors: THREE.VertexColors,
     });
     const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute(
+    geometry.addAttribute(
       'position',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
-    geometry.setAttribute(
+    geometry.addAttribute(
       'color',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
-    geometry.setAttribute(
+    geometry.addAttribute(
       'normal',
       new THREE.BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
