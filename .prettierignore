@@ -1,5 +1,5 @@
 package.json
 package-lock.json
-**/node_modules
-src/utils/constants.js
-src/utils/transformControls.js
+node_modules
+src/utils/editorControls.ts
+src/utils/2dControls.ts

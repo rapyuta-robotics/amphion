@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* tslint-disable */
 
 /**
  * @author qiao / https://github.com/qiao
