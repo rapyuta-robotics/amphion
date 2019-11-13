@@ -10,16 +10,24 @@ viewer.setContainer(document.getElementById('scene'));
 ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);
 
 // Add path
-const path = new Amphion.Path(ros, '/path_rosbag');
-path.subscribe();
-viewer.addVisualization(path);
+// const path = new Amphion.Path(ros, '/path_rosbag');
+// path.subscribe();
+// viewer.addVisualization(path);
 
-// Add Marker array
-const markerArray = new Amphion.MarkerArray(ros, '/markers_demo');
-markerArray.subscribe();
-viewer.addVisualization(markerArray);
+// // Add Marker array
+// const markerArray = new Amphion.MarkerArray(ros, '/markers_demo');
+// markerArray.subscribe();
+// viewer.addVisualization(markerArray);
 
-// Add Odometry
-const odometry = new Amphion.Odometry(ros, '/odom_rosbag');
-odometry.subscribe();
-viewer.addVisualization(odometry);
+// // Add Odometry
+// const odometry = new Amphion.Odometry(ros, '/odom_rosbag');
+// odometry.subscribe();
+// viewer.addVisualization(odometry);
+
+
+// Add PoseArray
+const posearray = new Amphion.PoseArray(ros, '/pose_array_rosbag', {
+    type: 'FlatArrow',
+});
+posearray.subscribe();
+viewer.addVisualization(posearray);

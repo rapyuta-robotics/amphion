@@ -20,17 +20,43 @@ class PoseArray extends Core {
       ...DEFAULT_OPTIONS_POSEARRAY,
       ...options,
     });
+    this.prevMessage = null;
   }
 
   update(message) {
     super.update(message);
-    this.object.children.forEach(obj => {
-      obj.parent.remove(obj);
-    });
-    this.object.children = [];
 
-    for (let i = 0; i < message.poses.length; i++) {
-      this.object.add(Pose.getNewPrimitive(this.options));
+    // let prevPoses =  this.object.children.reduce((acc, child,index) => {
+    //   const vertex = child.children[1].geometry.vertices[0]
+    //   const orientation = {
+    //     x: child.quaternion.x,
+    //     y:child.quaternion.y,
+    //     z: child.quaternion.z,
+    //     w:child.quaternion.w
+    //   }
+    //   let key = `${vertex.x}${vertex.y}${vertex.z}${orientation.x}${orientation.y}${orientation.z}${orientation.w}`
+    //   return {
+    //     ...acc,
+    //     [key]: index
+    //   }
+    // }, {})
+
+    if (this.object.children.length === 0) {
+      for (let i = 0; i < message.poses.length; i++) {
+        this.object.add(Pose.getNewPrimitive(this.options));
+      }
+    } else if (this.object.children.length > message.poses.length) {
+      for (
+        let i = this.object.children.length - 1;
+        i >= message.poses.length;
+        i--
+      ) {
+        this.object.remove(this.object.children[i]);
+      }
+    } else {
+      for (let i = this.object.children.length; i < message.poses.length; i++) {
+        this.object.add(Pose.getNewPrimitive(this.options));
+      }
     }
 
     for (let i = 0; i < message.poses.length; i++) {
@@ -38,7 +64,20 @@ class PoseArray extends Core {
         translation: message.poses[i].position,
         rotation: message.poses[i].orientation,
       });
-      setObjectDimension(this.object.children[i], this.options);
+    }
+  }
+
+  updateOptions(options) {
+    super.updateOptions(options);
+    // for (const key in this.objectMap) {
+    //   // eslint-disable-next-line no-prototype-builtins
+    //   if (this.objectMap.hasOwnProperty(key)) {
+    //     const namespace = this.extractNameSpace(key);
+    //     this.objectMap[key].visible = this.namespaces[namespace];
+    //   }
+    // }
+    for (let i = 0; i < this.object.children.length; i++) {
+      setObjectDimension(this.object.children[i], options);
     }
   }
 }
