@@ -2,6 +2,7 @@ import {
   ANCHOR_MODE,
   DEFAULT_HANDLE_GROUP_NAME,
 } from 'three-freeform-controls';
+import * as THREE from 'three';
 import randomColor from 'randomcolor';
 import Group from '../primitives/Group';
 import MarkerManager from './markerManager';
@@ -154,6 +155,37 @@ export default class InteractiveMarkerManager {
     }
   }
 
+  static getAlignment(rotation) {
+    const threshold = 10 ** -3;
+    const [x, y, z] = rotation.toArray();
+    for (let i = -4; i <= 4; i++) {
+      const angle = (i * Math.PI) / 2;
+      if (
+        Math.abs(x - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'x';
+      }
+      if (
+        Math.abs(y - angle) < threshold &&
+        Math.abs(x) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'y';
+      }
+      if (
+        Math.abs(z - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(x) < threshold
+      ) {
+        return 'z';
+      }
+    }
+
+    return null;
+  }
+
   static enableControls(
     object,
     interactionMode,
@@ -161,9 +193,35 @@ export default class InteractiveMarkerManager {
     orientation,
     controlName,
     controlsManager,
-    color,
+    givenColor,
   ) {
     controlsManager.showAll(false);
+
+    const controlsManagerOrientation = new THREE.Quaternion();
+    controlsManager.getWorldQuaternion(controlsManagerOrientation);
+    const controlsManagerRotation = new THREE.Euler().setFromQuaternion(
+      controlsManagerOrientation,
+    );
+    const alignment = InteractiveMarkerManager.getAlignment(
+      controlsManagerRotation,
+    );
+    let alignmentColor;
+    switch (alignment) {
+      case 'x': {
+        alignmentColor = 'red';
+        break;
+      }
+      case 'y': {
+        alignmentColor = 'green';
+        break;
+      }
+      case 'z': {
+        alignmentColor = 'blue';
+        break;
+      }
+      default:
+    }
+    const color = alignmentColor || givenColor;
 
     // currently only ROTATE_AXIS is supported for VIEW_FACING mode
     // this is the most useful one
