@@ -155,37 +155,6 @@ export default class InteractiveMarkerManager {
     }
   }
 
-  static getAlignment(rotation) {
-    const threshold = 10 ** -3;
-    const [x, y, z] = rotation.toArray();
-    for (let i = -4; i <= 4; i++) {
-      const angle = (i * Math.PI) / 2;
-      if (
-        Math.abs(x - angle) < threshold &&
-        Math.abs(y) < threshold &&
-        Math.abs(z) < threshold
-      ) {
-        return 'x';
-      }
-      if (
-        Math.abs(y - angle) < threshold &&
-        Math.abs(x) < threshold &&
-        Math.abs(z) < threshold
-      ) {
-        return 'y';
-      }
-      if (
-        Math.abs(z - angle) < threshold &&
-        Math.abs(y) < threshold &&
-        Math.abs(x) < threshold
-      ) {
-        return 'z';
-      }
-    }
-
-    return null;
-  }
-
   static enableControls(
     object,
     interactionMode,
@@ -202,25 +171,9 @@ export default class InteractiveMarkerManager {
     const controlsManagerRotation = new THREE.Euler().setFromQuaternion(
       controlsManagerOrientation,
     );
-    const alignment = InteractiveMarkerManager.getAlignment(
+    const alignmentColor = InteractiveMarkerManager.getAlignmentColor(
       controlsManagerRotation,
     );
-    let alignmentColor;
-    switch (alignment) {
-      case 'x': {
-        alignmentColor = 'red';
-        break;
-      }
-      case 'y': {
-        alignmentColor = 'green';
-        break;
-      }
-      case 'z': {
-        alignmentColor = 'blue';
-        break;
-      }
-      default:
-    }
     const color = alignmentColor || givenColor;
 
     // currently only ROTATE_AXIS is supported for VIEW_FACING mode
@@ -337,6 +290,37 @@ export default class InteractiveMarkerManager {
       object.userData.handlesControlsMap[handle] = controlName;
     });
     controlsManager.showByNames(handles, true);
+  }
+
+  static getAlignmentColor(rotation) {
+    const threshold = 10 ** -3;
+    const [x, y, z] = rotation.toArray();
+    for (let i = -4; i <= 4; i++) {
+      const angle = (i * Math.PI) / 2;
+      if (
+        Math.abs(x - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'red';
+      }
+      if (
+        Math.abs(y - angle) < threshold &&
+        Math.abs(x) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'green';
+      }
+      if (
+        Math.abs(z - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(x) < threshold
+      ) {
+        return 'blue';
+      }
+    }
+
+    return null;
   }
 
   removeObject(id) {
