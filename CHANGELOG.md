@@ -7,6 +7,16 @@
 
 ### Fixed
 
+## [0.1.20] - 2019-11-14
+### Added
+1. Added support for image streams via web-video-server
+2. Pointcloud now uses a decoder in wasm (npm: `pcl-decoder`)
+3. Added loop option to displaytrajectory
+4. Added support for depthcloud stream
+
+### Fixed
+1. Fix editor controls import in examples
+
 ## [0.1.14] - 2019-10-22
 ### Added
 - Interactive Markers
