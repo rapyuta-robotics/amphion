@@ -2,7 +2,7 @@ import {
   ANCHOR_MODE,
   DEFAULT_HANDLE_GROUP_NAME,
 } from 'three-freeform-controls';
-import * as THREE from 'three';
+import { Quaternion, Euler } from 'three';
 import randomColor from 'randomcolor';
 import Group from '../primitives/Group';
 import MarkerManager from './markerManager';
@@ -166,9 +166,9 @@ export default class InteractiveMarkerManager {
   ) {
     controlsManager.showAll(false);
 
-    const controlsManagerOrientation = new THREE.Quaternion();
+    const controlsManagerOrientation = new Quaternion();
     controlsManager.getWorldQuaternion(controlsManagerOrientation);
-    const controlsManagerRotation = new THREE.Euler().setFromQuaternion(
+    const controlsManagerRotation = new Euler().setFromQuaternion(
       controlsManagerOrientation,
     );
     const alignmentColor = InteractiveMarkerManager.getAlignmentColor(
