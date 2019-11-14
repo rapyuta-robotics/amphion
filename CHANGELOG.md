@@ -1,3 +1,12 @@
+## [Unreleased]
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+
 ## [0.1.20] - 2019-11-14
 ### Added
 1. Added support for image streams via web-video-server
@@ -7,15 +16,6 @@
 
 ### Fixed
 1. Fix editor controls import in examples
-
-## [Unreleased]
-### Added
-
-### Removed
-
-### Changed
-
-### Fixed
 
 ## [0.1.14] - 2019-10-22
 ### Added
