@@ -2,6 +2,7 @@ import {
   ANCHOR_MODE,
   DEFAULT_HANDLE_GROUP_NAME,
 } from 'three-freeform-controls';
+import { Quaternion, Euler } from 'three';
 import randomColor from 'randomcolor';
 import Group from '../primitives/Group';
 import MarkerManager from './markerManager';
@@ -161,9 +162,19 @@ export default class InteractiveMarkerManager {
     orientation,
     controlName,
     controlsManager,
-    color,
+    givenColor,
   ) {
     controlsManager.showAll(false);
+
+    const controlsManagerOrientation = new Quaternion();
+    controlsManager.getWorldQuaternion(controlsManagerOrientation);
+    const controlsManagerRotation = new Euler().setFromQuaternion(
+      controlsManagerOrientation,
+    );
+    const alignmentColor = InteractiveMarkerManager.getAlignmentColor(
+      controlsManagerRotation,
+    );
+    const color = alignmentColor || givenColor;
 
     // currently only ROTATE_AXIS is supported for VIEW_FACING mode
     // this is the most useful one
@@ -279,6 +290,37 @@ export default class InteractiveMarkerManager {
       object.userData.handlesControlsMap[handle] = controlName;
     });
     controlsManager.showByNames(handles, true);
+  }
+
+  static getAlignmentColor(rotation) {
+    const threshold = 10 ** -3;
+    const [x, y, z] = rotation.toArray();
+    for (let i = -4; i <= 4; i++) {
+      const angle = (i * Math.PI) / 2;
+      if (
+        Math.abs(x - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'red';
+      }
+      if (
+        Math.abs(y - angle) < threshold &&
+        Math.abs(x) < threshold &&
+        Math.abs(z) < threshold
+      ) {
+        return 'green';
+      }
+      if (
+        Math.abs(z - angle) < threshold &&
+        Math.abs(y) < threshold &&
+        Math.abs(x) < threshold
+      ) {
+        return 'blue';
+      }
+    }
+
+    return null;
   }
 
   removeObject(id) {
