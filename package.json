@@ -21,8 +21,6 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^2.2.1",
-    "@types/randomcolor": "^0.5.3",
-    "@types/roslib": "^1.0.0",
     "lodash.debounce": "^4.0.8",
     "pcl-decoder": "^0.1.7",
     "randomcolor": "^0.5.4",
@@ -47,6 +45,8 @@
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
     "@types/lodash.debounce": "^4.0.6",
+    "@types/randomcolor": "^0.5.3",
+    "@types/roslib": "^1.0.0",
     "babel-loader": "^8.0.6",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^3.0.2",
