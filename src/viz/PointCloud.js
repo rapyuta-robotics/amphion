@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_POINTCLOUD,
