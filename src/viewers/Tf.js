@@ -20,19 +20,27 @@ class TfViewer extends Viewer3d {
     this.getTFMessages = this.getTFMessages.bind(this);
     this.setFrameTransform = this.setFrameTransform.bind(this);
     this.addRobot = this.addRobot.bind(this);
+    this.onRosConnection = this.onRosConnection.bind(this);
   }
 
   initRosEvents() {
     this.ros.on('connection', () => {
-      this.ros.getTopics(rosTopics => {
-        ['/tf', '/tf_static'].forEach(name => {
-          const topic = new ROSLIB.Topic({
-            ros: this.ros,
-            name,
-            messageType: rosTopics.types[rosTopics.topics.indexOf(name)],
-          });
-          topic.subscribe(this.getTFMessages);
+      this.onRosConnection();
+    });
+    if (this.ros.isConnected) {
+      this.onRosConnection();
+    }
+  }
+
+  onRosConnection() {
+    this.ros.getTopics(rosTopics => {
+      ['/tf', '/tf_static'].forEach(name => {
+        const topic = new ROSLIB.Topic({
+          ros: this.ros,
+          name,
+          messageType: rosTopics.types[rosTopics.topics.indexOf(name)],
         });
+        topic.subscribe(this.getTFMessages);
       });
     });
   }
