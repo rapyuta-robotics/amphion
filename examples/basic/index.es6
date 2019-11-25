@@ -1,5 +1,5 @@
 import ROSLIB from 'roslib';
-import Amphion from '../../build/amphion.module';
+import Amphion from '../../build/amphion';
 import CONFIG from '../config.json';
 
 // Setup ros instance and viewer

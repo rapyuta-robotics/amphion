@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 
 import Core from '../core';
 import {
@@ -62,12 +62,12 @@ class LaserScan extends Core {
         break;
     }
 
-    const minColorHex = new THREE.Color(minColor);
-    const maxColorHex = new THREE.Color(maxColor);
+    const minColorHex = new Color(minColor);
+    const maxColorHex = new Color(maxColor);
 
     const finalColor =
       normI * maxColorHex.getHex() + (1 - normI) * minColorHex.getHex();
-    return new THREE.Color(finalColor);
+    return new Color(finalColor);
   }
 
   getNormalizedAxisValue(data) {
@@ -97,7 +97,7 @@ class LaserScan extends Core {
     }
 
     const finalColor = normI * maxAxisValue + (1 - normI) * minAxisValue;
-    return new THREE.Color(finalColor);
+    return new Color(finalColor);
   }
 
   colorTransformer(intensity, position) {
@@ -109,7 +109,7 @@ class LaserScan extends Core {
       case COLOR_TRANSFORMERS.AXIS_COLOR:
         return this.applyAxisColorTransform(intensity, position);
       case COLOR_TRANSFORMERS.FLAT_COLOR:
-        return new THREE.Color(flatColor);
+        return new Color(flatColor);
       default:
         return null;
     }

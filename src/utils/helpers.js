@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 
 import {
   OBJECT_TYPE_ARROW,
@@ -35,8 +35,8 @@ export const setObjectDimension = (object, options) => {
       object.setShaftDimensions({ radius: shaftRadius, length: shaftLength });
       object.setAlpha(alpha);
       object.setColor({
-        cone: new THREE.Color(color),
-        cylinder: new THREE.Color(color),
+        cone: new Color(color),
+        cylinder: new Color(color),
       });
       break;
     }
@@ -51,7 +51,7 @@ export const setObjectDimension = (object, options) => {
       const { arrowLength, color } = options;
 
       object.setLength(arrowLength);
-      object.setColor(new THREE.Color(color));
+      object.setColor(new Color(color));
       break;
     }
     case OBJECT_TYPE_ARROW_WITH_CIRCLE:
@@ -82,10 +82,10 @@ export const setObjectDimension = (object, options) => {
         circleCone: alpha,
       });
       object.setColor({
-        cone: new THREE.Color(color),
-        cylinder: new THREE.Color(color),
-        torus: new THREE.Color(color),
-        circleCone: new THREE.Color(color),
+        cone: new Color(color),
+        cylinder: new Color(color),
+        torus: new Color(color),
+        circleCone: new Color(color),
       });
       break;
   }

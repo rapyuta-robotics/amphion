@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { EditorControls } from '../utils/editorControls';
 
@@ -38,10 +38,10 @@ class Viewer3d {
   }
 
   initCamera() {
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.01, 1000);
+    this.camera = new PerspectiveCamera(50, 1, 0.01, 1000);
     this.camera.position.set(0, 5, 10);
-    this.camera.up = new THREE.Vector3(0, 0, 1);
-    this.camera.lookAt(new THREE.Vector3());
+    this.camera.up = new Vector3(0, 0, 1);
+    this.camera.lookAt(new Vector3());
 
     this.scene.add(this.camera);
   }
@@ -57,7 +57,7 @@ class Viewer3d {
   }
 
   initRenderer() {
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new WebGLRenderer({ antialias: true });
     renderer.autoClear = false;
     renderer.autoUpdateScene = false;
     renderer.setPixelRatio(window.devicePixelRatio);

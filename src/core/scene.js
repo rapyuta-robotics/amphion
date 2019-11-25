@@ -1,12 +1,19 @@
-import * as THREE from 'three';
+import {
+  Scene as ThreeScene,
+  Group,
+  DirectionalLight,
+  AmbientLight,
+  GridHelper,
+  Color,
+} from 'three';
 import Stats from 'stats-js';
 
 import { DEFAULT_OPTIONS_SCENE } from '../utils/constants';
 
-class Scene extends THREE.Scene {
+class Scene extends ThreeScene {
   constructor(options = {}) {
     super();
-    this.vizWrapper = new THREE.Group();
+    this.vizWrapper = new Group();
     this.add(this.vizWrapper);
 
     this.stats = new Stats();
@@ -18,18 +25,23 @@ class Scene extends THREE.Scene {
   }
 
   initLights() {
-    [[-1, 0], [1, 0], [0, -1], [0, 1]].forEach(positions => {
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    [
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1],
+    ].forEach(positions => {
+      const directionalLight = new DirectionalLight(0xffffff, 0.4);
       [directionalLight.position.x, directionalLight.position.y] = positions;
       directionalLight.position.z = 1;
       this.add(directionalLight);
     });
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    const ambientLight = new AmbientLight(0xffffff, 0.2);
     this.add(ambientLight);
   }
 
   initGrid() {
-    this.grid = new THREE.GridHelper(0, 0);
+    this.grid = new GridHelper(0, 0);
     this.add(this.grid);
   }
 
@@ -62,16 +74,11 @@ class Scene extends THREE.Scene {
     } = this.options;
 
     this.grid.copy(
-      new THREE.GridHelper(
-        gridSize,
-        gridDivisions,
-        gridCenterlineColor,
-        gridColor,
-      ),
+      new GridHelper(gridSize, gridDivisions, gridCenterlineColor, gridColor),
     );
     this.grid.rotateX(-Math.PI / 2);
 
-    this.background = new THREE.Color(backgroundColor);
+    this.background = new Color(backgroundColor);
   }
 }
 

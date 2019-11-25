@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 
 import Core from '../core';
 import { DEFAULT_OPTIONS_PATH, MESSAGE_TYPE_PATH } from '../utils/constants';
@@ -22,7 +22,7 @@ class Path extends Core {
   updateOptions(options) {
     super.updateOptions(options);
     const { alpha, color } = this.options;
-    this.line.setColor(new THREE.Color(color));
+    this.line.setColor(new Color(color));
     this.line.setAlpha(alpha);
   }
 

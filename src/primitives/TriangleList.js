@@ -1,16 +1,24 @@
-import * as THREE from 'three';
+import {
+  Geometry,
+  MeshBasicMaterial,
+  FaceColors,
+  DoubleSide,
+  Vector3,
+  Face3,
+  Color,
+} from 'three';
 
 import Mesh from './Mesh';
 
 class TriangleList extends Mesh {
   constructor() {
     super();
-    this.geometry = new THREE.Geometry();
+    this.geometry = new Geometry();
 
-    this.material = new THREE.MeshBasicMaterial({
-      vertexColors: THREE.FaceColors,
+    this.material = new MeshBasicMaterial({
+      vertexColors: FaceColors,
     });
-    this.material.side = THREE.DoubleSide;
+    this.material.side = DoubleSide;
   }
 
   updatePoints(points, colors = [], options) {
@@ -28,18 +36,18 @@ class TriangleList extends Mesh {
         points[3 * index + 2],
       ];
       verticesArray.map(side => {
-        vertices.push(new THREE.Vector3(side.x, side.y, side.z));
+        vertices.push(new Vector3(side.x, side.y, side.z));
       });
 
       const color =
         colors.length === 0 ? { r: 1, g: 0, b: 0 } : colors[3 * index];
       faces.push(
-        new THREE.Face3(
+        new Face3(
           3 * index,
           3 * index + 2,
           3 * index + 1,
-          new THREE.Vector3(),
-          new THREE.Color(color.r, color.g, color.b),
+          new Vector3(),
+          new Color(color.r, color.g, color.b),
         ),
       );
     }

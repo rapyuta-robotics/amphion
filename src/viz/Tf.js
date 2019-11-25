@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Group, Vector3 } from 'three';
 
 import Core from '../core';
 import TfFrame from '../primitives/TfFrame';
@@ -10,7 +10,7 @@ class Tf extends Core {
       ...DEFAULT_OPTIONS_TF,
       ...options,
     });
-    this.object = new THREE.Group();
+    this.object = new Group();
     this.object.name = 'test';
   }
 
@@ -33,9 +33,7 @@ class Tf extends Core {
         if (childFrame.position.length() < 0.1) {
           childFrame.arrow.visible = false;
         } else {
-          childFrame.arrow.lookAt(
-            parentFrame.getWorldPosition(new THREE.Vector3()),
-          );
+          childFrame.arrow.lookAt(parentFrame.getWorldPosition(new Vector3()));
           childFrame.arrow.rotateY(-Math.PI / 2);
           childFrame.arrow.visible = true;
 

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Group } from 'three';
 
 import Core from '../core';
 import {

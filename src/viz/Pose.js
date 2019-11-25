@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Group } from 'three';
 
 import Core from '../core';
 import {
@@ -17,7 +17,7 @@ class Pose extends Core {
       ...DEFAULT_OPTIONS_POSE,
       ...options,
     });
-    this.object = new THREE.Group();
+    this.object = new Group();
     this.primitive = null;
     this.updateOptions({
       ...DEFAULT_OPTIONS_POSE,

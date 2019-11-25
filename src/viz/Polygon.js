@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 
 import Core from '../core';
 import {
@@ -25,7 +25,7 @@ class Polygon extends Core {
   updateOptions(options) {
     super.updateOptions(options);
     const { alpha, color } = this.options;
-    this.line.setColor(new THREE.Color(color));
+    this.line.setColor(new Color(color));
     this.line.setAlpha(alpha);
   }
 

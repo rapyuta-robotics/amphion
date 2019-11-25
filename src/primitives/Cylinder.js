@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { CylinderGeometry, MeshStandardMaterial } from 'three';
 
 import {
   DEFAULT_CYLINDER_RADIUS,
@@ -15,13 +15,13 @@ class Cylinder extends Mesh {
     height = DEFAULT_CYLINDER_HEIGHT,
   ) {
     super();
-    this.geometry = new THREE.CylinderGeometry(
+    this.geometry = new CylinderGeometry(
       radius,
       radius,
       height,
       DEFAULT_RADIAL_SEGMENTS,
     );
-    this.material = new THREE.MeshStandardMaterial({ color });
+    this.material = new MeshStandardMaterial({ color });
     this.material.transparent = true;
     this.rotateX(Math.PI / 2);
   }
