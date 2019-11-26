@@ -16,10 +16,19 @@ class TfViewer extends Viewer3d {
     this.framesList = [];
     this.onFramesListUpdate = onFramesListUpdate || (() => {});
 
+    const vizWrapper = this.scene.vizWrapper;
+    vizWrapper.parent.remove(vizWrapper);
+    this.currentFrame = null;
+    this.currentFrameParent = null;
+    this.currentFrameTransformation = {
+      translation: [0, 0, 0],
+      rotation: [0, 0, 0, 1],
+    };
+
     this.initRosEvents();
     this.getTFMessages = this.getTFMessages.bind(this);
-    this.setFrameTransform = this.setFrameTransform.bind(this);
     this.addRobot = this.addRobot.bind(this);
+    this.setFixedFrame = this.setFixedFrame.bind(this);
   }
 
   initRosEvents() {
@@ -47,23 +56,32 @@ class TfViewer extends Viewer3d {
           translation: { x, y, z },
         },
       }) => {
-        const [childObject, parentObject] = [
-          this.getObjectOrCreate(childFrameId),
-          this.getObjectOrCreate(parentFrameId),
-        ];
+        if (childFrameId === this.currentFrame.name) {
+          this.currentFrameTransformation = {
+            translation: [x, y, z],
+            rotation: [rx, ry, rz, rw],
+          };
+        } else {
+          const [childObject, parentObject] = [
+            this.getObjectOrCreate(childFrameId),
+            this.getObjectOrCreate(parentFrameId),
+          ];
 
-        parentObject.add(childObject);
-        childObject.position.set(x, y, z);
-        childObject.quaternion.set(rx, ry, rz, rw);
+          parentObject.add(childObject);
+          childObject.position.set(x, y, z);
+          childObject.quaternion.set(rx, ry, rz, rw);
+          // console.log(childObject.position.toArray(), childObject.rotation.toArray());
+          parentObject.updateWorldMatrix(false, true);
+          // childObject.updateMatrixWorld();
 
-        [parentFrameId, childFrameId].forEach(frame => {
-          if (this.framesList.indexOf(frame) === -1) {
-            this.framesList.push(frame);
-          }
-        });
+          [parentFrameId, childFrameId].forEach(frame => {
+            if (this.framesList.indexOf(frame) === -1) {
+              this.framesList.push(frame);
+            }
+          });
+        }
       },
     );
-    this.setFrameTransform();
   }
 
   getObjectOrCreate(frameId) {
@@ -71,7 +89,9 @@ class TfViewer extends Viewer3d {
       this.framesList.push(frameId);
       this.onFramesListUpdate(this.framesList);
     }
-    const existingFrame = this.scene.getObjectByName(frameId);
+    const existingFrame =
+      this.scene.getObjectByName(frameId) ||
+      this.scene.vizWrapper.getObjectByName(frameId);
     if (existingFrame) {
       return existingFrame;
     }
@@ -80,36 +100,6 @@ class TfViewer extends Viewer3d {
     newFrame.name = frameId;
     this.scene.addObject(newFrame);
     return newFrame;
-  }
-
-  setFrameTransform() {
-    const {
-      options: { selectedFrame },
-      scene: { vizWrapper },
-    } = this;
-    if (!selectedFrame) {
-      return;
-    }
-    const currentFrameObject = vizWrapper.getObjectByName(selectedFrame);
-
-    if (currentFrameObject) {
-      vizWrapper.position.set(0, 0, 0);
-      vizWrapper.quaternion.set(0, 0, 0, 1);
-      vizWrapper.updateMatrixWorld();
-
-      const worldPos = new Vector3();
-      const worldQuat = new Quaternion();
-
-      currentFrameObject.getWorldQuaternion(worldQuat);
-      const { w: quatw, x: quatx, y: quaty, z: quatz } = worldQuat;
-      vizWrapper.quaternion.set(-quatx, -quaty, -quatz, quatw);
-
-      vizWrapper.updateMatrixWorld();
-
-      currentFrameObject.getWorldPosition(worldPos);
-      const oppPos = worldPos.negate();
-      vizWrapper.position.set(oppPos.x, oppPos.y, oppPos.z);
-    }
   }
 
   addVisualization(vizObject) {
@@ -143,7 +133,39 @@ class TfViewer extends Viewer3d {
     });
   }
 
-  setFixedFrame() {}
+  updateOptions(options) {
+    super.updateOptions(options);
+    this.setFixedFrame(options.selectedFrame);
+  }
+
+  setFixedFrame(frameName) {
+    if (!frameName) {
+      return;
+    }
+    const {
+      rotation: [rx, ry, rz, rw],
+      translation: [x, y, z],
+    } = this.currentFrameTransformation;
+    if (this.currentFrame) {
+      this.currentFrameParent.add(this.currentFrame);
+      this.currentFrame.position.set(x, y, z);
+      this.currentFrame.rotation.setFromQuaternion(
+        new Quaternion(rx, ry, rz, rw),
+      );
+    }
+
+    this.currentFrame = this.getObjectOrCreate(frameName);
+    this.currentFrameParent = this.currentFrame.parent;
+    this.currentFrameTransformation = {
+      translation: this.currentFrame.position.toArray(),
+      rotation: new Quaternion()
+        .setFromEuler(this.currentFrame.rotation)
+        .toArray(),
+    };
+    this.scene.add(this.currentFrame);
+    this.currentFrame.position.set(0, 0, 0);
+    this.currentFrame.rotation.set(0, 0, 0);
+  }
 }
 
 export default TfViewer;
