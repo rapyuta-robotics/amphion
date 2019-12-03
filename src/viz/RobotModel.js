@@ -42,6 +42,9 @@ class RobotModel extends URDFLoader {
       ros,
       name: paramName,
     });
+    // this.object is dummy in this viz
+    // as soon as the RobotModel loads finishing, the "links" in it
+    // are moved from this.object to their corresponding parent frames
     this.object = new Group();
     this.packages = packages || {};
     this.updateOptions({
@@ -50,6 +53,7 @@ class RobotModel extends URDFLoader {
     });
 
     this.defaultLoadMeshCallback = this.defaultLoadMeshCallback.bind(this);
+    this.robotModel = null;
   }
 
   static onComplete(object) {
@@ -65,14 +69,14 @@ class RobotModel extends URDFLoader {
   }
 
   loadRobot(robotString, onComplete = RobotModel.onComplete, options = {}) {
-    const robotModel = super.parse(robotString, {
+    this.robotModel = super.parse(robotString, {
       packages: this.packages,
       loadMeshCb: options.loadMeshCb || this.defaultLoadMeshCallback,
       fetchOptions: { mode: 'cors', credentials: 'same-origin' },
       ...options,
     });
-    this.object.add(robotModel);
-    this.object.name = robotModel.robotName;
+    this.object.add(this.robotModel);
+    this.object.name = this.robotModel.robotName;
 
     onComplete(this.object);
   }
@@ -100,16 +104,40 @@ class RobotModel extends URDFLoader {
   }
 
   destroy() {
+    const robotModelParent = this.robotModel && this.robotModel.parent;
+    if (robotModelParent) {
+      // TODO: proper scene clear for all viz types
+      // just parent.remove is not enough
+      Object.values(this.robotModel.links).map(linkObj => {
+        if (linkObj.parent) {
+          linkObj.parent.remove(linkObj);
+        }
+      });
+      robotModelParent.remove(this.robotModel);
+    }
+    this.robotModel = null;
     if (this.object.parent) {
       this.object.parent.remove(this.object);
     }
   }
 
   hide() {
+    if (!this.robotModel) {
+      return;
+    }
+    Object.values(this.robotModel.links).map(linkObj => {
+      linkObj.visible = false;
+    });
     this.object.visible = false;
   }
 
   show() {
+    if (!this.robotModel) {
+      return;
+    }
+    Object.values(this.robotModel.links).map(linkObj => {
+      linkObj.visible = true;
+    });
     this.object.visible = true;
   }
 }
