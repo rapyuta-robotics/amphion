@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 
 import Axes from './Axes';
 import Group from './Group';
@@ -32,8 +32,8 @@ class TfFrame extends Group {
       radius: (DEFAULT_CYLINDER_RADIUS * 0.05) / 6,
     });
     this.arrow.setColor({
-      cone: new THREE.Color('#FF1493'),
-      cylinder: new THREE.Color(DEFAULT_COLOR_ARROW),
+      cone: new Color('#FF1493'),
+      cylinder: new Color(DEFAULT_COLOR_ARROW),
     });
     this.add(this.arrow);
     this.name = TfFrame.getName(frameId);

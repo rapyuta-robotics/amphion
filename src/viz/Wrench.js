@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Group, Vector3, Quaternion } from 'three';
 
 import Core from '../core';
 import {
@@ -13,7 +13,7 @@ import { setObjectDimension } from '../utils/helpers';
 class Wrench extends Core {
   constructor(ros, topicName, options = DEFAULT_OPTIONS_WRENCH) {
     super(ros, topicName, MESSAGE_TYPE_WRENCHSTAMPED, options);
-    this.object = new THREE.Group();
+    this.object = new Group();
     this.primitive1 = null;
     this.primitive2 = null;
     this.updateOptions({
@@ -93,22 +93,14 @@ class Wrench extends Core {
     const {
       wrench: { force, torque },
     } = message;
-    const translationVector = new THREE.Vector3(1, 0, 0);
-    const forceVector = new THREE.Vector3(
-      force.x,
-      force.y,
-      force.z,
-    ).normalize();
-    const torqueVector = new THREE.Vector3(
-      torque.x,
-      torque.y,
-      torque.z,
-    ).normalize();
-    const forceQuaternion = new THREE.Quaternion().setFromUnitVectors(
+    const translationVector = new Vector3(1, 0, 0);
+    const forceVector = new Vector3(force.x, force.y, force.z).normalize();
+    const torqueVector = new Vector3(torque.x, torque.y, torque.z).normalize();
+    const forceQuaternion = new Quaternion().setFromUnitVectors(
       translationVector,
       forceVector,
     );
-    const torqueQuaternion = new THREE.Quaternion().setFromUnitVectors(
+    const torqueQuaternion = new Quaternion().setFromUnitVectors(
       translationVector,
       torqueVector,
     );

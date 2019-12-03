@@ -1,10 +1,18 @@
-import * as THREE from 'three';
+import {
+  BufferAttribute,
+  TextureLoader,
+  BufferGeometry,
+  PointsMaterial,
+  VertexColors,
+  Object3D,
+  Points as ThreePoints,
+} from 'three';
 import { LASERSCAN_STYLES } from './constants';
 
 class Points {
   constructor(options = {}) {
     this.max_pts = options.max_pts || 10000;
-    this.rootObject = options.rootObject || new THREE.Object3D();
+    this.rootObject = options.rootObject || new Object3D();
   }
 
   setup(type, size, alpha) {
@@ -12,12 +20,12 @@ class Points {
       this.rootObject.remove(child);
     });
 
-    this.positions = new THREE.BufferAttribute(
+    this.positions = new BufferAttribute(
       new Float32Array(this.max_pts * 3),
       3,
       false,
     );
-    this.colors = new THREE.BufferAttribute(
+    this.colors = new BufferAttribute(
       new Float32Array(this.max_pts * 3),
       3,
       false,
@@ -26,7 +34,7 @@ class Points {
     let options = {};
 
     if (type === LASERSCAN_STYLES.POINTS) {
-      const sprite = new THREE.TextureLoader().load(
+      const sprite = new TextureLoader().load(
         'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/circle.png',
       );
 
@@ -36,20 +44,20 @@ class Points {
       };
     }
 
-    this.geomtry = new THREE.BufferGeometry();
+    this.geomtry = new BufferGeometry();
     this.geomtry.addAttribute('position', this.positions.setDynamic(true));
     this.geomtry.addAttribute('color', this.colors.setDynamic(true));
 
-    this.material = new THREE.PointsMaterial({
+    this.material = new PointsMaterial({
       color: 0x888888,
       size,
       ...options,
     });
-    this.material.vertexColors = THREE.VertexColors;
+    this.material.vertexColors = VertexColors;
     this.material.transparent = true;
     this.material.opacity = alpha;
 
-    this.object = new THREE.Points(this.geomtry, this.material);
+    this.object = new ThreePoints(this.geomtry, this.material);
     this.rootObject.add(this.object);
   }
 

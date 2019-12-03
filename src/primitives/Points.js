@@ -1,13 +1,20 @@
-import * as THREE from 'three';
+import {
+  Points as ThreePoints,
+  Geometry,
+  PointsMaterial,
+  VertexColors,
+  Vector3,
+  Color,
+} from 'three';
 
 import * as TransformUtils from '../utils/transform';
 
-class Points extends THREE.Points {
+class Points extends ThreePoints {
   constructor() {
     super();
-    this.geometry = new THREE.Geometry();
-    this.material = new THREE.PointsMaterial({
-      vertexColors: THREE.VertexColors,
+    this.geometry = new Geometry();
+    this.material = new PointsMaterial({
+      vertexColors: VertexColors,
     });
   }
 
@@ -22,13 +29,13 @@ class Points extends THREE.Points {
 
     this.material.size = x;
     this.geometry.vertices = points.map(
-      vertex => new THREE.Vector3(vertex.x, vertex.y, vertex.z),
+      vertex => new Vector3(vertex.x, vertex.y, vertex.z),
     );
     this.geometry.verticesNeedUpdate = true;
 
     if (colors.length > 0) {
       this.geometry.colors = colors.map(
-        color => new THREE.Color(color.r, color.g, color.b),
+        color => new Color(color.r, color.g, color.b),
       );
       this.geometry.colorsNeedUpdate = true;
     }

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Quaternion, Vector3, Group } from 'three';
 import ROSLIB from 'roslib';
 
 import Viewer3d from './3d';
@@ -76,7 +76,7 @@ class TfViewer extends Viewer3d {
       return existingFrame;
     }
 
-    const newFrame = new THREE.Group();
+    const newFrame = new Group();
     newFrame.name = frameId;
     this.scene.addObject(newFrame);
     return newFrame;
@@ -97,8 +97,8 @@ class TfViewer extends Viewer3d {
       vizWrapper.quaternion.set(0, 0, 0, 1);
       vizWrapper.updateMatrixWorld();
 
-      const worldPos = new THREE.Vector3();
-      const worldQuat = new THREE.Quaternion();
+      const worldPos = new Vector3();
+      const worldQuat = new Quaternion();
 
       currentFrameObject.getWorldQuaternion(worldQuat);
       const { w: quatw, x: quatx, y: quaty, z: quatz } = worldQuat;

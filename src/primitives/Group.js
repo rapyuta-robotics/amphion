@@ -1,8 +1,8 @@
-import * as THREE from 'three';
+import { Group as ThreeGroup } from 'three';
 
 import * as TransformUtils from '../utils/transform';
 
-class Group extends THREE.Group {
+class Group extends ThreeGroup {
   setTransform(transform) {
     TransformUtils.setTransform(this, transform);
   }

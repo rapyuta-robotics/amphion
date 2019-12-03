@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { OrthographicCamera, Vector3, WebGLRenderer } from 'three';
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer';
 import { MapControls2D } from '../utils/2dControls';
 
@@ -38,11 +38,11 @@ class Viewer2d {
   }
 
   initCamera() {
-    this.camera = new THREE.OrthographicCamera(-100, 100, 100, -100, 0.1, 1000);
+    this.camera = new OrthographicCamera(-100, 100, 100, -100, 0.1, 1000);
     this.camera.zoom = 0.5;
     this.camera.position.set(0, 0, 10);
-    this.camera.up = new THREE.Vector3(0, 0, 1);
-    this.camera.lookAt(new THREE.Vector3());
+    this.camera.up = new Vector3(0, 0, 1);
+    this.camera.lookAt(new Vector3());
 
     this.scene.add(this.camera);
   }
@@ -58,7 +58,7 @@ class Viewer2d {
   }
 
   initRenderer() {
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new WebGLRenderer({ antialias: true });
     renderer.autoClear = false;
     renderer.autoUpdateScene = false;
     renderer.setPixelRatio(window.devicePixelRatio);

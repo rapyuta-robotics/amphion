@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Geometry, MeshBasicMaterial } from 'three';
 
 import Mesh from './Mesh';
 import ObjectCacher from '../utils/objectCacher';
@@ -8,8 +8,8 @@ import Sphere from './Sphere';
 class SphereList extends Mesh {
   constructor() {
     super();
-    this.geometry = new THREE.Geometry();
-    this.material = new THREE.MeshBasicMaterial();
+    this.geometry = new Geometry();
+    this.material = new MeshBasicMaterial();
     this.objectCacher = new ObjectCacher(this, Sphere);
   }
 

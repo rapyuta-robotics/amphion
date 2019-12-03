@@ -1,12 +1,12 @@
-import * as THREE from 'three';
+import { PlaneGeometry, MeshBasicMaterial } from 'three';
 
 import Mesh from './Mesh';
 
 class Plane extends Mesh {
   constructor() {
     super();
-    this.geometry = new THREE.PlaneGeometry();
-    this.material = new THREE.MeshBasicMaterial();
+    this.geometry = new PlaneGeometry();
+    this.material = new MeshBasicMaterial();
   }
 }
 
