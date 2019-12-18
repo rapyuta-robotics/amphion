@@ -52,7 +52,6 @@ export class RosTopicDataSource<T extends Message> implements DataSource<T> {
     this.topic = new Topic(topicOptions);
     this.producer = {
       start: listener => {
-        console.log('start');
         if (!this.rosCloseHook && !this.rosErrorHook) {
           this.addRosHealthHooks();
         }
@@ -65,7 +64,6 @@ export class RosTopicDataSource<T extends Message> implements DataSource<T> {
         this.topic.subscribe(this.internalListener);
       },
       stop: () => {
-        console.log('stop!');
         this.topic.unsubscribe(this.internalListener!);
         this.removeRosHealthHooks();
       },
@@ -76,11 +74,9 @@ export class RosTopicDataSource<T extends Message> implements DataSource<T> {
     this.isStreamLive = true;
 
     this.rosConnectionHook = () => {
-      console.log('connection');
       if (this.isStreamLive) {
         return;
       }
-      console.log('stream is dead!');
       this.stream = this.hasMemory
         ? xs.createWithMemory(this.producer)
         : xs.create(this.producer);
@@ -142,7 +138,6 @@ export class RosTopicDataSource<T extends Message> implements DataSource<T> {
     this.listeners.forEach(listener => {
       this.stream.removeListener(listener);
     });
-    console.log('cleaned');
   };
 
   public removeAllListeners = () => {
