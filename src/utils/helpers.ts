@@ -7,7 +7,11 @@ import {
   OBJECT_TYPE_ARROW_WITH_CIRCLE,
 } from './constants';
 
-export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
+export const checkToleranceThresholdExceed = (
+  oldPose: any,
+  newPose: any,
+  options: any,
+) => {
   const { angleTolerance, positionTolerance } = options;
   const { position, quaternion } = newPose;
   const { position: oldPosition, quaternion: oldQuaternion } = oldPose;
@@ -19,7 +23,7 @@ export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
   return positionToleranceBool || angleToleranceBool;
 };
 
-export const setObjectDimension = (object, options) => {
+export const setObjectDimension = (object: any, options: any) => {
   switch (options.type) {
     case OBJECT_TYPE_ARROW: {
       const {
@@ -91,8 +95,14 @@ export const setObjectDimension = (object, options) => {
   }
 };
 
-export const removeChildren = object => {
+export const removeChildren = (object: any) => {
   while (object.children.length > 0) {
     object.remove(object.children[0]);
   }
 };
+
+export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    throw new TypeError(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
