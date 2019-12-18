@@ -7,6 +7,9 @@ declare namespace RosMessage {
     };
     frame_id: string;
   }
+  interface Base {
+    header?: Header;
+  }
   interface Vector3 {
     x: number;
     y: number;
@@ -16,7 +19,7 @@ declare namespace RosMessage {
     linear: Vector3;
     angular: Vector3;
   }
-  interface AccelStamped {
+  interface AccelStamped extends Base {
     header: Header;
     accel: Accel;
   }
@@ -31,14 +34,14 @@ declare namespace RosMessage {
     z: number;
     w: number;
   }
-  interface PointStamped {
+  interface PointStamped extends Base {
     header: Header;
     point: Point;
   }
   interface Polygon {
     points: Point[];
   }
-  interface PolygonStamped {
+  interface PolygonStamped extends Base {
     header: Header;
     polygon: Polygon;
   }
@@ -46,15 +49,15 @@ declare namespace RosMessage {
     position: Point;
     orientation: Quaternion;
   }
-  interface PoseArray {
+  interface PoseArray extends Base {
     header: Header;
     poses: Pose[];
   }
-  interface PoseWithCovariance {
+  interface PoseWithCovariance extends Base {
     pose: Pose;
     covariance: number[];
   }
-  interface PoseStamped {
+  interface PoseStamped extends Base {
     header: Header;
     pose: Pose;
   }
@@ -62,11 +65,11 @@ declare namespace RosMessage {
     linear: Vector3;
     angular: Vector3;
   }
-  interface TwistStamped {
+  interface TwistStamped extends Base {
     header: Header;
     twist: Twist;
   }
-  interface Vector3Stamped {
+  interface Vector3Stamped extends Base {
     header: Header;
     vector: Vector3;
   }
@@ -74,7 +77,7 @@ declare namespace RosMessage {
     force: Vector3;
     torque: Vector3;
   }
-  interface WrenchStamped {
+  interface WrenchStamped extends Base {
     header: Header;
     wrench: Wrench;
   }
@@ -103,7 +106,7 @@ declare namespace RosMessage {
     triangles: MeshTriangle[];
     vertices: Point[];
   }
-  interface BoundingVolume {
+  interface BoundingVolume extends Base {
     primitives: SolidPrimitive[];
     primitive_poses: Pose[];
     meshes: Mesh[];
@@ -122,7 +125,7 @@ declare namespace RosMessage {
   interface Plane {
     coef: [number, number, number, number];
   }
-  interface CollisionObject {
+  interface CollisionObject extends Base {
     header: Header;
     id: string;
     type: ObjectType;
@@ -136,7 +139,7 @@ declare namespace RosMessage {
     subframe_poses: Pose[];
     operation: CollisionObjectOperation;
   }
-  interface JointState {
+  interface JointState extends Base {
     name: string[];
     position: number[];
     velocity: number[];
@@ -188,7 +191,7 @@ declare namespace RosMessage {
     id: string;
     color: ColorRGBA;
   }
-  interface DisplayRobotState {
+  interface DisplayRobotState extends Base {
     state: RobotState;
     highlight_links: ObjectColor[];
   }
@@ -207,7 +210,7 @@ declare namespace RosMessage {
     joint_trajectory: JointTrajectory;
     multi_dof_joint_trajectory: MultiDOFJointTrajectory;
   }
-  interface DisplayTrajectory {
+  interface DisplayTrajectory extends Base {
     model_id: string;
     trajectory: RobotTrajectory[];
     trajectory_start: RobotState;
@@ -250,7 +253,7 @@ declare namespace RosMessage {
     collision_objects: CollisionObject[];
     octomap: Octomap;
   }
-  interface PlanningScene {
+  interface PlanningScene extends Base {
     name: string;
     robot_state: RobotState;
     robot_model_name: string;
@@ -269,7 +272,7 @@ declare namespace RosMessage {
     height: number;
     origin: Pose;
   }
-  interface OccupancyGrid {
+  interface OccupancyGrid extends Base {
     header: Header;
     info: MapMetaData;
     data: number[];
@@ -278,22 +281,22 @@ declare namespace RosMessage {
     twist: Twist;
     covariance: number[];
   }
-  interface Odometry {
+  interface Odometry extends Base {
     header: Header;
     child_frame_id: string;
     pose: PoseWithCovariance;
     twist: TwistWithCovariance;
   }
-  interface Path {
+  interface Path extends Base {
     header: Header;
     poses: PoseStamped[];
   }
-  interface CompressedImage {
+  interface CompressedImage extends Base {
     header: Header;
     format: string;
     data: number[];
   }
-  interface Image {
+  interface Image extends Base {
     header: Header;
     height: number;
     width: number;
@@ -302,7 +305,7 @@ declare namespace RosMessage {
     step: number;
     data: number[];
   }
-  interface LaserScan {
+  interface LaserScan extends Base {
     header: Header;
     angle_min: number;
     angle_max: number;
@@ -314,7 +317,7 @@ declare namespace RosMessage {
     ranges: number[];
     intensities: number[];
   }
-  interface MagneticField {
+  interface MagneticField extends Base {
     header: Header;
     magnetic_field: Vector3;
     magnetic_field_covariance: number[];
@@ -323,7 +326,7 @@ declare namespace RosMessage {
     name: string;
     values: number[];
   }
-  interface PointCloud {
+  interface PointCloud extends Base {
     header: Header;
     points: Point[];
     channels: Channel[];
@@ -344,7 +347,7 @@ declare namespace RosMessage {
     datatype: PointFieldDataType;
     count: number;
   }
-  interface PointCloud2 {
+  interface PointCloud2 extends Base {
     header: Header;
     height: number;
     width: number;
@@ -359,7 +362,7 @@ declare namespace RosMessage {
     ULTRASOUND,
     INFRARED,
   }
-  interface Range {
+  interface Range extends Base {
     header: Header;
     radiation_type: RadiationType;
     field_of_view: number;
@@ -367,7 +370,7 @@ declare namespace RosMessage {
     max_range: number;
     range: number;
   }
-  interface TFMessage {
+  interface TFMessage extends Base {
     transforms: TransformStamped[];
   }
   enum MarkerType {
@@ -390,7 +393,7 @@ declare namespace RosMessage {
     DELETE = 2,
     DELETEALL = 3,
   }
-  interface Marker {
+  interface Marker extends Base {
     header: Header;
     ns: string;
     id: number;
@@ -410,7 +413,7 @@ declare namespace RosMessage {
     mesh_resource: string;
     mesh_use_embedded_materials: boolean;
   }
-  interface MarkerArray {
+  interface MarkerArray extends Base {
     markers: Marker[];
   }
   enum CommandType {
@@ -461,7 +464,7 @@ declare namespace RosMessage {
     menu_entries: MenuEntry[];
     controls: InteractiveMarkerControl[];
   }
-  interface InteractiveMarkerInit {
+  interface InteractiveMarkerInit extends Base {
     server_id: string;
     seq_num: number;
     markers: InteractiveMarker[];
@@ -475,7 +478,7 @@ declare namespace RosMessage {
     KEEP_ALIVE,
     UPDATE,
   }
-  interface InteractiveMarkerUpdate {
+  interface InteractiveMarkerUpdate extends Base {
     server_id: string;
     seq_num: number;
     type: InteractiveMarkerUpdateType;
@@ -491,7 +494,7 @@ declare namespace RosMessage {
     MOUSE_DOWN = 4,
     MOUSE_UP = 5,
   }
-  interface InteractiveMarkerFeedback {
+  interface InteractiveMarkerFeedback extends Base {
     header: Header;
     client_id: string;
     marker_name: string;
@@ -501,8 +504,5 @@ declare namespace RosMessage {
     menu_entry_id: number;
     mouse_point: Point;
     mouse_point_valid: boolean;
-  }
-  interface Base {
-    header?: Header;
   }
 }
