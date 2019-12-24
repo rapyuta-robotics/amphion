@@ -1,19 +1,24 @@
 import {
+  BufferAttribute,
+  BufferGeometry,
+  Mesh,
+  Points,
   PointsMaterial,
   VertexColors,
-  BufferGeometry,
-  BufferAttribute,
-  Points,
 } from 'three';
-import Core from '../core';
 import {
   DEFAULT_OPTIONS_POINTCLOUD,
   MAX_POINTCLOUD_POINTS,
-  MESSAGE_TYPE_POINTCLOUD2,
 } from '../utils/constants';
 import { PCLDecoder, updateGeometryAttribute } from '../utils/pcl';
+import Core2 from '../core/core2';
+import { DataSource } from '../data';
+import { assertIsDefined } from '../utils/helpers';
 
-const editPointCloudPoints = function(message, options) {
+const editPointCloudPoints = function(
+  message: RosMessage.PointCloud2,
+  options = DEFAULT_OPTIONS_POINTCLOUD,
+) {
   if (!message) {
     return {
       positions: new Float32Array(0),
@@ -37,11 +42,17 @@ const editPointCloudPoints = function(message, options) {
   };
 };
 
-class PointCloud extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_POINTCLOUD) {
-    super(ros, topicName, MESSAGE_TYPE_POINTCLOUD2, {
-      ...DEFAULT_OPTIONS_POINTCLOUD,
-      ...options,
+class PointCloud extends Core2<RosMessage.PointCloud2> {
+  constructor(
+    source: DataSource<RosMessage.PointCloud2>,
+    options = DEFAULT_OPTIONS_POINTCLOUD,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_POINTCLOUD,
+        ...options,
+      },
     });
     const cloudMaterial = new PointsMaterial({
       size: this.options.size,
@@ -79,30 +90,35 @@ class PointCloud extends Core {
     });
   }
 
-  updatePointCloudGeometry(positions, colors, normals) {
-    const { geometry, material } = this.object;
+  updatePointCloudGeometry(
+    positions: Float32Array,
+    colors: Float32Array,
+    normals: Float32Array,
+  ) {
+    assertIsDefined(this.object);
+    const { geometry, material } = this.object as Points;
     if (
-      material.size !== this.options.size &&
+      (material as PointsMaterial).size !== this.options.size &&
       !Number.isNaN(this.options.size)
     ) {
-      material.size = this.options.size;
-      material.needsUpdate = true;
+      (material as PointsMaterial).size = this.options.size;
+      (material as PointsMaterial).needsUpdate = true;
     }
     const l = Math.min(MAX_POINTCLOUD_POINTS, Math.floor(positions.length / 3));
-    geometry.setDrawRange(0, l);
+    (geometry as BufferGeometry).setDrawRange(0, l);
     updateGeometryAttribute(geometry, 'position', positions, l);
     updateGeometryAttribute(geometry, 'color', colors, l);
     updateGeometryAttribute(geometry, 'normal', normals, l);
   }
 
-  update(message) {
+  update = (message: RosMessage.PointCloud2) => {
     super.update(message);
     const { colors, normals, positions } = editPointCloudPoints(
       message,
-      this.options,
+      this.options as typeof DEFAULT_OPTIONS_POINTCLOUD,
     );
     this.updatePointCloudGeometry(positions, colors, normals);
-  }
+  };
 }
 
 export default PointCloud;

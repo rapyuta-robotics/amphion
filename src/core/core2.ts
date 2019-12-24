@@ -5,19 +5,22 @@ import { Listener } from 'xstream';
 
 interface CoreOptions<T> {
   sources: Array<DataSource<T>>;
-  options: { [k: string]: any };
+  options?: { [k: string]: any };
 }
 
 class Core2<T extends RosMessage.Base> {
   private onHeaderChange = (headerFrameId: string) => {};
   private sources: Array<DataSource<T>>;
-  private options: { [k: string]: any };
+  protected options: { [k: string]: any };
   private headerFrameId = '';
   public object?: Object3D;
 
   constructor(args: CoreOptions<T>) {
     this.sources = args.sources;
-    this.options = args.options;
+    this.options = args.options ?? {};
+
+    this.update = this.update.bind(this);
+    this.updateOptions = this.updateOptions.bind(this);
   }
 
   hide = () => {
@@ -41,7 +44,7 @@ class Core2<T extends RosMessage.Base> {
   subscribe = () => {
     this.sources.forEach(source => {
       const listener: Listener<T> = {
-        next: () => {},
+        next: this.update,
         error: error => console.log(error),
         complete: () => {},
       };
@@ -55,20 +58,20 @@ class Core2<T extends RosMessage.Base> {
     });
   };
 
-  update = (message: T) => {
+  update(message: T) {
     const headerFrameId = message.header?.frame_id ?? '';
     if (headerFrameId !== this.headerFrameId) {
       this.headerFrameId = headerFrameId;
       this.onHeaderChange(this.headerFrameId);
     }
-  };
+  }
 
-  updateOptions = (options: { [k: string]: any }) => {
+  updateOptions(options: { [k: string]: any }) {
     this.options = {
       ...this.options,
       ...options,
     };
-  };
+  }
 }
 
 export default Core2;

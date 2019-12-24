@@ -1,4 +1,4 @@
-import { Listener, Stream } from 'xstream';
+import { Listener } from 'xstream';
 
 export interface DataSourceAction {
   success: boolean;

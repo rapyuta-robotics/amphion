@@ -6,6 +6,7 @@ import {
   OBJECT_TYPE_FLAT_ARROW,
   OBJECT_TYPE_ARROW_WITH_CIRCLE,
 } from './constants';
+import Mesh from '../primitives/Mesh';
 
 export const checkToleranceThresholdExceed = (
   oldPose: any,

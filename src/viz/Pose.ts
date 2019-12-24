@@ -1,21 +1,24 @@
 import { Group } from 'three';
-
-import Core from '../core';
-import {
-  DEFAULT_OPTIONS_POSE,
-  MESSAGE_TYPE_POSESTAMPED,
-  POSE_OBJECT_TYPES,
-} from '../utils/constants';
+import { DEFAULT_OPTIONS_POSE, POSE_OBJECT_TYPES } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
 import { setObjectDimension } from '../utils/helpers';
+import Core2 from '../core/core2';
+import { DataSource } from '../data';
 
-class Pose extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_POSE) {
-    super(ros, topicName, MESSAGE_TYPE_POSESTAMPED, {
-      ...DEFAULT_OPTIONS_POSE,
-      ...options,
+class Pose extends Core2<RosMessage.PoseStamped> {
+  private primitive: Arrow | Axes | LineArrow | null;
+  constructor(
+    source: DataSource<RosMessage.PoseStamped>,
+    options = DEFAULT_OPTIONS_POSE,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_POSE,
+        ...options,
+      },
     });
     this.object = new Group();
     this.primitive = null;
@@ -25,7 +28,7 @@ class Pose extends Core {
     });
   }
 
-  static getNewPrimitive(options) {
+  static getNewPrimitive(options: { [k: string]: any }) {
     const { type } = options;
     let newObject = null;
 
@@ -44,29 +47,32 @@ class Pose extends Core {
     return newObject;
   }
 
-  updateOptions(options) {
+  updateOptions(options: { [k: string]: any }) {
     super.updateOptions(options);
     const { type } = this.options;
 
-    if (this.primitive && this.primitive.type !== type) {
-      this.object.remove(this.primitive);
+    if (this.primitive?.type !== type) {
+      this.object?.remove(this.primitive);
       this.primitive = null;
     }
 
     if (!this.primitive) {
-      this.primitive = Pose.getNewPrimitive(this.options);
-      this.object.add(this.primitive);
+      const primitive = Pose.getNewPrimitive(this.options);
+      if (primitive) {
+        this.primitive = primitive;
+        this.object?.add(this.primitive);
+      }
     }
 
     setObjectDimension(this.primitive, this.options);
   }
 
-  update(message) {
+  update(message: RosMessage.PoseStamped) {
     super.update(message);
     const {
       pose: { orientation, position },
     } = message;
-    this.primitive.setTransform({
+    this.primitive?.setTransform({
       translation: position,
       rotation: orientation,
     });
