@@ -1,4 +1,4 @@
-import { Color } from 'three';
+import { Color, Material, MeshBasicMaterial } from 'three';
 
 import {
   OBJECT_TYPE_ARROW,
@@ -105,5 +105,25 @@ export const removeChildren = (object: any) => {
 export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
     throw new TypeError(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
+
+export function assertIsMesh(val: any): asserts val is Mesh {
+  if (!(val instanceof Mesh)) {
+    throw new TypeError(`Expected 'val' to be mesh`);
+  }
+}
+
+export function assertIsMaterial(val: any): asserts val is Material {
+  if (!(val instanceof Material)) {
+    throw new TypeError(`Expected 'val' to be Material`);
+  }
+}
+
+export function assertIsMeshBasicMaterial(
+  val: any,
+): asserts val is MeshBasicMaterial {
+  if (!(val instanceof MeshBasicMaterial)) {
+    throw new TypeError(`Expected 'val' to be MeshBasicMaterial`);
   }
 }

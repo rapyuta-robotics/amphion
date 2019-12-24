@@ -2,6 +2,7 @@ import { DataSource } from '../data';
 import { Object3D } from 'three';
 import { assertIsDefined } from '../utils/helpers';
 import { Listener } from 'xstream';
+import Mesh from '../primitives/Mesh';
 
 interface CoreOptions<T> {
   sources: Array<DataSource<T>>;
