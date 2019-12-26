@@ -1,16 +1,16 @@
-import { Color, Material, MeshBasicMaterial } from 'three';
+import { Color, Material, MeshBasicMaterial, Quaternion, Vector3 } from 'three';
 
 import {
   OBJECT_TYPE_ARROW,
+  OBJECT_TYPE_ARROW_WITH_CIRCLE,
   OBJECT_TYPE_AXES,
   OBJECT_TYPE_FLAT_ARROW,
-  OBJECT_TYPE_ARROW_WITH_CIRCLE,
 } from './constants';
 import Mesh from '../primitives/Mesh';
 
 export const checkToleranceThresholdExceed = (
-  oldPose: any,
-  newPose: any,
+  oldPose: { position: Vector3; quaternion: Quaternion },
+  newPose: { position: Vector3; quaternion: Quaternion },
   options: any,
 ) => {
   const { angleTolerance, positionTolerance } = options;

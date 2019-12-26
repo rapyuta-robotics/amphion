@@ -14,34 +14,29 @@ import {
   checkToleranceThresholdExceed,
   setObjectDimension,
 } from '../utils/helpers';
+import Core2 from '../core/core2';
+import { DataSource } from '../data';
 
-class Odometry extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_ODOMETRY) {
-    super(ros, topicName, MESSAGE_TYPE_ODOMETRY, {
-      ...DEFAULT_OPTIONS_ODOMETRY,
-      ...options,
-    });
+class Odometry extends Core2<RosMessage.Odometry> {
+  private objectPool: Object3D[] = [];
+  private keepSize = 100;
+  private currentObjectIndex = -1;
 
-    this.object = null;
-    this.objectPool = [];
-    this.keepSize = 100;
-    this.currentObject = -1;
-    this.setVizType(options.controlledObject);
-    this.updateOptions({
-      ...DEFAULT_OPTIONS_ODOMETRY,
-      ...options,
+  constructor(
+    source: DataSource<RosMessage.Odometry>,
+    options = DEFAULT_OPTIONS_ODOMETRY,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_ODOMETRY,
+        ...options,
+      },
     });
+    this.object = new Group();
   }
 
-  setVizType(controlledObject) {
-    if (controlledObject) {
-      this.object = controlledObject;
-    } else {
-      this.object = new Group();
-    }
-  }
-
-  setKeepSize(size) {
+  setKeepSize(size: number) {
     let newKeepList = [];
 
     if (size === 0) {
@@ -52,7 +47,7 @@ class Odometry extends Core {
     if (size < this.keepSize && size < this.objectPool.length) {
       const removeCount = this.objectPool.length - size;
       for (let i = 0; i < removeCount; i++) {
-        this.object.remove(this.objectPool[i]);
+        this.object?.remove(this.objectPool[i]);
       }
 
       const slicedList = this.objectPool.slice(
@@ -66,25 +61,28 @@ class Odometry extends Core {
 
     this.objectPool = newKeepList;
     this.keepSize = size;
-    this.currentObject = this.objectPool.length - 1;
+    this.currentObjectIndex = this.objectPool.length - 1;
   }
 
   removeAllObjects() {
     this.objectPool.forEach((obj, index) => {
-      obj.parent.remove(obj);
+      obj.parent?.remove(obj);
       delete this.objectPool[index];
     });
     this.objectPool = [];
   }
 
-  checkToleranceThresholdExceed(newPose) {
+  checkToleranceThresholdExceed(newPose: {
+    position: Vector3;
+    quaternion: Quaternion;
+  }) {
     if (this.objectPool.length === 0) {
       return true;
     }
 
     const oldPose = {
-      position: this.objectPool[this.currentObject].position,
-      quaternion: this.objectPool[this.currentObject].quaternion,
+      position: this.objectPool[this.currentObjectIndex].position,
+      quaternion: this.objectPool[this.currentObjectIndex].quaternion,
     };
 
     return checkToleranceThresholdExceed(oldPose, newPose, this.options);
@@ -103,12 +101,12 @@ class Odometry extends Core {
   }
 
   changeObjectPoolType() {
-    const tempObjectPool = [];
+    const tempObjectPool: Object3D[] = [];
 
     // remove prev type objects and push the new ones in place of them.
     this.objectPool.forEach((object, index) => {
       const { position, quaternion } = object;
-      object.parent.remove(object);
+      object.parent?.remove(object);
       delete this.objectPool[index];
 
       const newObj = this.getObject();
@@ -120,14 +118,14 @@ class Odometry extends Core {
         quaternion.w,
       );
       tempObjectPool.push(newObj);
-      this.object.add(newObj);
+      this.object?.add(newObj);
       setObjectDimension(newObj, this.options);
     });
 
     this.objectPool = tempObjectPool;
   }
 
-  updateOptions(options) {
+  updateOptions(options: { [p: string]: any }) {
     const { type: currentType } = this.options;
     super.updateOptions(options);
     const { keep, type } = this.options;
@@ -143,7 +141,7 @@ class Odometry extends Core {
     this.setKeepSize(keep);
   }
 
-  update(message) {
+  update(message: RosMessage.Odometry) {
     super.update(message);
     if (!this.keepSize) {
       this.removeAllObjects();
@@ -178,15 +176,19 @@ class Odometry extends Core {
       setObjectDimension(newObject, this.options);
 
       this.objectPool.push(newObject);
-      this.currentObject += 1;
-      this.currentObject = Math.clamp(this.currentObject, 0, this.keepSize - 1);
-      this.object.add(newObject);
+      this.currentObjectIndex += 1;
+      this.currentObjectIndex = Math.clamp(
+        this.currentObjectIndex,
+        0,
+        this.keepSize - 1,
+      );
+      this.object?.add(newObject);
       TransformUtils.setTransform(newObject, transform);
 
       // remove excess object from object pool wrt to keepsize
       if (this.objectPool.length > this.keepSize) {
         const objToRemove = this.objectPool[0];
-        this.object.remove(objToRemove);
+        this.object?.remove(objToRemove);
         delete this.objectPool[0];
 
         const newObjectPool = this.objectPool.slice(1);
