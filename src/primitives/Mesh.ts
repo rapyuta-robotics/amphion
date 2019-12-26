@@ -14,7 +14,7 @@ class Mesh extends THREEMesh {
     TransformUtils.setScale(this, scale);
   }
 
-  setColor(colors: RosMessage.Point | string) {
+  setColor(colors: RosMessage.Color | string) {
     TransformUtils.setColor(this, colors);
   }
 
