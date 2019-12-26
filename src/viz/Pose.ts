@@ -4,10 +4,10 @@ import Arrow from '../primitives/Arrow';
 import Axes from '../primitives/Axes';
 import LineArrow from '../primitives/LineArrow';
 import { setObjectDimension } from '../utils/helpers';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { DataSource } from '../data';
 
-class Pose extends Live<RosMessage.PoseStamped, Group> {
+class Pose extends LiveCore<RosMessage.PoseStamped, Group> {
   private primitive: Arrow | Axes | LineArrow | null;
   constructor(
     source: DataSource<RosMessage.PoseStamped>,

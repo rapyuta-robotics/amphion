@@ -10,7 +10,7 @@ import {
   MAX_POINTCLOUD_POINTS,
 } from '../utils/constants';
 import { PCLDecoder, updateGeometryAttribute } from '../utils/pcl';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { DataSource } from '../data';
 import { assertIsDefined } from '../utils/helpers';
 
@@ -41,7 +41,7 @@ const editPointCloudPoints = function(
   };
 };
 
-class PointCloud extends Live<RosMessage.PointCloud2, Points> {
+class PointCloud extends LiveCore<RosMessage.PointCloud2, Points> {
   constructor(
     source: DataSource<RosMessage.PointCloud2>,
     options = DEFAULT_OPTIONS_POINTCLOUD,

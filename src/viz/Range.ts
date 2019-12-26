@@ -6,10 +6,10 @@ import {
 
 import Group from '../primitives/Group';
 import Cylinder from '../primitives/Cylinder';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { DataSource } from '../data';
 
-class Range extends Live<RosMessage.Range, Group> {
+class Range extends LiveCore<RosMessage.Range, Group> {
   private readonly cylinder: Cylinder;
 
   constructor(

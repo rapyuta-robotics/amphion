@@ -3,10 +3,10 @@ import { DEFAULT_OPTIONS_POSEARRAY } from '../utils/constants';
 import Pose from './Pose';
 import * as TransformUtils from '../utils/transform';
 import { assertIsDefined, setObjectDimension } from '../utils/helpers';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { DataSource } from '../data';
 
-class PoseArray extends Live<RosMessage.PoseArray, Group> {
+class PoseArray extends LiveCore<RosMessage.PoseArray, Group> {
   constructor(
     source: DataSource<RosMessage.PoseArray>,
     options = DEFAULT_OPTIONS_POSEARRAY,

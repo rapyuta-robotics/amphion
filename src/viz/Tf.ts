@@ -3,10 +3,10 @@ import { Group, Vector3 } from 'three';
 import Core from '../core';
 import TfFrame from '../primitives/TfFrame';
 import { DEFAULT_OPTIONS_TF } from '../utils/constants';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { DataSource } from '../data';
 
-class Tf extends Live<RosMessage.TFMessage, Group> {
+class Tf extends LiveCore<RosMessage.TFMessage, Group> {
   constructor(
     source: DataSource<RosMessage.TFMessage>,
     options = DEFAULT_OPTIONS_TF,

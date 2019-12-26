@@ -7,7 +7,7 @@ import {
   populateRawImageDataFromNavMsg,
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
-import Live from '../core/live';
+import LiveCore from '../core/live';
 import { RosTopicDataSource } from '../data/ros';
 import {
   assertIsMaterial,
@@ -15,7 +15,7 @@ import {
   assertIsMeshBasicMaterial,
 } from '../utils/helpers';
 
-class Map extends Live<RosMessage.OccupancyGrid, Plane> {
+class Map extends LiveCore<RosMessage.OccupancyGrid, Plane> {
   private cachedMessage: RosMessage.OccupancyGrid | null = null;
 
   constructor(
