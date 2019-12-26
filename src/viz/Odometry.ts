@@ -1,9 +1,6 @@
-import { Object3D, Vector3, Quaternion, Math } from 'three';
-
-import Core from '../core';
+import { Math, Object3D, Quaternion, Vector3 } from 'three';
 import {
   DEFAULT_OPTIONS_ODOMETRY,
-  MESSAGE_TYPE_ODOMETRY,
   ODOMETRY_OBJECT_TYPES,
 } from '../utils/constants';
 import Arrow from '../primitives/Arrow';

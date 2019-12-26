@@ -1,28 +1,33 @@
-import { Group, Vector3, Quaternion } from 'three';
-
-import Core from '../core';
+import { Group, Quaternion, Vector3 } from 'three';
 import {
   DEFAULT_OPTIONS_WRENCH,
-  MESSAGE_TYPE_WRENCHSTAMPED,
   WRENCH_OBJECT_TYPES,
 } from '../utils/constants';
 import Arrow from '../primitives/Arrow';
 import ArrowWithCircle from '../primitives/ArrowWithCircle';
 import { setObjectDimension } from '../utils/helpers';
+import Core2 from '../core/core2';
+import { DataSource } from '../data';
 
-class Wrench extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_WRENCH) {
-    super(ros, topicName, MESSAGE_TYPE_WRENCHSTAMPED, options);
-    this.object = new Group();
-    this.primitive1 = null;
-    this.primitive2 = null;
-    this.updateOptions({
-      ...DEFAULT_OPTIONS_WRENCH,
-      ...options,
+class Wrench extends Core2<RosMessage.WrenchStamped> {
+  private primitiveX: Arrow | ArrowWithCircle | null = null;
+  private primitiveY: Arrow | ArrowWithCircle | null = null;
+
+  constructor(
+    source: DataSource<RosMessage.WrenchStamped>,
+    options = DEFAULT_OPTIONS_WRENCH,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_WRENCH,
+        ...options,
+      },
     });
+    this.object = new Group();
   }
 
-  static getNewPrimitive(options) {
+  static getNewPrimitive(options: { type: string }) {
     const { type } = options;
     let newObject = null;
 
@@ -37,26 +42,36 @@ class Wrench extends Core {
     return newObject;
   }
 
-  updatePrimitive(primitive) {
-    if (primitive && primitive.type !== this.options.type) {
-      this.object.remove(primitive);
-      primitive = null;
-    }
+  getOrUpdatePrimitive(
+    primitive: Arrow | ArrowWithCircle | null,
+    type: string,
+  ) {
+    const mustUpdatePrimitive = primitive === null || primitive?.type !== type;
 
-    if (!primitive) {
-      primitive = Wrench.getNewPrimitive(this.options);
-      this.object.add(primitive);
+    if (mustUpdatePrimitive) {
+      if (primitive) {
+        this.object?.remove(primitive);
+      }
+      const object = Wrench.getNewPrimitive({ type });
+      if (object) {
+        this.object?.add(object);
+      }
+      return object;
     }
 
     return primitive;
   }
 
-  updateOptions(options) {
+  updateOptions(options: { [p: string]: any }) {
     super.updateOptions(options);
-    this.options.type = WRENCH_OBJECT_TYPES.arrow;
-    this.primitive1 = this.updatePrimitive(this.primitive1);
-    this.options.type = WRENCH_OBJECT_TYPES.arrowWithCircle;
-    this.primitive2 = this.updatePrimitive(this.primitive2);
+    this.primitiveX = this.getOrUpdatePrimitive(
+      this.primitiveX,
+      WRENCH_OBJECT_TYPES.arrow,
+    );
+    this.primitiveY = this.getOrUpdatePrimitive(
+      this.primitiveY,
+      WRENCH_OBJECT_TYPES.arrowWithCircle,
+    );
 
     const forceOptions = {
       color: this.options.forceColor,
@@ -84,11 +99,11 @@ class Wrench extends Core {
       type: WRENCH_OBJECT_TYPES.arrowWithCircle,
     };
 
-    setObjectDimension(this.primitive1, forceOptions);
-    setObjectDimension(this.primitive2, torqueOptions);
+    setObjectDimension(this.primitiveX, forceOptions);
+    setObjectDimension(this.primitiveY, torqueOptions);
   }
 
-  update(message) {
+  update(message: RosMessage.WrenchStamped) {
     super.update(message);
     const {
       wrench: { force, torque },
@@ -104,11 +119,11 @@ class Wrench extends Core {
       translationVector,
       torqueVector,
     );
-    this.primitive1.setTransform({
+    this.primitiveX?.setTransform({
       translation: { y: 0, x: 0, z: 0 },
       rotation: forceQuaternion,
     });
-    this.primitive2.setTransform({
+    this.primitiveY?.setTransform({
       translation: { y: 0, x: 0, z: 0 },
       rotation: torqueQuaternion,
     });

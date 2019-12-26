@@ -1,16 +1,10 @@
-import { DoubleSide, FrontSide, CanvasTexture, NearestFilter } from 'three';
-
-import Core from '../core';
-import {
-  DEFAULT_OPTIONS_MAP,
-  MAP_COLOR_SCHEMES,
-  MESSAGE_TYPE_OCCUPANCYGRID,
-} from '../utils/constants';
+import { CanvasTexture, DoubleSide, FrontSide, NearestFilter } from 'three';
+import { DEFAULT_OPTIONS_MAP, MAP_COLOR_SCHEMES } from '../utils/constants';
 import {
   imageDataToCanvas,
+  populateConstImageDataFromNavMsg,
   populateImageDataFromNavMsg,
   populateRawImageDataFromNavMsg,
-  populateConstImageDataFromNavMsg,
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
 import Core2 from '../core/core2';

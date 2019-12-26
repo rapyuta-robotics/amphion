@@ -1,4 +1,9 @@
-import { MeshStandardMaterial, TorusGeometry, Math, Mesh } from 'three';
+import {
+  Math as THREEMath,
+  Mesh,
+  MeshStandardMaterial,
+  TorusGeometry,
+} from 'three';
 import Arrow from './Arrow';
 import Cone from './Cone';
 import {
@@ -120,7 +125,7 @@ class ArrowWithCircle extends Arrow {
     }
 
     if (torus) {
-      this.torus.material.opacity = Math.clamp(torus, 0, 1);
+      this.torus.material.opacity = THREEMath.clamp(torus, 0, 1);
     }
 
     if (circleCone) {

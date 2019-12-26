@@ -1,7 +1,6 @@
 import {
   BufferAttribute,
   BufferGeometry,
-  Mesh,
   Points,
   PointsMaterial,
   VertexColors,
