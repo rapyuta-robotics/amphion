@@ -181,6 +181,11 @@ declare namespace RosMessage {
     attached_collision_objects: AttachedCollisionObject[];
     is_diff: boolean;
   }
+  interface Color {
+    r: number;
+    g: number;
+    b: number;
+  }
   interface ColorRGBA {
     r: number;
     g: number;

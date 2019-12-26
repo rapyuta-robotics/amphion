@@ -127,3 +127,9 @@ export function assertIsMeshBasicMaterial(
     throw new TypeError(`Expected 'val' to be MeshBasicMaterial`);
   }
 }
+
+export function assertBehavesLikeArray<T>(val: any): asserts val is Array<T> {
+  if (val.length === undefined) {
+    throw new TypeError(`Expected 'val' to be an array`);
+  }
+}
