@@ -72,6 +72,12 @@ class Core2<T extends RosMessage.Base> {
       ...options,
     };
   }
+
+  changeSources(sources: Array<DataSource<T>>) {
+    this.unsubscribe();
+    this.sources = sources;
+    this.subscribe();
+  }
 }
 
 export default Core2;
