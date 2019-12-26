@@ -1,29 +1,40 @@
-import Core from '../core';
-import { DEFAULT_OPTIONS_IMAGE, MESSAGE_TYPE_IMAGE } from '../utils/constants';
+import { DEFAULT_OPTIONS_IMAGE } from '../utils/constants';
 import { populateImageDataFromImageMsg } from '../utils/processing';
+import LiveCore from '../core/live';
+import { DataSource } from '../data';
+import { assertIsDefined } from '../utils/helpers';
 
-class Image extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_IMAGE) {
-    super(ros, topicName, MESSAGE_TYPE_IMAGE, {
-      ...DEFAULT_OPTIONS_IMAGE,
-      ...options,
+class Image extends LiveCore<RosMessage.Image, HTMLCanvasElement> {
+  private readonly shadowObject: HTMLCanvasElement;
+
+  constructor(
+    source: DataSource<RosMessage.Image>,
+    options = DEFAULT_OPTIONS_IMAGE,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_IMAGE,
+        ...options,
+      },
     });
+    const { height, width } = this.options;
     this.object = document.createElement('canvas');
     this.shadowObject = document.createElement('canvas');
-    this.updateOptions({
-      ...DEFAULT_OPTIONS_IMAGE,
-      ...options,
-    });
+    this.object.width = width;
+    this.object.height = height;
   }
 
-  applyImageData(message) {
+  applyImageData(message: RosMessage.Image) {
     const { encoding, height, width } = message;
-
-    const aspectRatio = width / height;
+    assertIsDefined(this.object);
     const ctx = this.object.getContext('2d');
+    assertIsDefined(ctx);
     const shadowCtx = this.shadowObject.getContext('2d');
+    assertIsDefined(shadowCtx);
     const imgData = shadowCtx.createImageData(width, height);
 
+    const aspectRatio = width / height;
     switch (encoding) {
       // not using encoding.find(bayer) because js switch statement
       // is much faster
@@ -106,32 +117,28 @@ class Image extends Core {
     }
   }
 
-  updateDimensions(width, height) {
+  updateDimensions(width: number, height: number) {
+    assertIsDefined(this.object);
     this.object.width = width;
     this.object.height = height;
   }
 
-  updateOptions(options) {
-    super.updateOptions(options);
-    const { height, width } = this.options;
-    this.object.width = width;
-    this.object.height = height;
-  }
-
-  update(message) {
+  update(message: RosMessage.Image) {
     const { height, width } = message;
     this.shadowObject.width = width;
     this.shadowObject.height = height;
     this.applyImageData(message);
   }
 
-  hide() {
+  hide = () => {
+    assertIsDefined(this.object);
     this.object.style.visibility = 'hidden';
-  }
+  };
 
-  show() {
+  show = () => {
+    assertIsDefined(this.object);
     this.object.style.visibility = 'visible';
-  }
+  };
 }
 
 export default Image;

@@ -2,10 +2,10 @@ import { Color } from 'three';
 import { DEFAULT_OPTIONS_PATH } from '../utils/constants';
 import Group from '../primitives/Group';
 import Line from '../primitives/Line';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 
-class Path extends Core2<RosMessage.Path> {
+class Path extends Live<RosMessage.Path, Group> {
   private readonly line: Line;
 
   constructor(

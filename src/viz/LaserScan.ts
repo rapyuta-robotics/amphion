@@ -10,11 +10,11 @@ import Points from '../utils/points';
 import Group from '../primitives/Group';
 import SphereList from '../primitives/SphereList';
 import CubeList from '../primitives/CubeList';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 import { assertBehavesLikeArray, assertIsDefined } from '../utils/helpers';
 
-class LaserScan extends Core2<RosMessage.LaserScan> {
+class LaserScan extends Live<RosMessage.LaserScan, Group> {
   private points: Points;
   private readonly sphereList: SphereList;
   private readonly cubeList: CubeList;

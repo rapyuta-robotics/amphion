@@ -6,10 +6,10 @@ import {
 import Arrow from '../primitives/Arrow';
 import ArrowWithCircle from '../primitives/ArrowWithCircle';
 import { setObjectDimension } from '../utils/helpers';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 
-class Wrench extends Core2<RosMessage.WrenchStamped> {
+class Wrench extends Live<RosMessage.WrenchStamped, Group> {
   private primitiveX: Arrow | ArrowWithCircle | null = null;
   private primitiveY: Arrow | ArrowWithCircle | null = null;
 

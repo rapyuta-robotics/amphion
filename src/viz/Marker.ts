@@ -1,12 +1,13 @@
 import { DEFAULT_OPTIONS_MARKER } from '../utils/constants';
 import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { RosTopicDataSource } from '../data/ros';
 
-class Marker extends Core2<RosMessage.Marker> {
+class Marker extends Live<RosMessage.Marker, Group> {
   private markerManager: MarkerManager;
   private onNameSpaceChange?: () => void;
+
   constructor(
     source: RosTopicDataSource<RosMessage.Marker>,
     options = DEFAULT_OPTIONS_MARKER,

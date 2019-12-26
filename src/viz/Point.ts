@@ -1,10 +1,10 @@
 import { DEFAULT_OPTIONS_POINT } from '../utils/constants';
 import Group from '../primitives/Group';
 import Sphere from '../primitives/Sphere';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 
-class Point extends Core2<RosMessage.PointStamped> {
+class Point extends Live<RosMessage.PointStamped, Group> {
   private readonly sphere: Sphere;
 
   constructor(

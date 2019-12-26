@@ -11,10 +11,10 @@ import {
   checkToleranceThresholdExceed,
   setObjectDimension,
 } from '../utils/helpers';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 
-class Odometry extends Core2<RosMessage.Odometry> {
+class Odometry extends Live<RosMessage.Odometry, Group> {
   private objectPool: Object3D[] = [];
   private keepSize = 100;
   private currentObjectIndex = -1;

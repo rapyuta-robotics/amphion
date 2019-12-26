@@ -1,4 +1,11 @@
-import { Color, Material, MeshBasicMaterial, Quaternion, Vector3 } from 'three';
+import {
+  Color,
+  Material,
+  MeshBasicMaterial,
+  Object3D,
+  Quaternion,
+  Vector3,
+} from 'three';
 
 import {
   OBJECT_TYPE_ARROW,
@@ -132,4 +139,12 @@ export function assertBehavesLikeArray<T>(val: any): asserts val is Array<T> {
   if (val.length === undefined) {
     throw new TypeError(`Expected 'val' to be an array`);
   }
+}
+
+export function isObject3D(val: any): val is Object3D {
+  return val instanceof Object3D;
+}
+
+export function isHTMLElement(val: any): val is HTMLElement {
+  return val instanceof HTMLElement;
 }

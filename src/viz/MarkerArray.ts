@@ -1,10 +1,10 @@
 import { DEFAULT_OPTIONS_MARKERARRAY } from '../utils/constants';
 import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
-import Core2 from '../core/core2';
+import Live from '../core/live';
 import { DataSource } from '../data';
 
-class MarkerArray extends Core2<RosMessage.MarkerArray> {
+class MarkerArray extends Live<RosMessage.MarkerArray, Group> {
   private markerManager: MarkerManager;
   private onNameSpaceChange?: () => void;
 

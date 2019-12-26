@@ -1,6 +1,6 @@
 import { DataSource } from '../data';
 import { Object3D } from 'three';
-import { assertIsDefined } from '../utils/helpers';
+import { assertIsDefined, isHTMLElement, isObject3D } from '../utils/helpers';
 import { Listener } from 'xstream';
 
 interface CoreOptions<T> {
@@ -8,12 +8,12 @@ interface CoreOptions<T> {
   options?: { [k: string]: any };
 }
 
-class Core2<T extends RosMessage.Base> {
+class LiveCore<T extends RosMessage.Base, V extends Object3D | HTMLElement> {
   private onHeaderChange = (headerFrameId: string) => {};
   private sources: Array<DataSource<T>>;
   protected options: { [k: string]: any };
   private headerFrameId = '';
-  public object?: Object3D;
+  public object?: V;
 
   constructor(args: CoreOptions<T>) {
     this.sources = args.sources;
@@ -25,17 +25,29 @@ class Core2<T extends RosMessage.Base> {
 
   hide = () => {
     assertIsDefined(this.object);
-    this.object.visible = false;
+    if (isObject3D(this.object)) {
+      this.object.visible = false;
+    } else if (isHTMLElement(this.object)) {
+      this.object.style.visibility = 'hidden';
+    }
   };
 
   show = () => {
     assertIsDefined(this.object);
-    this.object.visible = true;
+    if (isObject3D(this.object)) {
+      this.object.visible = true;
+    } else if (isHTMLElement(this.object)) {
+      this.object.style.visibility = 'visible';
+    }
   };
 
   destroy = () => {
     this.unsubscribe();
-    this.object?.parent?.remove(this.object);
+    if (isObject3D(this.object)) {
+      this.object?.parent?.remove(this.object);
+    } else if (isHTMLElement(this.object)) {
+      this.object?.parentElement?.removeChild(this.object);
+    }
     this.object = undefined;
   };
 
@@ -80,4 +92,4 @@ class Core2<T extends RosMessage.Base> {
   }
 }
 
-export default Core2;
+export default LiveCore;
