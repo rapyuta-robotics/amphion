@@ -1,5 +1,5 @@
-import { DefaultLoadingManager, LoadingManager, Mesh, Object3D } from 'three';
-import { assertIsDefined, isHTMLElement, isObject3D } from '../utils/helpers';
+import { DefaultLoadingManager, LoadingManager, Object3D } from 'three';
+import { assertIsDefined } from '../utils/helpers';
 import URDFLoader from 'urdf-js/src/URDFLoader';
 import ROSLIB, { Ros } from 'roslib';
 import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';

@@ -1,6 +1,4 @@
 import { Group, Vector3 } from 'three';
-
-import Core from '../core';
 import TfFrame from '../primitives/TfFrame';
 import { DEFAULT_OPTIONS_TF } from '../utils/constants';
 import LiveCore from '../core/live';

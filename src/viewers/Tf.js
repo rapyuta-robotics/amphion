@@ -1,8 +1,7 @@
-import { Quaternion, Vector3, Group } from 'three';
+import { Group, Quaternion, Vector3 } from 'three';
 import ROSLIB from 'roslib';
 
 import Viewer3d from './3d';
-import RobotModel from '../viz/RobotModel';
 import { DEFAULT_OPTIONS_TF_VIEWER } from '../utils/constants';
 
 class TfViewer extends Viewer3d {
