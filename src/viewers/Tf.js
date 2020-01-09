@@ -135,8 +135,7 @@ class TfViewer extends Viewer3d {
   }
 
   addRobot(robotModel) {
-    robotModel.load(object => {
-      RobotModel.onComplete(object);
+    robotModel.loadFromParam(object => {
       super.addVisualization(robotModel);
       // eslint-disable-next-line guard-for-in
       for (const linkName in object.children[0].links) {
