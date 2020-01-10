@@ -55,8 +55,8 @@ class TfViewer extends Viewer3d {
         },
       }) => {
         const [childObject, parentObject] = [
-          this.getObjectOrCreate(childFrameId),
-          this.getObjectOrCreate(parentFrameId),
+          this.getObjectOrCreate(`${childFrameId}-tf-connector`),
+          this.getObjectOrCreate(`${parentFrameId}-tf-connector`),
         ];
 
         parentObject.add(childObject);
@@ -64,8 +64,8 @@ class TfViewer extends Viewer3d {
         childObject.quaternion.set(rx, ry, rz, rw);
 
         [parentFrameId, childFrameId].forEach(frame => {
-          if (this.framesList.indexOf(frame) === -1) {
-            this.framesList.push(frame);
+          if (this.framesList.indexOf(`${frame}-tf-connector`) === -1) {
+            this.framesList.push(`${frame}-tf-connector`);
           }
         });
       },
@@ -74,11 +74,14 @@ class TfViewer extends Viewer3d {
   }
 
   getObjectOrCreate(frameId) {
+    const {
+      scene: { vizWrapper },
+    } = this;
     if (this.framesList.indexOf(frameId) === -1) {
       this.framesList.push(frameId);
       this.onFramesListUpdate(this.framesList);
     }
-    const existingFrame = this.scene.getObjectByName(frameId);
+    const existingFrame = vizWrapper.getObjectByName(frameId);
     if (existingFrame) {
       return existingFrame;
     }
@@ -97,7 +100,7 @@ class TfViewer extends Viewer3d {
     if (!selectedFrame) {
       return;
     }
-    const currentFrameObject = vizWrapper.getObjectByName(selectedFrame);
+    const currentFrameObject = this.getObjectOrCreate(selectedFrame);
 
     if (currentFrameObject) {
       vizWrapper.position.set(0, 0, 0);
@@ -123,29 +126,28 @@ class TfViewer extends Viewer3d {
     super.addVisualization(vizObject);
 
     vizObject.onHeaderChange = newFrameId => {
-      const frameObject = this.getObjectOrCreate(newFrameId);
+      const frameObject = this.getObjectOrCreate(`${newFrameId}-tf-connector`);
       frameObject.add(vizObject.object);
     };
   }
 
   attachObjectOutsideTree(object) {
-    const frameObject = this.getObjectOrCreate(object.frameId);
+    const frameObject = this.getObjectOrCreate(
+      `${object.frameId}-tf-connector`,
+    );
     frameObject.attach(object);
   }
 
   addRobot(robotModel) {
-    robotModel.loadFromParam(object => {
+    robotModel.loadFromParam(() => {
       super.addVisualization(robotModel);
-      // eslint-disable-next-line guard-for-in
-      for (const linkName in object.children[0].links) {
-        const o = object.children[0].links[linkName];
-        const existingObject = this.scene.getObjectByName(o.name);
-        if (existingObject) {
-          o.children.forEach(child => {
-            existingObject.add(child);
-          });
-        }
-      }
+      const links = robotModel.object.children[0].links;
+      const linkNames = Object.keys(links);
+      linkNames.map(linkName => {
+        const link = links[linkName];
+        const connector = this.getObjectOrCreate(`${linkName}-tf-connector`);
+        connector.add(link);
+      });
     });
   }
 

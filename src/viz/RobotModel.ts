@@ -12,17 +12,6 @@ class RobotModel extends URDFCore<Object3D> {
   ) {
     super(ros, paramName, options);
     this.object = new Group();
-    this.excludedObjects = [
-      'PerspectiveCamera',
-      'OrthographicCamera',
-      'AmbientLight',
-      'DirectionalLight',
-      'HemisphereLight',
-      'Light',
-      'RectAreaLight',
-      'SpotLight',
-      'PointLight',
-    ];
     this.updateOptions({
       ...DEFAULT_OPTIONS_ROBOTMODEL,
       ...options,
