@@ -1,9 +1,11 @@
 import { DefaultLoadingManager, LoadingManager, Object3D } from 'three';
 import { assertIsDefined } from '../utils/helpers';
-import URDFLoader from 'urdf-js/src/URDFLoader';
 import ROSLIB, { Ros } from 'roslib';
 import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
-import { URDFRobot } from 'urdf-js/src/URDFClasses';
+// @ts-ignore
+import URDFLoader from 'urdf-js/umd/URDFLoader';
+// @ts-ignore
+import { URDFRobot, URDFLink } from 'urdf-js/umd/URDFClasses';
 
 class URDFCore<V extends Object3D> extends URDFLoader {
   private readonly param: ROSLIB.Param;
@@ -61,7 +63,7 @@ class URDFCore<V extends Object3D> extends URDFLoader {
     ext: LoadingManager,
     done: (mesh: Object3D) => void,
   ) {
-    super.defaultMeshLoader(path, ext, mesh => {
+    super.defaultMeshLoader(path, ext, (mesh: Object3D) => {
       done(mesh);
     });
   }
@@ -85,20 +87,20 @@ class URDFCore<V extends Object3D> extends URDFLoader {
 
   hide = () => {
     assertIsDefined(this.object);
-    Object.values(this.urdfObject?.links ?? []).forEach(link => {
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
       link.hide();
     });
   };
 
   show = () => {
     assertIsDefined(this.object);
-    Object.values(this.urdfObject?.links ?? []).forEach(link => {
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
       link.show();
     });
   };
 
   destroy = () => {
-    Object.values(this.urdfObject?.links ?? []).forEach(link => {
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
       link.delete();
     });
     this.object?.parent?.remove(this.object);
