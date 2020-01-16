@@ -2,7 +2,7 @@ import { DEFAULT_OPTIONS_MARKER } from '../utils/constants';
 import Group from '../primitives/Group';
 import MarkerManager from '../utils/markerManager';
 import LiveCore from '../core/live';
-import { RosTopicDataSource } from '../data/ros';
+import { RosTopicDataSource } from '../data/rosTopic';
 
 class Marker extends LiveCore<RosMessage.Marker, Group> {
   private markerManager: MarkerManager;

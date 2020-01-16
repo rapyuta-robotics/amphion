@@ -8,7 +8,7 @@ import {
 } from '../utils/processing';
 import Plane from '../primitives/Plane';
 import LiveCore from '../core/live';
-import { RosTopicDataSource } from '../data/ros';
+import { RosTopicDataSource } from '../data/rosTopic';
 import {
   assertIsMaterial,
   assertIsMesh,
