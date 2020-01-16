@@ -16,6 +16,7 @@ type Reader = (file: File, result: BagReadResult) => void;
 
 export default class RosbagBucket {
   public files: Set<File> = new Set();
+  public filesAwaitingDelete: Set<File> = new Set();
   public topics: Array<{
     name: string;
     messageType: string;
@@ -31,11 +32,20 @@ export default class RosbagBucket {
       throw new Error('file already exists in the bucket');
     }
     this.files.add(file);
+    if (this.filesAwaitingDelete.has(file)) {
+      this.filesAwaitingDelete.delete(file);
+    }
     await this.processFile(file);
   };
 
-  removeFile = async (file: File) => {
-    // TODO: implement after figuring out how to stop the stream
+  removeFile = async (file: File, cb: () => void) => {
+    if (!this.files.has(file)) {
+      throw new Error('file does not exist in the bucket');
+    }
+    this.files.delete(file);
+    this.filesAwaitingDelete.add(file);
+    this.topics = this.topics.filter(x => x.rosbagFileName !== file.name);
+    cb();
   };
 
   addReader = (topic: string, reader: Reader) => {
@@ -71,11 +81,18 @@ export default class RosbagBucket {
       }
     });
     await bag.readMessages({}, (result: BagReadResult) => {
+      if (this.filesAwaitingDelete.has(file)) {
+        return;
+      }
       const readers = this.readers[result.topic];
       const globalReaders = this.readers['*'];
       globalReaders?.forEach(reader => reader(file, result));
       readers?.forEach(reader => reader(file, result));
     });
-    await this.processFile(file);
+    if (!this.filesAwaitingDelete.has(file)) {
+      await this.processFile(file);
+    } else {
+      this.filesAwaitingDelete.delete(file);
+    }
   }
 }
