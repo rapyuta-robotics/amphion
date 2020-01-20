@@ -7,6 +7,7 @@ interface RosBagDataSourceOptions {
   bucket: RosbagBucket;
   memory?: boolean;
   topicName: string;
+  fileName: string;
 }
 
 export class RosbagDataSource<T extends Message> implements DataSource<T> {
@@ -32,13 +33,21 @@ export class RosbagDataSource<T extends Message> implements DataSource<T> {
           }
           listener.next(bagReadResult.message as T);
         };
-        this.bucket.addReader(options.topicName, this.internalListener);
+        this.bucket.addReader(
+          options.topicName,
+          options.fileName,
+          this.internalListener,
+        );
       },
       stop: () => {
         if (!this.internalListener) {
           return;
         }
-        this.bucket.removeReader(options.topicName, this.internalListener);
+        this.bucket.removeReader(
+          options.topicName,
+          options.fileName,
+          this.internalListener,
+        );
       },
     };
     this.stream = this.hasMemory

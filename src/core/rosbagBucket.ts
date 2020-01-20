@@ -16,25 +16,29 @@ type Reader = (file: File, result: BagReadResult) => void;
 
 export default class RosbagBucket {
   public files: Set<File> = new Set();
-  public filesAwaitingDelete: Set<File> = new Set();
   public topics: Array<{
     name: string;
     messageType: string;
     rosbagFileName: string;
   }> = [];
   private readers: {
-    [p: string]: Set<Reader> | undefined;
+    [fileName: string]: {
+      topics: {
+        [topicName: string]: Set<Reader> | undefined;
+      };
+      queue: Array<BagReadResult>;
+      timer?: number;
+      queueStartWaitTimer?: number;
+    };
   } = {};
-  constructor() {}
+  private firstBagReadResult: BagReadResult | undefined;
 
   addFile = async (file: File) => {
     if (this.files.has(file)) {
       throw new Error('file already exists in the bucket');
     }
     this.files.add(file);
-    if (this.filesAwaitingDelete.has(file)) {
-      this.filesAwaitingDelete.delete(file);
-    }
+    this.readers[file.name] = { topics: {}, queue: [] };
     await this.processFile(file);
   };
 
@@ -43,25 +47,88 @@ export default class RosbagBucket {
       throw new Error('file does not exist in the bucket');
     }
     this.files.delete(file);
-    this.filesAwaitingDelete.add(file);
+    clearTimeout(this.readers[file.name].timer);
+    clearTimeout(this.readers[file.name].queueStartWaitTimer);
+    this.readers[file.name] = {
+      topics: {},
+      queue: [],
+    };
     this.topics = this.topics.filter(x => x.rosbagFileName !== file.name);
     cb();
   };
 
-  addReader = (topic: string, reader: Reader) => {
-    const readers = this.readers[topic];
-    if (!readers) {
-      this.readers[topic] = new Set();
+  addReader = (topic: string, fileName: string, reader: Reader) => {
+    const topicReadersMap = this.readers[fileName].topics;
+    if (!topicReadersMap) {
+      throw new Error(`add ${fileName} to the bucket first`);
     }
-    this.readers[topic]?.add(reader);
+    if (!topicReadersMap[topic]) {
+      topicReadersMap[topic] = new Set<Reader>();
+    }
+    topicReadersMap[topic]?.add(reader);
   };
 
-  removeReader = (topic: string, reader: Reader) => {
-    const readers = this.readers[topic];
-    if (!readers || !readers.has(reader)) {
+  removeReader = (topic: string, fileName: string, reader: Reader) => {
+    const topicReadersMap = this.readers[fileName].topics;
+    if (!topicReadersMap) {
+      throw new Error(`add ${fileName} to the bucket first`);
+    }
+    if (!topicReadersMap[topic]?.has(reader)) {
       throw new Error('reader has not yet been added to the bucket');
     }
-    this.readers[topic]?.delete(reader);
+    topicReadersMap[topic]?.delete(reader);
+  };
+
+  processQueue = (file: File) => {
+    const { queue } = this.readers[file.name];
+    if (queue.length === 0) {
+      this.readers[file.name].queueStartWaitTimer = window.setTimeout(() => {
+        this.processQueue(file);
+      }, 500);
+      return;
+    }
+    this.enqueueProcessing(0, file);
+  };
+
+  enqueueProcessing = (index: number, file: File) => {
+    const { queue } = this.readers[file.name];
+    const first = queue[index];
+    const second: BagReadResult | undefined = queue[index + 1];
+    this.processBagReadResult(first, file);
+    if (!second) {
+      // loop over at queue end
+      // note that this loop also starts if the queue is still being
+      // constructed while the message consumption outpaces the construction
+      this.enqueueProcessing(0, file);
+      return;
+    }
+    const { sec: secFirst, nsec: nsecFirst } = first.timestamp;
+    const { sec, nsec } = second.timestamp;
+    const firstTimestampMs = Math.floor(
+      secFirst * 10 ** 3 + nsecFirst / 10 ** 6,
+    );
+    const timestampMs = Math.floor(sec * 10 ** 3 + nsec / 10 ** 6);
+    let diff = 0;
+    if (timestampMs > firstTimestampMs) {
+      diff = timestampMs - firstTimestampMs;
+    }
+    // setTimeout is throttled to 4ms in HTML5 spec
+    // not bypassing it in this case will cause the visualisation to slow down
+    if (diff < 4) {
+      this.enqueueProcessing(index + 1, file);
+    } else {
+      this.readers[file.name].timer = window.setTimeout(() => {
+        this.enqueueProcessing(index + 1, file);
+      }, diff);
+    }
+  };
+
+  processBagReadResult = (result: BagReadResult, file: File) => {
+    const topicsReadersMap = this.readers[file.name].topics;
+    const globalReaders = topicsReadersMap['*'];
+    const specificReaders = topicsReadersMap[result.topic];
+    globalReaders?.forEach(reader => reader(file, result));
+    specificReaders?.forEach(reader => reader(file, result));
   };
 
   async processFile(file: File) {
@@ -80,19 +147,13 @@ export default class RosbagBucket {
         });
       }
     });
-    await bag.readMessages({}, (result: BagReadResult) => {
-      if (this.filesAwaitingDelete.has(file)) {
-        return;
-      }
-      const readers = this.readers[result.topic];
-      const globalReaders = this.readers['*'];
-      globalReaders?.forEach(reader => reader(file, result));
-      readers?.forEach(reader => reader(file, result));
+    bag.readMessages({}, (result: BagReadResult) => {
+      this.readers[file.name].queue.push(result);
     });
-    if (!this.filesAwaitingDelete.has(file)) {
-      await this.processFile(file);
-    } else {
-      this.filesAwaitingDelete.delete(file);
-    }
+    // processing starts without waiting for the full bag read to finish
+    // this enables us to implement remote rosbags
+    // to wait for the full bag read before processing, use await on
+    // bag.readMessages above
+    this.processQueue(file);
   }
 }
