@@ -5,7 +5,7 @@ import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
 // @ts-ignore
 import URDFLoader from 'urdf-js/umd/URDFLoader';
 // @ts-ignore
-import { URDFRobot, URDFLink } from 'urdf-js/umd/URDFClasses';
+import { URDFLink, URDFRobot } from 'urdf-js/umd/URDFClasses';
 
 class URDFCore<V extends Object3D> extends URDFLoader {
   private readonly param: ROSLIB.Param;

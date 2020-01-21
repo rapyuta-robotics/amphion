@@ -12,7 +12,7 @@ import {
 import { PCLDecoder, updateGeometryAttribute } from '../utils/pcl';
 import LiveCore from '../core/live';
 import { DataSource } from '../data';
-import { assertIsDefined } from '../utils/helpers';
+import { assertIsBufferGeometry, assertIsDefined } from '../utils/helpers';
 
 const editPointCloudPoints = function(
   message: RosMessage.PointCloud2,
@@ -104,7 +104,8 @@ class PointCloud extends LiveCore<RosMessage.PointCloud2, Points> {
       (material as PointsMaterial).needsUpdate = true;
     }
     const l = Math.min(MAX_POINTCLOUD_POINTS, Math.floor(positions.length / 3));
-    (geometry as BufferGeometry).setDrawRange(0, l);
+    assertIsBufferGeometry(geometry);
+    geometry.setDrawRange(0, l);
     updateGeometryAttribute(geometry, 'position', positions, l);
     updateGeometryAttribute(geometry, 'color', colors, l);
     updateGeometryAttribute(geometry, 'normal', normals, l);

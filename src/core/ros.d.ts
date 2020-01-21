@@ -10,6 +10,10 @@ declare namespace RosMessage {
   interface Base {
     header?: Header;
   }
+  interface Duration {
+    sec: number;
+    nsec: number;
+  }
   interface Vector3 {
     x: number;
     y: number;
@@ -161,7 +165,7 @@ declare namespace RosMessage {
     velocities: number[];
     accelerations: number[];
     effort: number[];
-    time_from_start: number;
+    time_from_start: Duration;
   }
   interface JointTrajectory {
     header: Header;
@@ -407,10 +411,7 @@ declare namespace RosMessage {
     pose: Pose;
     scale: Vector3;
     color: ColorRGBA;
-    lifetime: {
-      sec: number;
-      nsec: number;
-    };
+    lifetime: Duration;
     frame_locked: boolean;
     points: Point[];
     colors: ColorRGBA[];

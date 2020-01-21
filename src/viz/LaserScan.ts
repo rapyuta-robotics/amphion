@@ -32,7 +32,7 @@ class LaserScan extends LiveCore<RosMessage.LaserScan, Group> {
       },
     });
 
-    this.points = new Points(LASERSCAN_STYLES.POINTS);
+    this.points = new Points();
     this.sphereList = new SphereList();
     this.cubeList = new CubeList();
 

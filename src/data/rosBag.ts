@@ -1,5 +1,5 @@
 import { DataSource } from './index';
-import { Message, Ros, Topic } from 'roslib';
+import { Message } from 'roslib';
 import xs, { Listener, Producer, Stream } from 'xstream';
 import RosbagBucket, { BagReadResult } from '../core/rosbagBucket';
 
