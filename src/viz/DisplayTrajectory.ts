@@ -1,6 +1,6 @@
 import { Mesh, MeshPhongMaterial } from 'three';
 
-import Core from '../core';
+import LegacyCore from '../core';
 import {
   DEFAULT_OPTIONS_DISPLAYTRAJECTORY,
   MESSAGE_TYPE_DISPLAYTRAJECTORY,
@@ -9,7 +9,7 @@ import Group from '../primitives/Group';
 import { Ros } from 'roslib';
 import { URDFJoint, URDFRobot } from 'urdf-js/src/URDFClasses';
 
-class DisplayTrajectory extends Core {
+class DisplayTrajectory extends LegacyCore {
   private readonly robotClone: URDFRobot;
   private lastMessage?: RosMessage.DisplayTrajectory;
   private loopbackId?: number;

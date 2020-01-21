@@ -1,4 +1,4 @@
-import Core from '../core';
+import LegacyCore from '../core';
 import {
   COLLISION_OBJECT_OPERATIONS,
   DEFAULT_OPTIONS_PLANNINGSCENE,
@@ -10,7 +10,7 @@ import { Ros } from 'roslib';
 import { assertIsDefined } from '../utils/helpers';
 import { URDFJoint } from 'urdf-js/src/URDFClasses';
 
-class PlanningScene extends Core {
+class PlanningScene extends LegacyCore {
   private readonly collisionObjectViz = new CollisionObject();
   private readonly attachedCollisionObjects = new Map();
 

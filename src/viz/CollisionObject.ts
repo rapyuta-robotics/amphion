@@ -1,4 +1,4 @@
-import Core from '../core';
+import LegacyCore from '../core';
 import {
   COLLISION_OBJECT_OPERATIONS,
   DEFAULT_OPTIONS_COLLISION_OBJECT,
@@ -10,7 +10,7 @@ import Box from '../primitives/Box';
 import { Ros } from 'roslib';
 import { Object3D } from 'three';
 
-class CollisionObject extends Core {
+class CollisionObject extends LegacyCore {
   public object: Object3D;
 
   constructor(

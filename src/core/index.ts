@@ -4,7 +4,7 @@ import { Object3D } from 'three';
 import { assertIsDefined } from '../utils/helpers';
 import { DataSource } from '../data';
 
-class Core {
+class LegacyCore {
   public options: { [p: string]: any };
   public readonly ros: Ros | null;
   private headerFrameId: string;
@@ -127,4 +127,4 @@ class Core {
   }
 }
 
-export default Core;
+export default LegacyCore;

@@ -1,7 +1,7 @@
 import debounce from 'lodash.debounce';
 import { ControlsManager, RAYCASTER_EVENTS } from 'three-freeform-controls';
 import ROSLIB, { Ros, Topic } from 'roslib';
-import Core from '../core';
+import LegacyCore from '../core';
 import {
   DEFAULT_OPTIONS_INTERACTIVE_MARKER,
   MESSAGE_TYPE_INTERACTIVEMARKER,
@@ -13,7 +13,7 @@ import TfViewer from '../viewers/Tf';
 import { assertIsDefined } from '../utils/helpers';
 import { Object3D } from 'three';
 
-class InteractiveMarkers extends Core {
+class InteractiveMarkers extends LegacyCore {
   private init = false;
   public readonly object = new Group();
   private readonly viewer: TfViewer;

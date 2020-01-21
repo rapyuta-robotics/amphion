@@ -1,6 +1,6 @@
 import { Color } from 'three';
 
-import Core from '../core';
+import LegacyCore from '../core';
 import {
   DEFAULT_OPTIONS_POLYGON,
   MESSAGE_TYPE_POLYGONSTAMPED,
@@ -9,7 +9,7 @@ import Group from '../primitives/Group';
 import Line from '../primitives/Line';
 import { Ros } from 'roslib';
 
-class Polygon extends Core {
+class Polygon extends LegacyCore {
   public readonly object: Group;
   private readonly line: Line;
 
