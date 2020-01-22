@@ -1,6 +1,7 @@
 import { BufferGeometry, Color } from 'three';
 import { POINT_FIELD_DATATYPES, POINTCLOUD_COLOR_CHANNELS } from './constants';
 import { assertIsBufferAttribute } from './helpers';
+import './attachPCL';
 
 export const getAccessorForDataType = (
   dataView: DataView,
@@ -222,10 +223,4 @@ export class PCLDecoder {
       return { positions, colors, normals };
     };
   }
-}
-
-if (!window.WebAssembly) {
-  import('pcl-decoder').then(module => {
-    PCLDecoder.attachDecoder(module);
-  });
 }
