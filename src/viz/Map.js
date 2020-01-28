@@ -57,7 +57,7 @@ class Map extends Core {
     this.object.scale.set(width * resolution, -1 * height * resolution, 1);
     const translatedX = (width * resolution) / 2 + origin.position.x;
     const translatedY = (height * resolution) / 2 + origin.position.y;
-    this.object.position.set(translatedX, translatedY, 0);
+    this.object.position.set(translatedX, translatedY, 0.1);
   }
 
   setCanvasData(message) {
