@@ -1,4 +1,10 @@
-import { DoubleSide, FrontSide, CanvasTexture, NearestFilter } from 'three';
+import {
+  DoubleSide,
+  FrontSide,
+  CanvasTexture,
+  NearestFilter,
+  Quaternion,
+} from 'three';
 
 import Core from '../core';
 import {
@@ -51,13 +57,22 @@ class Map extends Core {
 
   updateCanvasDimensions(message) {
     const {
-      info: { height, origin, resolution, width },
+      info: {
+        height,
+        origin: {
+          orientation: { w: qw, x: qx, y: qy, z: qz },
+          position: { x, y },
+        },
+        resolution,
+        width,
+      },
     } = message;
 
     this.object.scale.set(width * resolution, -1 * height * resolution, 1);
-    const translatedX = (width * resolution) / 2 + origin.position.x;
-    const translatedY = (height * resolution) / 2 + origin.position.y;
+    const translatedX = (width * resolution) / 2 + x;
+    const translatedY = (height * resolution) / 2 + y;
     this.object.position.set(translatedX, translatedY, 0);
+    this.object.quaternion.copy(new Quaternion(qx, qy, qz, qw).normalize());
   }
 
   setCanvasData(message) {
