@@ -1,13 +1,16 @@
 import { DefaultLoadingManager, LoadingManager, Object3D } from 'three';
 import { assertIsDefined } from '../utils/helpers';
-import URDFLoader from 'urdf-js/src/URDFLoader';
 import ROSLIB, { Ros } from 'roslib';
 import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
+// @ts-ignore
+import URDFLoader from 'urdf-js/umd/URDFLoader';
+// @ts-ignore
+import { URDFRobot, URDFLink } from 'urdf-js/umd/URDFClasses';
 
 class URDFCore<V extends Object3D> extends URDFLoader {
   private readonly param: ROSLIB.Param;
   protected options: { [k: string]: any };
-  protected excludedObjects: string[] = [];
+  private urdfObject?: URDFRobot;
   private readonly packages: { [packageName: string]: string } = {};
   public object?: V;
 
@@ -27,19 +30,15 @@ class URDFCore<V extends Object3D> extends URDFLoader {
     this.updateOptions = this.updateOptions.bind(this);
     this.getPackages = this.getPackages.bind(this);
     this.defaultLoadMeshCallback = this.defaultLoadMeshCallback.bind(this);
-    this.removeExcludedObjects = this.removeExcludedObjects.bind(this);
     this.onComplete = this.onComplete.bind(this);
     this.loadURDF = this.loadURDF.bind(this);
     this.loadFromParam = this.loadFromParam.bind(this);
   }
 
-  onComplete(object: Object3D) {
-    this.removeExcludedObjects(object);
-  }
+  onComplete(object: Object3D) {}
 
   loadFromParam(onComplete = this.onComplete, options = {}) {
     this.param.get(urdfString => {
-      console.log('here');
       this.loadURDF(urdfString, onComplete, options);
     });
   }
@@ -52,31 +51,11 @@ class URDFCore<V extends Object3D> extends URDFLoader {
       ...options,
     });
     assertIsDefined(this.object);
+    this.urdfObject = urdfObject;
     this.object.add(urdfObject);
     this.object.name = urdfObject.robotName;
 
     onComplete(this.object);
-  }
-
-  removeExcludedObjects(mesh: Object3D) {
-    const objectArray: Object3D[] = [mesh];
-    while (Object.keys(objectArray).length > 0) {
-      const currentItem = objectArray.shift();
-      currentItem?.children.forEach(child => {
-        if (!child) {
-          return;
-        }
-        if (this.excludedObjects.indexOf(child.type) > -1) {
-          const { parent } = child;
-          const children = parent?.children.filter(c => c !== child);
-          if (parent && children) {
-            parent.children = children;
-          }
-        } else {
-          objectArray.push(child);
-        }
-      });
-    }
   }
 
   public defaultLoadMeshCallback(
@@ -84,8 +63,7 @@ class URDFCore<V extends Object3D> extends URDFLoader {
     ext: LoadingManager,
     done: (mesh: Object3D) => void,
   ) {
-    super.defaultMeshLoader(path, ext, mesh => {
-      this.removeExcludedObjects(mesh);
+    super.defaultMeshLoader(path, ext, (mesh: Object3D) => {
       done(mesh);
     });
   }
@@ -109,15 +87,22 @@ class URDFCore<V extends Object3D> extends URDFLoader {
 
   hide = () => {
     assertIsDefined(this.object);
-    this.object.visible = false;
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
+      link.hide();
+    });
   };
 
   show = () => {
     assertIsDefined(this.object);
-    this.object.visible = true;
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
+      link.show();
+    });
   };
 
   destroy = () => {
+    Object.values(this.urdfObject?.links ?? []).forEach((link: URDFLink) => {
+      link.delete();
+    });
     this.object?.parent?.remove(this.object);
     this.object = undefined;
   };
