@@ -1,4 +1,4 @@
-import ROSLIB from 'roslib';
+import { RosTopicDataSource } from '../data/ros';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {
@@ -32,20 +32,25 @@ class Core {
   reset() {}
 
   subscribe() {
-    if (!this.topicInstances) {
+    if (!this.dataSourceInstances) {
       return;
     }
-    this.topicInstances.forEach(t => {
-      t.subscribe(this.update);
+    this.dataSourceInstances.forEach(t => {
+      const listener = {
+        next: this.update,
+        error: error => console.log(error),
+        complete: () => console.log('stream complete'),
+      };
+      t.addListener(listener);
     });
   }
 
   unsubscribe() {
-    if (!this.topicInstances) {
+    if (!this.dataSourceInstances) {
       return;
     }
-    this.topicInstances.forEach(t => {
-      t.unsubscribe();
+    this.dataSourceInstances.forEach(t => {
+      t.removeAllListeners();
     });
   }
 
@@ -73,18 +78,18 @@ class Core {
 
     this.topicName = topicName;
     this.messageType = type || this.messageType;
-    this.topicInstances = (Array.isArray(topicName)
+    this.dataSourceInstances = (Array.isArray(topicName)
       ? topicName
       : [{ name: topicName, messageType: type }]
     ).map(
       ({ name, messageType }) =>
-        new ROSLIB.Topic({
+        new RosTopicDataSource({
           ros: this.ros,
-          name,
+          topicName: name,
           messageType,
           compression: compression || 'none',
-          throttle_rate: throttleRate || 0,
-          queue_size: queueSize || 10,
+          throttleRate: throttleRate || 0,
+          queueSize: queueSize || 10,
         }),
     );
 

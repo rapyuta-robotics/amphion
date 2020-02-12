@@ -1,8 +1,7 @@
-import { Quaternion, Vector3, Group } from 'three';
+import { Group, Quaternion, Vector3 } from 'three';
 import ROSLIB from 'roslib';
 
 import Viewer3d from './3d';
-import RobotModel from '../viz/RobotModel';
 import { DEFAULT_OPTIONS_TF_VIEWER } from '../utils/constants';
 
 class TfViewer extends Viewer3d {
@@ -135,8 +134,7 @@ class TfViewer extends Viewer3d {
   }
 
   addRobot(robotModel) {
-    robotModel.load(object => {
-      RobotModel.onComplete(object);
+    robotModel.loadFromParam(object => {
       super.addVisualization(robotModel);
       // eslint-disable-next-line guard-for-in
       for (const linkName in object.children[0].links) {

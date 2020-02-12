@@ -28,7 +28,8 @@
     "stats-js": "^1.0.1",
     "three-freeform-controls": "0.0.18",
     "three-spritetext": "^1.1.1",
-    "urdf-js": "0.0.7"
+    "urdf-js": "^0.0.14",
+    "xstream": "^11.11.0"
   },
   "peerDependencies": {
     "three": "^0.109.0"

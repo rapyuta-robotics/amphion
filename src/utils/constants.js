@@ -15,9 +15,9 @@ export const DEFAULT_GRID_COLOR = '#222222';
 export const DEFAULT_GRID_COLOR_CENTERLINE = '#333333';
 
 export const INTERACTIVE_MARKER_ORIENTATION_MODES = {
-  'INHERIT': 0,
-  'FIXED': 1,
-  'VIEW_FACING': 2,
+  INHERIT: 0,
+  FIXED: 1,
+  VIEW_FACING: 2,
 };
 
 export const UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES = [
@@ -25,16 +25,16 @@ export const UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES = [
 ];
 
 export const INTERACTIVE_MARKER_INTERACTION_MODES = {
-  'NONE': 0,
-  'MENU': 1,
-  'BUTTON': 2,
-  'MOVE_AXIS': 3,
-  'MOVE_PLANE': 4,
-  'ROTATE_AXIS': 5,
-  'MOVE_ROTATE': 6,
-  'MOVE_3D': 7,
-  'ROTATE_3D': 8,
-  'MOVE_ROTATE_3D': 9,
+  NONE: 0,
+  MENU: 1,
+  BUTTON: 2,
+  MOVE_AXIS: 3,
+  MOVE_PLANE: 4,
+  ROTATE_AXIS: 5,
+  MOVE_ROTATE: 6,
+  MOVE_3D: 7,
+  ROTATE_3D: 8,
+  MOVE_ROTATE_3D: 9,
 };
 
 /* * ***************************
@@ -75,9 +75,12 @@ export const MESSAGE_TYPE_TF2 = 'tf2_msgs/TFMessage';
 
 export const MESSAGE_TYPE_MARKER = 'visualization_msgs/Marker';
 export const MESSAGE_TYPE_MARKERARRAY = 'visualization_msgs/MarkerArray';
-export const MESSAGE_TYPE_INTERACTIVEMARKER = 'visualization_msgs/InteractiveMarkerInit';
-export const MESSAGE_TYPE_INTERACTIVEMARKER_UPDATE = 'visualization_msgs/InteractiveMarkerUpdate';
-export const MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK = 'visualization_msgs/InteractiveMarkerFeedback';
+export const MESSAGE_TYPE_INTERACTIVEMARKER =
+  'visualization_msgs/InteractiveMarkerInit';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_UPDATE =
+  'visualization_msgs/InteractiveMarkerUpdate';
+export const MESSAGE_TYPE_INTERACTIVEMARKER_FEEDBACK =
+  'visualization_msgs/InteractiveMarkerFeedback';
 
 /** ***************************
  *   Visualizations
@@ -205,10 +208,6 @@ export const WRENCH_OBJECT_TYPES = {
   arrow: OBJECT_TYPE_ARROW,
   arrowWithCircle: OBJECT_TYPE_ARROW_WITH_CIRCLE,
 };
-
-
-
-
 
 /** ***************************
  *   Default Options
@@ -395,7 +394,7 @@ export const DEFAULT_OPTIONS_TORUS = {
   tube: 0.03,
   radialSegments: 16,
   tubularSegments: 100,
-  arc: 1.7*Math.PI,
+  arc: 1.7 * Math.PI,
 };
 
 export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {
@@ -406,14 +405,14 @@ export const DEFAULT_OPTIONS_ARROW_WITH_CIRCLE = {
 };
 
 export const DEFAULT_OPTIONS_WRENCH = {
-    forceColor: DEFAULT_COLOR_X_AXIS,
-    torqueColor: DEFAULT_COLOR_ARROW,
-    alpha: 1,
-    forceArrowScale: 1,
-    torqueArrowScale: 1,
-    arrowWidth: 1,
-    ...DEFAULT_OPTIONS_ARROW_WITH_CIRCLE,
-    type: WRENCH_OBJECT_TYPES.arrow,
+  forceColor: DEFAULT_COLOR_X_AXIS,
+  torqueColor: DEFAULT_COLOR_ARROW,
+  alpha: 1,
+  forceArrowScale: 1,
+  torqueArrowScale: 1,
+  arrowWidth: 1,
+  ...DEFAULT_OPTIONS_ARROW_WITH_CIRCLE,
+  type: WRENCH_OBJECT_TYPES.arrow,
 };
 
 export const DEFAULT_OPTIONS_POSEARRAY = {

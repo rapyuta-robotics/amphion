@@ -1,20 +1,26 @@
 import { Group, Vector3 } from 'three';
-
-import Core from '../core';
 import TfFrame from '../primitives/TfFrame';
 import { DEFAULT_OPTIONS_TF } from '../utils/constants';
+import LiveCore from '../core/live';
+import { DataSource } from '../data';
 
-class Tf extends Core {
-  constructor(ros, topics, options = DEFAULT_OPTIONS_TF) {
-    super(ros, topics, null, {
-      ...DEFAULT_OPTIONS_TF,
-      ...options,
+class Tf extends LiveCore<RosMessage.TFMessage, Group> {
+  constructor(
+    source: DataSource<RosMessage.TFMessage>,
+    options = DEFAULT_OPTIONS_TF,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_TF,
+        ...options,
+      },
     });
     this.object = new Group();
-    this.object.name = 'test';
+    this.object.name = 'tf-tree';
   }
 
-  update(message) {
+  update(message: RosMessage.TFMessage) {
     const { transforms } = message;
     transforms.forEach(
       ({
@@ -45,19 +51,21 @@ class Tf extends Core {
       },
     );
 
-    this.object.children.forEach(child => {
-      child.arrow.visible = false;
+    this.object?.children.forEach(child => {
+      (child as any).arrow.visible = false;
     });
   }
 
-  getFrameOrCreate(frameId) {
-    const existingFrame = this.object.getObjectByName(TfFrame.getName(frameId));
+  getFrameOrCreate(frameId: string) {
+    const existingFrame = this.object?.getObjectByName(
+      TfFrame.getName(frameId),
+    );
     if (existingFrame) {
-      return existingFrame;
+      return existingFrame as TfFrame;
     }
 
     const newFrame = new TfFrame(frameId);
-    this.object.add(newFrame);
+    this.object?.add(newFrame);
     return newFrame;
   }
 }

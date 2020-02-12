@@ -1,13 +1,25 @@
-import { Color } from 'three';
+import {
+  Color,
+  Material,
+  MeshBasicMaterial,
+  Object3D,
+  Quaternion,
+  Vector3,
+} from 'three';
 
 import {
   OBJECT_TYPE_ARROW,
+  OBJECT_TYPE_ARROW_WITH_CIRCLE,
   OBJECT_TYPE_AXES,
   OBJECT_TYPE_FLAT_ARROW,
-  OBJECT_TYPE_ARROW_WITH_CIRCLE,
 } from './constants';
+import Mesh from '../primitives/Mesh';
 
-export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
+export const checkToleranceThresholdExceed = (
+  oldPose: { position: Vector3; quaternion: Quaternion },
+  newPose: { position: Vector3; quaternion: Quaternion },
+  options: any,
+) => {
   const { angleTolerance, positionTolerance } = options;
   const { position, quaternion } = newPose;
   const { position: oldPosition, quaternion: oldQuaternion } = oldPose;
@@ -19,7 +31,7 @@ export const checkToleranceThresholdExceed = (oldPose, newPose, options) => {
   return positionToleranceBool || angleToleranceBool;
 };
 
-export const setObjectDimension = (object, options) => {
+export const setObjectDimension = (object: any, options: any) => {
   switch (options.type) {
     case OBJECT_TYPE_ARROW: {
       const {
@@ -91,8 +103,48 @@ export const setObjectDimension = (object, options) => {
   }
 };
 
-export const removeChildren = object => {
+export const removeChildren = (object: any) => {
   while (object.children.length > 0) {
     object.remove(object.children[0]);
   }
 };
+
+export function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    throw new TypeError(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
+
+export function assertIsMesh(val: any): asserts val is Mesh {
+  if (!(val instanceof Mesh)) {
+    throw new TypeError(`Expected 'val' to be mesh`);
+  }
+}
+
+export function assertIsMaterial(val: any): asserts val is Material {
+  if (!(val instanceof Material)) {
+    throw new TypeError(`Expected 'val' to be Material`);
+  }
+}
+
+export function assertIsMeshBasicMaterial(
+  val: any,
+): asserts val is MeshBasicMaterial {
+  if (!(val instanceof MeshBasicMaterial)) {
+    throw new TypeError(`Expected 'val' to be MeshBasicMaterial`);
+  }
+}
+
+export function assertBehavesLikeArray<T>(val: any): asserts val is Array<T> {
+  if (val.length === undefined) {
+    throw new TypeError(`Expected 'val' to be an array`);
+  }
+}
+
+export function isObject3D(val: any): val is Object3D {
+  return val instanceof Object3D;
+}
+
+export function isHTMLElement(val: any): val is HTMLElement {
+  return val instanceof HTMLElement;
+}

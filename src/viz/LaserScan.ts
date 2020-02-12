@@ -1,22 +1,36 @@
 import { Color } from 'three';
-
-import Core from '../core';
 import {
-  DEFAULT_OPTIONS_LASERSCAN,
-  LASERSCAN_STYLES,
-  MESSAGE_TYPE_LASERSCAN,
-  COLOR_TRANSFORMERS,
-  INTENSITY_CHANNEL_OPTIONS,
   AXES,
+  COLOR_TRANSFORMERS,
+  DEFAULT_OPTIONS_LASERSCAN,
+  INTENSITY_CHANNEL_OPTIONS,
+  LASERSCAN_STYLES,
 } from '../utils/constants';
 import Points from '../utils/points';
 import Group from '../primitives/Group';
 import SphereList from '../primitives/SphereList';
 import CubeList from '../primitives/CubeList';
+import LiveCore from '../core/live';
+import { DataSource } from '../data';
+import { assertBehavesLikeArray, assertIsDefined } from '../utils/helpers';
 
-class LaserScan extends Core {
-  constructor(ros, topicName, options = DEFAULT_OPTIONS_LASERSCAN) {
-    super(ros, topicName, MESSAGE_TYPE_LASERSCAN, options);
+class LaserScan extends LiveCore<RosMessage.LaserScan, Group> {
+  private points: Points;
+  private readonly sphereList: SphereList;
+  private readonly cubeList: CubeList;
+  private cachedMessage: RosMessage.LaserScan | null = null;
+
+  constructor(
+    source: DataSource<RosMessage.LaserScan>,
+    options = DEFAULT_OPTIONS_LASERSCAN,
+  ) {
+    super({
+      sources: [source],
+      options: {
+        ...DEFAULT_OPTIONS_LASERSCAN,
+        ...options,
+      },
+    });
 
     this.points = new Points(LASERSCAN_STYLES.POINTS);
     this.sphereList = new SphereList();
@@ -26,20 +40,14 @@ class LaserScan extends Core {
     this.object.add(this.points.rootObject);
     this.object.add(this.sphereList);
     this.object.add(this.cubeList);
-    this.prevMessage = null;
-    this.updateOptions({
-      ...DEFAULT_OPTIONS_LASERSCAN,
-      ...options,
-    });
   }
 
-  getNormalizedIntensity(data) {
+  getNormalizedIntensity(intensity: number) {
     const { maxIntensity, minIntensity } = this.options;
-
-    return (data - minIntensity) / (maxIntensity - minIntensity);
+    return (intensity - minIntensity) / (maxIntensity - minIntensity);
   }
 
-  applyIntensityTransform(intensity, position) {
+  applyIntensityTransform(intensity: number, position: RosMessage.Point) {
     const { channelName, maxColor, minColor } = this.options;
     const { x, y, z } = position;
 
@@ -65,18 +73,18 @@ class LaserScan extends Core {
     const minColorHex = new Color(minColor);
     const maxColorHex = new Color(maxColor);
 
+    assertIsDefined(normI);
     const finalColor =
       normI * maxColorHex.getHex() + (1 - normI) * minColorHex.getHex();
     return new Color(finalColor);
   }
 
-  getNormalizedAxisValue(data) {
+  getNormalizedAxisValue(axisValue: number) {
     const { maxAxisValue, minAxisValue } = this.options;
-
-    return (data - minAxisValue) / (maxAxisValue - minAxisValue);
+    return (axisValue - minAxisValue) / (maxAxisValue - minAxisValue);
   }
 
-  applyAxisColorTransform(intensity, position) {
+  applyAxisColorTransform(intensity: number, position: RosMessage.Point) {
     const { axis, maxAxisValue, minAxisValue } = this.options;
     const { x, y, z } = position;
 
@@ -96,11 +104,12 @@ class LaserScan extends Core {
         break;
     }
 
+    assertIsDefined(normI);
     const finalColor = normI * maxAxisValue + (1 - normI) * minAxisValue;
     return new Color(finalColor);
   }
 
-  colorTransformer(intensity, position) {
+  colorTransformer(intensity: number, position: RosMessage.Point) {
     const { colorTransformer, flatColor } = this.options;
 
     switch (colorTransformer) {
@@ -115,13 +124,23 @@ class LaserScan extends Core {
     }
   }
 
-  setupPoints({ j, position, color }) {
-    this.points.colors.array[j] = color.r;
-    this.points.positions.array[j++] = position.x;
-    this.points.colors.array[j] = color.g;
-    this.points.positions.array[j++] = position.y;
-    this.points.colors.array[j] = color.b;
-    this.points.positions.array[j++] = position.z;
+  setupPoints(
+    index: number,
+    position: RosMessage.Point,
+    color: RosMessage.Color | null,
+  ) {
+    assertIsDefined(color);
+    assertIsDefined(this.points.colors);
+    assertIsDefined(this.points.positions);
+    assertBehavesLikeArray(this.points.colors.array);
+    assertBehavesLikeArray(this.points.positions.array);
+
+    this.points.colors.array[index] = color.r;
+    this.points.positions.array[index++] = position.x;
+    this.points.colors.array[index] = color.g;
+    this.points.positions.array[index++] = position.y;
+    this.points.colors.array[index] = color.b;
+    this.points.positions.array[index++] = position.z;
   }
 
   hideAllObjects() {
@@ -130,10 +149,7 @@ class LaserScan extends Core {
     this.cubeList.visible = false;
   }
 
-  setStyleDimensions(message) {
-    if (!message) {
-      return;
-    }
+  setStyleDimensions(message: RosMessage.LaserScan) {
     const { alpha, style } = this.options;
     const { size } = this.options;
     const { intensities, ranges } = message;
@@ -165,7 +181,7 @@ class LaserScan extends Core {
           case LASERSCAN_STYLES.POINTS:
           case LASERSCAN_STYLES.SQUARES:
           case LASERSCAN_STYLES.FLAT_SQUARES: {
-            this.setupPoints({ j, position, color });
+            this.setupPoints(j, position, color);
             j += 3;
             break;
           }
@@ -197,15 +213,17 @@ class LaserScan extends Core {
     }
   }
 
-  updateOptions(options) {
+  updateOptions(options: { [p: string]: any }) {
     super.updateOptions(options);
-    this.setStyleDimensions(this.prevMessage);
+    if (this.cachedMessage) {
+      this.setStyleDimensions(this.cachedMessage);
+    }
   }
 
-  update(message) {
+  update(message: RosMessage.LaserScan) {
     super.update(message);
     this.setStyleDimensions(message);
-    this.prevMessage = message;
+    this.cachedMessage = message;
   }
 }
 

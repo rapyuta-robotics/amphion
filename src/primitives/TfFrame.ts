@@ -13,16 +13,20 @@ import {
 } from '../utils/constants';
 
 class TfFrame extends Group {
-  constructor(frameId) {
+  public readonly arrow = new Arrow();
+
+  constructor(frameId: string) {
     super();
+
     this.add(new Axes(0.015, 0.25));
+
     const textObject = new Text(frameId);
     textObject
       .rotateY(Math.PI)
       .translateX(0.03)
       .translateY(0.03);
     this.add(textObject);
-    this.arrow = new Arrow();
+
     this.arrow.setHeadDimensions({
       length: (DEFAULT_CONE_HEIGHT * 0.3) / 2,
       radius: (DEFAULT_CONE_RADIUS * 0.1) / 2,
@@ -39,7 +43,7 @@ class TfFrame extends Group {
     this.name = TfFrame.getName(frameId);
   }
 
-  static getName(frameId) {
+  static getName(frameId: string) {
     return `tf-${frameId}`;
   }
 }

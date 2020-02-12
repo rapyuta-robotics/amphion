@@ -1,5 +1,4 @@
 import { PlaneGeometry, MeshBasicMaterial } from 'three';
-
 import Mesh from './Mesh';
 
 class Plane extends Mesh {
