@@ -1,4 +1,4 @@
-import { RosTopicDataSource } from '../data/ros';
+import { RosTopicDataSource } from '../data/rosTopic';
 
 class Core {
   constructor(ros, topicName, messageType, options = {}) {

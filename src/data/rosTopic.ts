@@ -2,7 +2,7 @@ import { DataSource } from './index';
 import { Message, Ros, Topic } from 'roslib';
 import xs, { Listener, Producer, Stream } from 'xstream';
 
-interface RosDataSourceOptions {
+interface RosTopicDataSourceOptions {
   ros: Ros;
   topicName: string;
   messageType: string;
@@ -31,7 +31,7 @@ export class RosTopicDataSource<T extends Message> implements DataSource<T> {
   private rosCloseHook: (() => void) | null = null;
   private rosErrorHook: ((error: any) => void) | null = null;
 
-  constructor(options: RosDataSourceOptions) {
+  constructor(options: RosTopicDataSourceOptions) {
     this.ros = options.ros;
     this.hasMemory = options.memory ?? false;
 

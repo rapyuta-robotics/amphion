@@ -24,6 +24,7 @@
     "lodash.debounce": "^4.0.8",
     "pcl-decoder": "^0.1.7",
     "randomcolor": "^0.5.4",
+    "rosbag": "^2.2.1",
     "roslib": "^1.0.1",
     "stats-js": "^1.0.1",
     "three-freeform-controls": "0.0.18",
