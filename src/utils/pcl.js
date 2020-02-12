@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Color } from 'three';
 import { POINT_FIELD_DATATYPES, POINTCLOUD_COLOR_CHANNELS } from './constants';
 
 export const getAccessorForDataType = (dataView, dataType) => {
@@ -53,7 +53,7 @@ export class PCLDecoder {
     const offsets = {};
     const accessor = {};
 
-    const rgbCache = new THREE.Color();
+    const rgbCache = new Color();
 
     message.fields.forEach(f => {
       offsets[f.name] = f.offset;

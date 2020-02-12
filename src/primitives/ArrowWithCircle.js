@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { MeshStandardMaterial, TorusGeometry, Math, Mesh } from 'three';
 import Arrow from './Arrow';
 import Cone from './Cone';
 import {
@@ -16,12 +16,12 @@ class ArrowWithCircle extends Arrow {
 
     const torusOptions = DEFAULT_OPTIONS_TORUS;
 
-    this.material = new THREE.MeshStandardMaterial({
+    this.material = new MeshStandardMaterial({
       color: this.cone.material.color,
     });
     this.material.transparent = true;
 
-    const torusGeometry = new THREE.TorusGeometry(
+    const torusGeometry = new TorusGeometry(
       torusOptions.circleRadius,
       torusOptions.tube,
       torusOptions.radialSegments,
@@ -29,7 +29,7 @@ class ArrowWithCircle extends Arrow {
       torusOptions.arc,
     );
 
-    this.torus = new THREE.Mesh(torusGeometry, this.material);
+    this.torus = new Mesh(torusGeometry, this.material);
     this.add(this.torus);
 
     this.circleCone.rotateX(this.torus.geometry.parameters.arc);
@@ -50,7 +50,7 @@ class ArrowWithCircle extends Arrow {
   setTorusDimensions({ radius, tube }) {
     const torusOptions = DEFAULT_OPTIONS_TORUS;
 
-    this.torus.geometry = new THREE.TorusGeometry(
+    this.torus.geometry = new TorusGeometry(
       radius,
       tube,
       torusOptions.radialSegments,
@@ -120,7 +120,7 @@ class ArrowWithCircle extends Arrow {
     }
 
     if (torus) {
-      this.torus.material.opacity = THREE.Math.clamp(torus, 0, 1);
+      this.torus.material.opacity = Math.clamp(torus, 0, 1);
     }
 
     if (circleCone) {

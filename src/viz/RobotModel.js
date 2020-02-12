@@ -1,5 +1,5 @@
 import ROSLIB from 'roslib';
-import * as THREE from 'three';
+import { DefaultLoadingManager } from 'three';
 import URDFLoader from 'urdf-js';
 import Group from '../primitives/Group';
 import { DEFAULT_OPTIONS_ROBOTMODEL } from '../utils/constants';
@@ -36,7 +36,7 @@ const removeExcludedObjects = mesh => {
 
 class RobotModel extends URDFLoader {
   constructor(ros, paramName, options = DEFAULT_OPTIONS_ROBOTMODEL) {
-    super(THREE.DefaultLoadingManager);
+    super(DefaultLoadingManager);
     const { packages } = options;
     this.param = new ROSLIB.Param({
       ros,

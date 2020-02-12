@@ -5,7 +5,7 @@ import {
 } from 'three';
 import { EditorControls } from '../../src/utils/editorControls';
 import ROSLIB from 'roslib';
-import Amphion from '../../build/amphion.module';
+import Amphion from '../../build/amphion';
 import CONFIG from "../config";
 
 let camera, controls, scene, renderer;

@@ -1,4 +1,10 @@
-import * as THREE from 'three';
+import {
+  PointsMaterial,
+  VertexColors,
+  BufferGeometry,
+  BufferAttribute,
+  Points,
+} from 'three';
 import Core from '../core';
 import {
   DEFAULT_OPTIONS_POINTCLOUD,
@@ -37,35 +43,35 @@ class PointCloud extends Core {
       ...DEFAULT_OPTIONS_POINTCLOUD,
       ...options,
     });
-    const cloudMaterial = new THREE.PointsMaterial({
+    const cloudMaterial = new PointsMaterial({
       size: this.options.size,
-      vertexColors: THREE.VertexColors,
+      vertexColors: VertexColors,
     });
-    const geometry = new THREE.BufferGeometry();
+    const geometry = new BufferGeometry();
     geometry.addAttribute(
       'position',
-      new THREE.BufferAttribute(
+      new BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
     geometry.addAttribute(
       'color',
-      new THREE.BufferAttribute(
+      new BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
     geometry.addAttribute(
       'normal',
-      new THREE.BufferAttribute(
+      new BufferAttribute(
         new Float32Array(MAX_POINTCLOUD_POINTS * 3),
         3,
       ).setDynamic(true),
     );
     geometry.setDrawRange(0, 0);
     geometry.computeBoundingSphere();
-    this.object = new THREE.Points(geometry, cloudMaterial);
+    this.object = new Points(geometry, cloudMaterial);
     this.object.frustumCulled = false;
     this.updateOptions({
       ...DEFAULT_OPTIONS_POINTCLOUD,

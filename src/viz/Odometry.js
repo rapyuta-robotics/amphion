@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Object3D, Vector3, Quaternion, Math } from 'three';
 
 import Core from '../core';
 import {
@@ -99,7 +99,7 @@ class Odometry extends Core {
         return new Axes();
     }
 
-    return new THREE.Object3D();
+    return new Object3D();
   }
 
   changeObjectPoolType() {
@@ -161,8 +161,8 @@ class Odometry extends Core {
     };
 
     const newPose = {
-      position: new THREE.Vector3(position.x, position.y, position.z),
-      quaternion: new THREE.Quaternion(
+      position: new Vector3(position.x, position.y, position.z),
+      quaternion: new Quaternion(
         orientation.x,
         orientation.y,
         orientation.z,
@@ -179,11 +179,7 @@ class Odometry extends Core {
 
       this.objectPool.push(newObject);
       this.currentObject += 1;
-      this.currentObject = THREE.Math.clamp(
-        this.currentObject,
-        0,
-        this.keepSize - 1,
-      );
+      this.currentObject = Math.clamp(this.currentObject, 0, this.keepSize - 1);
       this.object.add(newObject);
       TransformUtils.setTransform(newObject, transform);
 

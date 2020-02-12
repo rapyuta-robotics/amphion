@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { DoubleSide, FrontSide, CanvasTexture, NearestFilter } from 'three';
 
 import Core from '../core';
 import {
@@ -39,9 +39,9 @@ class Map extends Core {
     this.object.material.opacity = alpha;
 
     if (drawBehind) {
-      this.object.material.side = THREE.DoubleSide;
+      this.object.material.side = DoubleSide;
     } else {
-      this.object.material.side = THREE.FrontSide;
+      this.object.material.side = FrontSide;
     }
     this.object.material.needsUpdate = true;
     if (this.prevMessage) {
@@ -91,9 +91,9 @@ class Map extends Core {
         break;
     }
 
-    this.object.material.map = new THREE.CanvasTexture(bitmapCanvas);
-    this.object.material.map.minFilter = THREE.NearestFilter;
-    this.object.material.map.magFilter = THREE.NearestFilter;
+    this.object.material.map = new CanvasTexture(bitmapCanvas);
+    this.object.material.map.minFilter = NearestFilter;
+    this.object.material.map.magFilter = NearestFilter;
     this.object.material.needsUpdate = true;
 
     this.updateCanvasDimensions(message);

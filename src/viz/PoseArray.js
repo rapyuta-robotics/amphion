@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Group } from 'three';
 
 import Core from '../core';
 import {
@@ -15,7 +15,7 @@ class PoseArray extends Core {
       ...DEFAULT_OPTIONS_POSEARRAY,
       ...options,
     });
-    this.object = new THREE.Group();
+    this.object = new Group();
     this.updateOptions({
       ...DEFAULT_OPTIONS_POSEARRAY,
       ...options,
