@@ -29,7 +29,7 @@ class MarkerArray extends LiveCore<RosMessage.MarkerArray, Group> {
 
   updateOptions(options: { [p: string]: any }) {
     super.updateOptions(options);
-    this.markerManager.updateOptions(this.options);
+    this.markerManager.updateOptions(this.options as any);
   }
 
   update(message: RosMessage.MarkerArray) {

@@ -1,6 +1,7 @@
 import { Group as ThreeGroup } from 'three';
 
 import * as TransformUtils from '../utils/transform';
+import Mesh from './Mesh';
 
 class Group extends ThreeGroup {
   setTransform(transform: {
@@ -16,7 +17,7 @@ class Group extends ThreeGroup {
 
   setColor(colors: RosMessage.Color) {
     this.children.forEach(child => {
-      TransformUtils.setColor(child, colors);
+      TransformUtils.setColor(child as Mesh, colors);
     });
   }
 }

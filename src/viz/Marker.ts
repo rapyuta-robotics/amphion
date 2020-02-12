@@ -33,7 +33,7 @@ class Marker extends LiveCore<RosMessage.Marker, Group> {
 
   updateOptions(options: { [k: string]: any }) {
     super.updateOptions(options);
-    this.markerManager.updateOptions(this.options);
+    this.markerManager.updateOptions(this.options as any);
   }
 
   update(message: RosMessage.Marker) {

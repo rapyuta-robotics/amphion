@@ -1,9 +1,13 @@
 import {
+  BufferAttribute,
+  BufferGeometry,
   Color,
   Material,
+  Mesh,
   MeshBasicMaterial,
   Object3D,
   Quaternion,
+  TorusGeometry,
   Vector3,
 } from 'three';
 
@@ -13,7 +17,6 @@ import {
   OBJECT_TYPE_AXES,
   OBJECT_TYPE_FLAT_ARROW,
 } from './constants';
-import Mesh from '../primitives/Mesh';
 
 export const checkToleranceThresholdExceed = (
   oldPose: { position: Vector3; quaternion: Quaternion },
@@ -87,12 +90,7 @@ export const setObjectDimension = (object: any, options: any) => {
         radius: circleConeRadius,
         length: circleConeLength,
       });
-      object.setAlpha({
-        cone: alpha,
-        cylinder: alpha,
-        torus: alpha,
-        circleCone: alpha,
-      });
+      object.setAlpha(alpha);
       object.setColor({
         cone: new Color(color),
         cylinder: new Color(color),
@@ -147,4 +145,34 @@ export function isObject3D(val: any): val is Object3D {
 
 export function isHTMLElement(val: any): val is HTMLElement {
   return val instanceof HTMLElement;
+}
+
+export function assertIsTorusGeometry(val: any): asserts val is TorusGeometry {
+  if (!(val instanceof TorusGeometry)) {
+    throw new Error('the provided geometry was not TorusGeometry');
+  }
+}
+
+export function assertIsHTMLVideoElement(
+  val: any,
+): asserts val is HTMLVideoElement {
+  if (!(val instanceof HTMLVideoElement)) {
+    throw new Error('the provided element must be an HTMLVideoElement');
+  }
+}
+
+export function assertIsBufferGeometry(
+  val: any,
+): asserts val is BufferGeometry {
+  if (!(val instanceof BufferGeometry)) {
+    throw new Error('the provided attribute must be an BufferGeometry');
+  }
+}
+
+export function assertIsBufferAttribute(
+  val: any,
+): asserts val is BufferAttribute {
+  if (!(val instanceof BufferAttribute)) {
+    throw new Error('the provided attribute must be an BufferAttribute');
+  }
 }

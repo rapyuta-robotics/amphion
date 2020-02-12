@@ -1,4 +1,4 @@
-import { Mesh as THREEMesh, Math } from 'three';
+import { Math, Mesh as THREEMesh } from 'three';
 
 import * as TransformUtils from '../utils/transform';
 
@@ -10,12 +10,16 @@ class Mesh extends THREEMesh {
     TransformUtils.setTransform(this, transform);
   }
 
-  setScale(scale: RosMessage.Point) {
-    TransformUtils.setScale(this, scale);
+  setScale(scale?: RosMessage.Point) {
+    if (scale) {
+      TransformUtils.setScale(this, scale);
+    }
   }
 
-  setColor(colors: RosMessage.Color | string) {
-    TransformUtils.setColor(this, colors);
+  setColor(colors: RosMessage.Color | string | null) {
+    if (colors) {
+      TransformUtils.setColor(this, colors);
+    }
   }
 
   setAlpha(alpha: number) {

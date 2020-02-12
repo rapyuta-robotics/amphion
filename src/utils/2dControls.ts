@@ -16,15 +16,7 @@
  Change to this.panSpeed and this.zoomSpeed
  ** */
 
-import {
-  Box3,
-  EventDispatcher,
-  Matrix3,
-  Sphere,
-  Spherical,
-  Vector2,
-  Vector3,
-} from 'three';
+import { Box3, EventDispatcher, Matrix3, Sphere, Spherical, Vector2, Vector3 } from 'three';
 
 const MapControls2D = function(object, domElement) {
   domElement = domElement !== undefined ? domElement : document;
