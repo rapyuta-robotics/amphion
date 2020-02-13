@@ -28,7 +28,9 @@ export const setColor = (
   object: Mesh | Line | LineSegments,
   color: string | number | RosMessage.Color,
 ) => {
-  assertIsMeshBasicMaterial(object.material);
+  if (!('color' in object.material)) {
+    return;
+  }
   if (typeof color === 'string' || typeof color === 'number') {
     object.material.color = new Color(color);
   } else {
