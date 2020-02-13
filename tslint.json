@@ -4,6 +4,7 @@
   "rules": {
     "no-empty": false,
     "jsdoc-format": false,
-    "one-variable-per-declaration": [true, "ignore-for-loop"]
+    "one-variable-per-declaration": [true, "ignore-for-loop"],
+    "no-floating-promises": false
   }
 }

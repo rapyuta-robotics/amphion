@@ -13,15 +13,7 @@
  * Changes to this.rotate function to take spherical wrt z as vertical axis
  * */
 
-import {
-  Box3,
-  EventDispatcher,
-  Matrix3,
-  Sphere,
-  Spherical,
-  Vector2,
-  Vector3,
-} from 'three';
+import { Box3, EventDispatcher, Matrix3, Sphere, Spherical, Vector2, Vector3 } from 'three';
 
 const EditorControls = function(object, domElement) {
   domElement = domElement !== undefined ? domElement : document;

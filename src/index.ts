@@ -29,6 +29,9 @@ import TfViewer from './viewers/Tf';
 import InteractiveMarkers from './viz/InteractiveMarkers';
 
 import * as CONSTANTS from './utils/constants';
+import { RosTopicDataSource } from './data/rosTopic';
+import RosbagBucket from './core/rosbagBucket';
+import { RosbagDataSource } from './data/rosBag';
 
 export default {
   CollisionObject,
@@ -60,6 +63,10 @@ export default {
   TfViewer,
 
   InteractiveMarkers,
+
+  RosbagBucket,
+  RosTopicDataSource,
+  RosbagDataSource,
 
   CONSTANTS,
 };
