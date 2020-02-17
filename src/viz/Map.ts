@@ -5,10 +5,7 @@ import {
   NearestFilter,
   Quaternion,
 } from 'three';
-import {
-  DEFAULT_OPTIONS_MAP,
-  MAP_COLOR_SCHEMES,
-} from '../utils/constants';
+import { DEFAULT_OPTIONS_MAP, MAP_COLOR_SCHEMES } from '../utils/constants';
 import {
   imageDataToCanvas,
   populateConstImageDataFromNavMsg,
@@ -79,15 +76,14 @@ class Map extends LiveCore<RosMessage.OccupancyGrid, Plane> {
       },
     } = message;
 
-    this.object?.scale.set(width * resolution, -1 * height * resolution, 1);
+    this.object?.scale.set(width * resolution, height * resolution, 1);
     const translatedX = (width * resolution) / 2 + x;
     const translatedY = (height * resolution) / 2 + y;
-    this.object?.position.set(
-      translatedX,
-      translatedY,
-      z || 0.01,
-    );
+    this.object?.position.set(translatedX, translatedY, z || -0.01);
     this.object?.quaternion.copy(new Quaternion(qx, qy, qz, qw).normalize());
+
+    // @ts-ignore
+    window.mapObject = this.object;
   }
 
   setCanvasData(message: RosMessage.OccupancyGrid) {

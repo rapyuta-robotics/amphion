@@ -9,6 +9,7 @@ import {
   DEFAULT_OPTIONS_POINTCLOUD,
   MAX_POINTCLOUD_POINTS,
 } from '../utils/constants';
+import '../utils/attachPCL';
 import { PCLDecoder, updateGeometryAttribute } from '../utils/pcl';
 import LiveCore from '../core/live';
 import { DataSource } from '../data';

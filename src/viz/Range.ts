@@ -33,6 +33,13 @@ class Range extends LiveCore<RosMessage.Range, Group> {
     this.cylinder.setColor(new Color(color));
   }
 
+  updateOptions(options: { [p: string]: any }) {
+    super.updateOptions(options);
+    const { alpha, color } = this.options;
+    this.cylinder.setColor(new Color(color));
+    this.cylinder.setAlpha(alpha);
+  }
+
   update(message: RosMessage.Range) {
     super.update(message);
     const { field_of_view: fov, max_range: max, min_range: min } = message;

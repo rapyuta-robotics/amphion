@@ -7,6 +7,18 @@ import URDFLoader from 'urdf-js/umd/URDFLoader';
 // @ts-ignore
 import { URDFLink, URDFRobot } from 'urdf-js/umd/URDFClasses';
 
+const excludedObjects = [
+  'PerspectiveCamera',
+  'OrthographicCamera',
+  'AmbientLight',
+  'DirectionalLight',
+  'HemisphereLight',
+  'Light',
+  'RectAreaLight',
+  'SpotLight',
+  'PointLight',
+];
+
 class URDFCore<V extends Object3D> extends URDFLoader {
   private readonly param: ROSLIB.Param;
   protected options: { [k: string]: any };
@@ -33,9 +45,12 @@ class URDFCore<V extends Object3D> extends URDFLoader {
     this.onComplete = this.onComplete.bind(this);
     this.loadURDF = this.loadURDF.bind(this);
     this.loadFromParam = this.loadFromParam.bind(this);
+    this.removeExcludedObjects = this.removeExcludedObjects.bind(this);
   }
 
-  onComplete(object: Object3D) {}
+  onComplete(object: Object3D) {
+    this.removeExcludedObjects(object);
+  }
 
   loadFromParam(onComplete = this.onComplete, options = {}) {
     this.param.get(urdfString => {
@@ -58,12 +73,34 @@ class URDFCore<V extends Object3D> extends URDFLoader {
     onComplete(this.object);
   }
 
+  removeExcludedObjects(mesh: Object3D) {
+    const objectArray: Object3D[] = [mesh];
+    while (Object.keys(objectArray).length > 0) {
+      const currentItem = objectArray.shift();
+      currentItem?.children.forEach(child => {
+        if (!child) {
+          return;
+        }
+        if (excludedObjects.indexOf(child.type) > -1) {
+          const { parent } = child;
+          const children = parent?.children.filter(c => c !== child);
+          if (parent && children) {
+            parent.children = children;
+          }
+        } else {
+          objectArray.push(child);
+        }
+      });
+    }
+  }
+
   public defaultLoadMeshCallback(
     path: string,
     ext: LoadingManager,
     done: (mesh: Object3D) => void,
   ) {
     super.defaultMeshLoader(path, ext, (mesh: Object3D) => {
+      this.removeExcludedObjects(mesh);
       done(mesh);
     });
   }

@@ -1,4 +1,4 @@
-import { CylinderGeometry, MeshStandardMaterial } from 'three';
+import { CylinderGeometry, MeshLambertMaterial } from 'three';
 import {
   DEFAULT_COLOR_ARROW,
   DEFAULT_CYLINDER_HEIGHT,
@@ -9,7 +9,7 @@ import Mesh from './Mesh';
 
 class Cylinder extends Mesh {
   public geometry: CylinderGeometry;
-  public material: MeshStandardMaterial;
+  public material: MeshLambertMaterial;
 
   constructor(
     color = DEFAULT_COLOR_ARROW,
@@ -23,7 +23,7 @@ class Cylinder extends Mesh {
       height,
       DEFAULT_RADIAL_SEGMENTS,
     );
-    this.material = new MeshStandardMaterial({ color });
+    this.material = new MeshLambertMaterial({ color });
     this.material.transparent = true;
     this.rotateX(Math.PI / 2);
   }

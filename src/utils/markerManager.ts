@@ -22,7 +22,6 @@ export default class MarkerManager {
     if (!marker) {
       return;
     }
-
     this.removeObject(id);
   }
 
@@ -75,7 +74,7 @@ export default class MarkerManager {
     const markerObject: any = this.getMarkerOrCreate(marker);
     const markerId = MarkerManager.getId(marker);
 
-    this.markerLifetime.track(markerId, lifetime.sec);
+    this.markerLifetime.track(markerId, lifetime.sec || lifetime.secs);
 
     if (markerObject.updatePoints) {
       markerObject.updatePoints(points, colors, marker);

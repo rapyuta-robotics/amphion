@@ -1,4 +1,4 @@
-import { ConeGeometry, MeshStandardMaterial } from 'three';
+import { ConeGeometry, MeshLambertMaterial } from 'three';
 
 import Mesh from './Mesh';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../utils/constants';
 
 class Cone extends Mesh {
-  public readonly material: MeshStandardMaterial;
+  public readonly material: MeshLambertMaterial;
   public readonly geometry: ConeGeometry;
 
   constructor(color = DEFAULT_COLOR_X_AXIS) {
@@ -19,7 +19,7 @@ class Cone extends Mesh {
       DEFAULT_CONE_HEIGHT,
       DEFAULT_RADIAL_SEGMENTS,
     );
-    this.material = new MeshStandardMaterial({ color });
+    this.material = new MeshLambertMaterial({ color });
     this.material.transparent = true;
   }
 }

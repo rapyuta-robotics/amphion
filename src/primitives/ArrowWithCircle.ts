@@ -1,4 +1,4 @@
-import { Math as THREEMath, MeshStandardMaterial, TorusGeometry } from 'three';
+import { Math as THREEMath, MeshLambertMaterial, TorusGeometry } from 'three';
 import Arrow from './Arrow';
 import Cone from './Cone';
 import {
@@ -11,7 +11,7 @@ import Mesh from './Mesh';
 
 class ArrowWithCircle extends Arrow {
   private readonly circleCone = new Cone(DEFAULT_COLOR_X_AXIS);
-  public readonly material = new MeshStandardMaterial({
+  public readonly material = new MeshLambertMaterial({
     color: this.cone.material.color,
   });
   private readonly torus: Mesh;

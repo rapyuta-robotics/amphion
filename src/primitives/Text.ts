@@ -9,8 +9,10 @@ import {
 import Mesh from './Mesh';
 
 class Text extends Mesh {
-  public geometry: TextGeometry | Geometry = new Geometry();
-  public material: MeshBasicMaterial | Material = new Material();
+  // @ts-ignore
+  public geometry: TextGeometry | undefined;
+  // @ts-ignore
+  public material: MeshBasicMaterial | undefined;
 
   constructor(text: string) {
     super();

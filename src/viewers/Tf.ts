@@ -8,7 +8,7 @@ import { URDFRobot } from 'urdf-js/src/URDFClasses';
 
 class TfViewer extends Viewer3d {
   public options: {
-    onFramesListUpdate?: () => void;
+    onFramesListUpdate?: (framesList: string[]) => void;
     selectedFrame?: string;
   } = {};
   private readonly ros: Ros;
@@ -28,7 +28,7 @@ class TfViewer extends Viewer3d {
     });
     const { onFramesListUpdate } = this.options;
     this.ros = rosInstance;
-    this.onFramesListUpdate = onFramesListUpdate || (() => {});
+    this.onFramesListUpdate = options.onFramesListUpdate || (() => {});
 
     this.initRosEvents();
     this.getTFMessages = this.getTFMessages.bind(this);
@@ -74,19 +74,13 @@ class TfViewer extends Viewer3d {
         },
       }) => {
         const [childObject, parentObject] = [
-          this.getObjectOrCreate(`${childFrameId}-tf-connector`),
-          this.getObjectOrCreate(`${parentFrameId}-tf-connector`),
+          this.getObjectOrCreate(childFrameId),
+          this.getObjectOrCreate(parentFrameId),
         ];
 
         parentObject.add(childObject);
         childObject.position.set(x, y, z);
         childObject.quaternion.set(rx, ry, rz, rw);
-
-        [parentFrameId, childFrameId].forEach(frame => {
-          if (this.framesList.indexOf(`${frame}-tf-connector`) === -1) {
-            this.framesList.push(`${frame}-tf-connector`);
-          }
-        });
       },
     );
     this.setFrameTransform();
@@ -100,13 +94,13 @@ class TfViewer extends Viewer3d {
       this.framesList.push(frameId);
       this.onFramesListUpdate(this.framesList);
     }
-    const existingFrame = vizWrapper.getObjectByName(frameId);
+    const existingFrame = vizWrapper.getObjectByName(`${frameId}-tf-connector`);
     if (existingFrame) {
       return existingFrame;
     }
 
     const newFrame = new Group();
-    newFrame.name = frameId;
+    newFrame.name = `${frameId}-tf-connector`;
     this.scene.addObject(newFrame);
     return newFrame;
   }
@@ -148,7 +142,7 @@ class TfViewer extends Viewer3d {
     super.addVisualization(vizObject);
 
     vizObject.onHeaderChange = newFrameId => {
-      const frameObject = this.getObjectOrCreate(`${newFrameId}-tf-connector`);
+      const frameObject = this.getObjectOrCreate(newFrameId);
       frameObject.add(vizObject.object);
     };
   }
@@ -157,9 +151,7 @@ class TfViewer extends Viewer3d {
     if (!object.frameId) {
       return;
     }
-    const frameObject = this.getObjectOrCreate(
-      `${object.frameId}-tf-connector`,
-    );
+    const frameObject = this.getObjectOrCreate(object.frameId);
     frameObject.attach(object);
   }
 
@@ -170,7 +162,7 @@ class TfViewer extends Viewer3d {
       const linkNames = Object.keys(links);
       linkNames.map(linkName => {
         const link = links[linkName];
-        const connector = this.getObjectOrCreate(`${linkName}-tf-connector`);
+        const connector = this.getObjectOrCreate(linkName);
         connector.add(link);
       });
     });

@@ -1,11 +1,11 @@
-import { MeshStandardMaterial, SphereGeometry } from 'three';
+import { MeshLambertMaterial, SphereGeometry } from 'three';
 
 import Mesh from './Mesh';
 import { DEFAULT_RADIAL_SEGMENTS } from '../utils/constants';
 
 class Sphere extends Mesh {
   public readonly geometry: SphereGeometry;
-  public readonly material: MeshStandardMaterial;
+  public readonly material: MeshLambertMaterial;
 
   constructor() {
     super();
@@ -15,7 +15,7 @@ class Sphere extends Mesh {
       DEFAULT_RADIAL_SEGMENTS,
       DEFAULT_RADIAL_SEGMENTS,
     );
-    this.material = new MeshStandardMaterial();
+    this.material = new MeshLambertMaterial();
     this.material.transparent = true;
   }
 }
