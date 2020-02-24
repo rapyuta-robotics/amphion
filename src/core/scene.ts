@@ -70,7 +70,7 @@ class Scene extends ThreeScene {
     return this.vizWrapper.getObjectByName(name);
   }
 
-  updateOptions(options = DEFAULT_OPTIONS_SCENE) {
+  updateOptions(options: object = {}) {
     this.options = {
       ...DEFAULT_OPTIONS_SCENE,
       ...options,
