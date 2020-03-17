@@ -25,6 +25,7 @@ import DepthCloud from './viz/DepthCloud';
 
 import Viewer2d from './viewers/2d';
 import Viewer3d from './viewers/3d';
+import Viewer from './viewers/viewer';
 import TfViewer from './viewers/Tf';
 import InteractiveMarkers from './viz/InteractiveMarkers';
 
@@ -58,6 +59,7 @@ export default {
 
   Scene,
 
+  Viewer,
   Viewer2d,
   Viewer3d,
   TfViewer,

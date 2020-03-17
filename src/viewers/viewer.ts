@@ -11,7 +11,11 @@ import { EditorControls } from '../utils/editorControls';
 import { MapControls2D } from '../utils/2dControls';
 import Scene from '../core/scene';
 import { DEFAULT_OPTIONS_SCENE, VIEW_TYPES } from '../utils/constants';
-import { assertIsDefined } from '../utils/helpers';
+import {
+  assertIsDefined,
+  assertIsOrthographicCamera,
+  assertIsPerspectiveCamera,
+} from '../utils/helpers';
 
 const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
 
@@ -24,8 +28,7 @@ class Viewer {
   public renderer?: WebGLRenderer;
   public camera?: OrthographicCamera | PerspectiveCamera;
   public container?: HTMLElement;
-  // @ts-ignore
-  public controls?: any;
+  public controls: any = undefined;
   public viewType: any;
 
   constructor(scene: Scene | null, options: object = {}) {
@@ -37,6 +40,7 @@ class Viewer {
       scene || new Scene(this.options as typeof DEFAULT_OPTIONS_SCENE);
 
     this.initCamera();
+    this.initObserver();
 
     this.animate = this.animate.bind(this);
     this.onWindowResize = this.onWindowResize.bind(this);
@@ -88,7 +92,7 @@ class Viewer {
     }
   }
 
-  protected initCamera() {
+  private initCamera() {
     const { viewType } = this.options as typeof DEFAULT_OPTIONS_SCENE;
 
     let camera: OrthographicCamera | PerspectiveCamera | null = null;
@@ -110,7 +114,6 @@ class Viewer {
     camera.up = new Vector3(0, 0, 1);
     camera.lookAt(new Vector3());
     this.camera = camera;
-
     this.scene.add(this.camera);
   }
 
@@ -172,6 +175,8 @@ class Viewer {
           offsetWidth / 100,
           offsetHeight / 100,
         ];
+
+        assertIsOrthographicCamera(this.camera);
         this.camera.left = -cameraWidth / 2;
         this.camera.right = cameraWidth / 2;
         this.camera.top = cameraHeight / 2;
@@ -181,6 +186,8 @@ class Viewer {
       case VIEW_TYPES.VIEW_3D:
       default: {
         const { offsetHeight, offsetWidth } = this.container as HTMLElement;
+        assertIsPerspectiveCamera(this.camera);
+
         this.camera.aspect = offsetWidth / offsetHeight;
         break;
       }
