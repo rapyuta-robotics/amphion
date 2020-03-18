@@ -1,5 +1,14 @@
-import { CanvasTexture, DoubleSide, FrontSide, NearestFilter } from 'three';
-import { DEFAULT_OPTIONS_MAP, MAP_COLOR_SCHEMES } from '../utils/constants';
+import {
+  DoubleSide,
+  FrontSide,
+  CanvasTexture,
+  NearestFilter,
+  Quaternion,
+} from 'three';
+import {
+  DEFAULT_OPTIONS_MAP,
+  MAP_COLOR_SCHEMES,
+} from '../utils/constants';
 import {
   imageDataToCanvas,
   populateConstImageDataFromNavMsg,
@@ -59,17 +68,26 @@ class Map extends LiveCore<RosMessage.OccupancyGrid, Plane> {
 
   updateCanvasDimensions(message: RosMessage.OccupancyGrid) {
     const {
-      info: { height, origin, resolution, width },
+      info: {
+        height,
+        origin: {
+          orientation: { w: qw, x: qx, y: qy, z: qz },
+          position: { x, y, z },
+        },
+        resolution,
+        width,
+      },
     } = message;
 
     this.object?.scale.set(width * resolution, -1 * height * resolution, 1);
-    const translatedX = (width * resolution) / 2 + origin.position.x;
-    const translatedY = (height * resolution) / 2 + origin.position.y;
+    const translatedX = (width * resolution) / 2 + x;
+    const translatedY = (height * resolution) / 2 + y;
     this.object?.position.set(
       translatedX,
       translatedY,
-      origin.position.z || 0.01,
+      z || 0.01,
     );
+    this.object?.quaternion.copy(new Quaternion(qx, qy, qz, qw).normalize());
   }
 
   setCanvasData(message: RosMessage.OccupancyGrid) {
