@@ -225,12 +225,18 @@ export const DEFAULT_COLOR_Z_AXIS = '#0000ff';
 export const DEFAULT_COLOR_ARROW = '#f0ff00';
 export const DEFAULT_COLOR_LINE = '#f0ff00';
 
+export const VIEW_TYPES = {
+  VIEW_3D: 0,
+  VIEW_2D: 1,
+};
+
 export const DEFAULT_OPTIONS_SCENE = {
   backgroundColor: DEFAULT_BACKGROUND_COLOR,
   gridSize: DEFAULT_GRID_SIZE,
   gridDivisions: DEFAULT_GRID_DIVISIONS,
   gridColor: DEFAULT_GRID_COLOR,
   gridCenterlineColor: DEFAULT_GRID_COLOR_CENTERLINE,
+  viewType: VIEW_TYPES.VIEW_3D,
 };
 
 export const DEFAULT_OPTIONS_TF_VIEWER = {

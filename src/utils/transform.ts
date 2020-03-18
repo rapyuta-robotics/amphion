@@ -1,4 +1,11 @@
-import { Color, Mesh, Object3D, Quaternion } from 'three';
+import {
+  Color,
+  Mesh,
+  Object3D,
+  Quaternion,
+  MeshBasicMaterial,
+  LineBasicMaterial,
+} from 'three';
 import { assertIsMeshBasicMaterial } from './helpers';
 import Line from '../primitives/Line';
 import LineSegments from '../primitives/LineSegment';
@@ -27,8 +34,16 @@ export const setScale = (object: Object3D, scale: RosMessage.Point) => {
 export const setColor = (
   object: Mesh | Line | LineSegments,
   color: string | number | RosMessage.Color,
-) => {
-  assertIsMeshBasicMaterial(object.material);
+): void | never => {
+  if (
+    !(object.material instanceof MeshBasicMaterial) &&
+    !(object.material instanceof LineBasicMaterial)
+  ) {
+    throw new TypeError(
+      `Expected 'val' to be MeshBasicMaterial | LineBasicMaterial`,
+    );
+  }
+
   if (typeof color === 'string' || typeof color === 'number') {
     object.material.color = new Color(color);
   } else {

@@ -9,6 +9,8 @@ import {
   Quaternion,
   TorusGeometry,
   Vector3,
+  OrthographicCamera,
+  PerspectiveCamera,
 } from 'three';
 
 import {
@@ -174,5 +176,21 @@ export function assertIsBufferAttribute(
 ): asserts val is BufferAttribute {
   if (!(val instanceof BufferAttribute)) {
     throw new Error('the provided attribute must be an BufferAttribute');
+  }
+}
+
+export function assertIsOrthographicCamera(
+  val: any,
+): asserts val is OrthographicCamera {
+  if (!(val instanceof OrthographicCamera)) {
+    throw new Error('Value is not instance of Orthographic camera.');
+  }
+}
+
+export function assertIsPerspectiveCamera(
+  val: any,
+): asserts val is PerspectiveCamera {
+  if (!(val instanceof PerspectiveCamera)) {
+    throw new Error('Value is not instance of Perspective camera.');
   }
 }

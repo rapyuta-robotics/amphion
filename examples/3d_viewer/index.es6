@@ -4,7 +4,7 @@ import CONFIG from '../config.json';
 
 // Setup ros instance and viewer
 const ros = new ROSLIB.Ros();
-const viewer = new Amphion.Viewer3d();
+const viewer = new Amphion.Viewer(null);
 
 viewer.setContainer(document.getElementById('scene'));
 ros.connect(CONFIG.ROS_WEBSOCKET_ENDPOINT);
@@ -22,8 +22,9 @@ viewer.addVisualization(marker);
 // Load robot model
 const robotModel = new Amphion.RobotModel(ros, 'robot_description', {
   packages: {
-    franka_description: 'https://storage.googleapis.com/kompose-artifacts/franka_description',
-  }
+    franka_description:
+      'https://storage.googleapis.com/kompose-artifacts/franka_description',
+  },
 });
 robotModel.load();
 viewer.addVisualization(robotModel);
