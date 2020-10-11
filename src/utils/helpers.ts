@@ -9,6 +9,7 @@ import {
   Quaternion,
   TorusGeometry,
   Vector3,
+  MeshStandardMaterial,
 } from 'three';
 
 import {
@@ -174,5 +175,18 @@ export function assertIsBufferAttribute(
 ): asserts val is BufferAttribute {
   if (!(val instanceof BufferAttribute)) {
     throw new Error('the provided attribute must be an BufferAttribute');
+  }
+}
+
+export function assertMaterialWithColorSettable(
+  val: any,
+): asserts val is MeshBasicMaterial | MeshStandardMaterial {
+  if (
+    !(val instanceof MeshBasicMaterial) &&
+    !(val instanceof MeshStandardMaterial)
+  ) {
+    throw new TypeError(
+      `Expected 'val' to be MeshBasicMaterial | MeshStandardMaterial. Color not settable on material.`,
+    );
   }
 }
