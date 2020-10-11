@@ -11,6 +11,7 @@ import {
   INTERACTIVE_MARKER_INTERACTION_MODES,
   INTERACTIVE_MARKER_ORIENTATION_MODES,
   UNSUPPORTED_INTERACTIVE_MARKER_ORIENTATION_MODES,
+  DEFAULT_SCALE,
 } from './constants';
 import Controls from 'three-freeform-controls/dist/types/controls';
 import TfViewer from '../viewers/Tf';
@@ -122,7 +123,8 @@ export default class InteractiveMarkerManager {
             .hideOtherControlsInstancesOnSelect,
           showHelperPlane: true,
         });
-        controls.scale.set(scale, scale, scale);
+        const newScale = scale || DEFAULT_SCALE;
+        controls.scale.set(newScale, newScale, newScale);
         controls.visible = visible;
 
         InteractiveMarkerManager.enableControls(
