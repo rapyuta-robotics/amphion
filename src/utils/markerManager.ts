@@ -1,4 +1,5 @@
 import getNewPrimitive, { MarkerObjectType } from './markerTypes';
+import { DEFAULT_SCALE } from '../utils/constants';
 import MarkerLifetime from './markerLifetime';
 import { Object3D } from 'three';
 
@@ -85,7 +86,11 @@ export default class MarkerManager {
 
     // To avoid settings these properties for list types: LINE, TRIANGLE, CUBELIST etc
     if (markerObject.setScale && !markerObject.updatePoints) {
-      markerObject.setScale({ x: scale.x, y: scale.y, z: scale.z });
+      markerObject.setScale({
+        x: scale.x || DEFAULT_SCALE,
+        y: scale.y || DEFAULT_SCALE,
+        z: scale.z || DEFAULT_SCALE,
+      });
     }
     if (markerObject.setColor && colors.length <= 0) {
       markerObject.setColor(color);

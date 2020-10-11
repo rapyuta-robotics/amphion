@@ -216,6 +216,8 @@ export const DEFAULT_CYLINDER_HEIGHT = 1;
 export const DEFAULT_CYLINDER_RADIUS = 1;
 export const DEFAULT_RADIAL_SEGMENTS = 32;
 
+export const DEFAULT_SCALE = 0.00001; // To prevent: can't invert matrix, determinant is 0
+
 export const DEFAULT_CONE_HEIGHT = 1;
 export const DEFAULT_CONE_RADIUS = 1;
 
